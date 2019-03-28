@@ -114,12 +114,9 @@ func _parseResponse (response *http.Response) (AccessToken, error) {
   expires, err = strconv.Atoi (responseMap["expires_in"])
 
   accessToken = AccessToken {
-    responseMap["access_token"],
-    responseMap["token_type"],
-    responseMap["refresh_token"],
-    responseMap["scope"],
-    responseMap["user_id"],
-    expires,
+    responseMap["access_token"], responseMap["token_type"],
+    responseMap["refresh_token"], responseMap["scope"],
+    responseMap["user_id"], expires,
   }
 
   return accessToken, err

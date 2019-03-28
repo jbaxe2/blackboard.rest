@@ -38,6 +38,7 @@ func (oauth2 *BbRestOAuth2) Secret() string {
   return oauth2.secret
 }
 
+/// The [GetAuthorizationCode] method...
 func (oauth2 *BbRestOAuth2) GetAuthorizationCode (
   redirectUri url.URL, responseType string, response http.Response,
 ) error {
@@ -46,8 +47,9 @@ func (oauth2 *BbRestOAuth2) GetAuthorizationCode (
   return err
 }
 
+/// The [RequestToken] method...
 func (oauth2 *BbRestOAuth2) RequestToken (
-    grantType string, code string, redirectUri url.URL,
+  grantType string, code string, redirectUri url.URL,
 ) (oauth2.AccessToken, error) {
   var accessToken oauth2.AccessToken
   var err error
