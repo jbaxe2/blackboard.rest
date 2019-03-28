@@ -1,0 +1,4 @@
+# Ignore files for git project
+
+.idea
+*.iml
