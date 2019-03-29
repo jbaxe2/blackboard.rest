@@ -8,15 +8,16 @@ import (
   "strconv"
 )
 
-/// The [AuthorizerFactory] type...
-type AuthorizerFactory struct {}
-
-/// The [RestAuthorizer] interface...
+/**
+ * The [RestAuthorizer] interface...
+ */
 type RestAuthorizer interface {
   RequestAuthorization() (AccessToken, error)
 }
 
-/// The [RestUserAuthorizer] interface...
+/**
+ * The [RestUserAuthorizer] interface...
+ */
 type RestUserAuthorizer interface {
   RequestAuthorizationCode (redirectUri string, response http.Response)
 
@@ -25,7 +26,14 @@ type RestUserAuthorizer interface {
   RestAuthorizer
 }
 
-/// The [_RestAuthorizer] type...
+/**
+ * The [AuthorizerFactory] type...
+ */
+type AuthorizerFactory struct {}
+
+/**
+ * The [_RestAuthorizer] type...
+ */
 type _RestAuthorizer struct {
   host url.URL
 
@@ -34,21 +42,26 @@ type _RestAuthorizer struct {
   RestAuthorizer
 }
 
-/// The [_RestUserAuthorizer] type...
+/**
+ * The [_RestUserAuthorizer] type...
+ */
 type _RestUserAuthorizer struct {
   _RestAuthorizer
 
   RestUserAuthorizer
 }
 
-/// The [BuildAuthorizer] method...
+/**
+ * The [BuildAuthorizer] method...
+ */
 func (*AuthorizerFactory) BuildAuthorizer (
   host url.URL, clientId string, secret string, authType string,
 ) RestAuthorizer {
   var restAuthorizer RestAuthorizer
 
   if "user" == authType {
-    restAuthorizer = new (_RestUserAuthorizer)
+    restAuthorizer = new (_RestAuthorizer)
+    restAuthorizer = restAuthorizer.(RestUserAuthorizer)
   } else {
     restAuthorizer = new (_RestAuthorizer)
   }
@@ -56,7 +69,9 @@ func (*AuthorizerFactory) BuildAuthorizer (
   return restAuthorizer
 }
 
-/// The [RequestAuthorization] method...
+/**
+ * The [RequestAuthorization] method...
+ */
 func (authorizer *_RestAuthorizer) RequestAuthorization() (AccessToken, error) {
   request := new (http.Request)
   request.SetBasicAuth (authorizer.clientId, authorizer.secret)
@@ -69,7 +84,9 @@ func (authorizer *_RestAuthorizer) RequestAuthorization() (AccessToken, error) {
   return accessToken, err
 }
 
-/// The [RequestAuthorizationCode] method...
+/**
+ * The [RequestAuthorizationCode] method...
+ */
 func (authorizer *_RestUserAuthorizer) RequestAuthorizationCode (
   redirectUri string, response *http.Response,
 ) error {
@@ -93,7 +110,9 @@ func (authorizer *_RestUserAuthorizer) RequestAuthorizationCode (
   return err
 }
 
-/// The [RequestUserAuthorization] method...
+/**
+ * The [RequestUserAuthorization] method...
+ */
 func (authorizer *_RestUserAuthorizer) RequestUserAuthorization (
   authCode string, redirectUri string,
 ) (AccessToken, error) {
@@ -103,7 +122,9 @@ func (authorizer *_RestUserAuthorizer) RequestUserAuthorization (
   return accessToken, err
 }
 
-/// The [_parseResponse] function...
+/**
+ * The [_parseResponse] function...
+ */
 func _parseResponse (response *http.Response) (AccessToken, error) {
   var accessToken AccessToken
   var err error

@@ -1,6 +1,8 @@
 package oauth2
 
-/// The [AccessToken] type...
+/**
+ * The [AccessToken] type...
+ */
 type AccessToken struct {
   accessToken, tokenType, refreshToken, scope, userId string
 

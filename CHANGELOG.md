@@ -1,5 +1,9 @@
 **blackboard.rest (Go)**
 
+## 0.0.2
+- More work of OAuth2 code.
+- Start of Users code.
+
 ## 0.0.1
 - Initial commit.
 - Start of porting the blackboard.rest library from Dart to Go.
