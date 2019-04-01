@@ -55,7 +55,7 @@ type _RestUserAuthorizer struct {
  * The [BuildAuthorizer] method...
  */
 func (*AuthorizerFactory) BuildAuthorizer (
-  host url.URL, clientId string, secret string, authType string,
+  host *url.URL, clientId string, secret string, authType string,
 ) RestAuthorizer {
   var restAuthorizer RestAuthorizer
 
@@ -77,7 +77,11 @@ func (authorizer *_RestAuthorizer) RequestAuthorization() (AccessToken, error) {
   var err error
   var response *http.Response
 
+  print (authorizer.host.String() + "\n\n")
   request := new (http.Request)
+  request.Header = make (http.Header)
+
+  request.Method = "POST"
   request.SetBasicAuth (authorizer.clientId, authorizer.secret)
   request.Header.Set ("Content-Type", "application/x-www-form-urlencoded")
 
@@ -86,7 +90,14 @@ func (authorizer *_RestAuthorizer) RequestAuthorization() (AccessToken, error) {
     config.OAuth2Endpoints()["request_token"],
   )
 
+  print (request.URL.String())
+  print (authorizer.host.String())
   response, err = (new (http.Client)).Do (request)
+
+  if nil != err {
+    return accessToken, err
+  }
+
   accessToken, err = _parseResponse (response)
 
   err = response.Body.Close()
@@ -152,6 +163,11 @@ func (authorizer *_RestUserAuthorizer) RequestUserAuthorization (
   request.URL, err = url.Parse (authCodeUriStr)
 
   response, err  := (new (http.Client)).Do (request)
+
+  if nil != err {
+    return accessToken, err
+  }
+
   accessToken, err = _parseResponse (response)
 
   err = response.Body.Close()

@@ -23,7 +23,7 @@ type BlackboardRestOAuth2 interface {
  * The [BbRestOAuth2] type...
  */
 type BbRestOAuth2 struct {
-  host url.URL
+  host *url.URL
 
   clientId, secret string
 
@@ -32,7 +32,7 @@ type BbRestOAuth2 struct {
   BlackboardRestOAuth2
 }
 
-func (restOAuth2 *BbRestOAuth2) Host() url.URL {
+func (restOAuth2 *BbRestOAuth2) Host() *url.URL {
   return restOAuth2.host
 }
 
@@ -48,7 +48,7 @@ func (restOAuth2 *BbRestOAuth2) Secret() string {
  * The [GetOAuth2Instance] function...
  */
 func GetOAuth2Instance (
-  host url.URL, clientId string, secret string,
+  host *url.URL, clientId string, secret string,
 ) BlackboardRestOAuth2 {
   oauth2Instance :=  new (BbRestOAuth2)
 
@@ -84,6 +84,17 @@ func (restOAuth2 *BbRestOAuth2) RequestToken (
 ) (oauth2.AccessToken, error) {
   var accessToken oauth2.AccessToken
   var err error
+
+  restOAuth2._createAuthorizer (grantType)
+
+  if "client_credentials" == grantType {
+    accessToken, err = restOAuth2.authorizer.RequestAuthorization()
+  } else if "authorization_code" == grantType {
+    var userAuthorizer = restOAuth2.authorizer.(oauth2.RestUserAuthorizer)
+
+    accessToken, err =
+      userAuthorizer.RequestUserAuthorization (code, redirectUri.String())
+  }
 
   return accessToken, err
 }
