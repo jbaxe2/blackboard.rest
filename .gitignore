@@ -2,3 +2,5 @@
 
 .idea
 *.iml
+
+src/config/connection_info.go

@@ -1,6 +1,8 @@
 package users
 
-import "time"
+import (
+  "time"
+)
 
 /**
  * The [User] type...

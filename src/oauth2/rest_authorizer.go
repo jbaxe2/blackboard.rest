@@ -2,7 +2,7 @@ package oauth2
 
 import (
   "encoding/json"
-  "github.com/jbaxe2/blackboard.rest.go/config"
+  "github.com/jbaxe2/blackboard.rest.go/src/config"
   "net/http"
   "net/url"
   "strconv"
@@ -73,11 +73,21 @@ func (*AuthorizerFactory) BuildAuthorizer (
  * The [RequestAuthorization] method...
  */
 func (authorizer *_RestAuthorizer) RequestAuthorization() (AccessToken, error) {
+  var accessToken AccessToken
+  var err error
+  var response *http.Response
+
   request := new (http.Request)
   request.SetBasicAuth (authorizer.clientId, authorizer.secret)
+  request.Header.Set ("Content-Type", "application/x-www-form-urlencoded")
 
-  response, err := (new (http.Client)).Do (request)
-  accessToken, err := _parseResponse (response)
+  request.URL, err = url.Parse (
+    authorizer.host.String() + config.Base +
+    config.OAuth2Endpoints()["request_token"],
+  )
+
+  response, err = (new (http.Client)).Do (request)
+  accessToken, err = _parseResponse (response)
 
   err = response.Body.Close()
 
@@ -118,6 +128,33 @@ func (authorizer *_RestUserAuthorizer) RequestUserAuthorization (
 ) (AccessToken, error) {
   var accessToken AccessToken
   var err error
+  var encodedRedirect string
+  var parsedRedirect *url.URL
+
+  if "" == redirectUri {
+    encodedRedirect = ""
+  } else {
+    parsedRedirect, err = url.Parse (redirectUri)
+
+    if nil != err {
+      return accessToken, err
+    }
+
+    encodedRedirect = "&redirect_uri=" + parsedRedirect.String()
+  }
+
+  authCodeUriStr := authorizer.host.String() + config.Base +
+    config.OAuth2Endpoints()["authorization_code"] + "?code=" + authCode +
+    encodedRedirect
+
+  request := new (http.Request)
+  request.SetBasicAuth (authorizer.clientId, authorizer.secret)
+  request.URL, err = url.Parse (authCodeUriStr)
+
+  response, err  := (new (http.Client)).Do (request)
+  accessToken, err = _parseResponse (response)
+
+  err = response.Body.Close()
 
   return accessToken, err
 }
@@ -134,7 +171,7 @@ func _parseResponse (response *http.Response) (AccessToken, error) {
   err = json.NewDecoder (response.Body).Decode (responseMap)
   expires, err = strconv.Atoi (responseMap["expires_in"])
 
-  accessToken = AccessToken {
+  accessToken = AccessToken{
     responseMap["access_token"], responseMap["token_type"],
     responseMap["refresh_token"], responseMap["scope"],
     responseMap["user_id"], expires,
