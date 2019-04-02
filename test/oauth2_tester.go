@@ -83,11 +83,13 @@ func _testObtainAccessToken (t *testing.T) {
     t.Error ("Parsing the host failed, so unable to obtain the access token")
   }
 
-  restAuthorizer := (new (oauth2.AuthorizerFactory)).BuildAuthorizer (
-    *host, config.ClientId, config.Secret, "",
+  oauth2Service := blackboard_rest.GetOAuth2Instance (
+    *host, config.ClientId, config.Secret,
   )
 
-  accessToken, err := restAuthorizer.RequestAuthorization()
+  accessToken, err := oauth2Service.RequestToken (
+    "client_credentials", "", *host,
+  )
 
   if ((oauth2.AccessToken{}) == accessToken) || (nil != err) {
     if nil == err {

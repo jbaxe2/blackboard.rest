@@ -31,9 +31,9 @@ type _BbRestUsers struct {
 
   accessToken oauth2.AccessToken
 
-  Users
+  service services.BlackboardRestServices
 
-  services.BbRestServices
+  Users
 }
 
 func (restUsers *_BbRestUsers) Host() url.URL {
@@ -59,11 +59,20 @@ func GetUsersInstance (host string, accessToken oauth2.AccessToken) Users {
 func (restUsers *_BbRestUsers) GetUser (userId string) (users.User, error) {
   var user users.User
   var err error
+  var result interface{}
 
   endpoint := config.UserEndpoints()["user"]
   endpoint = strings.Replace (endpoint, "{user_id}", userId, -1)
 
   rawUser := make (map[string]interface{})
+
+  connector := restUsers.service.Connector()
+
+  result, err = connector.SendBbRequest (
+    endpoint, "GET", make (map[string]interface{}), 1,
+  )
+
+  rawUser = result.(map[string]interface{})
 
   user = (new (factory.UserFactory)).NewUser (rawUser)
 
