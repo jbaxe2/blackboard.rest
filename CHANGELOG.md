@@ -1,5 +1,8 @@
 **blackboard.rest (Go)**
 
+## 0.0.5
+- Adding the connector to allow arbitrary REST services to connect to the API.
+
 ## 0.0.4
 - Finished client-based authorization for OAuth2.
 - Start of creating Users service.

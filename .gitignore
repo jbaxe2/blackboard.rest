@@ -3,4 +3,4 @@
 .idea
 *.iml
 
-src/config/connection_info.go
+#src/config/connection_info.go

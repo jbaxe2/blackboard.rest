@@ -1,10 +1,13 @@
 package blackboard_rest
 
 import (
+  "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
+  "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/factory"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/services"
   "github.com/jbaxe2/blackboard.rest.go/src/oauth2"
   "github.com/jbaxe2/blackboard.rest.go/src/users"
   "net/url"
+  "strings"
 )
 
 /**
@@ -56,6 +59,13 @@ func GetUsersInstance (host string, accessToken oauth2.AccessToken) Users {
 func (restUsers *_BbRestUsers) GetUser (userId string) (users.User, error) {
   var user users.User
   var err error
+
+  endpoint := config.UserEndpoints()["user"]
+  endpoint = strings.Replace (endpoint, "{user_id}", userId, -1)
+
+  rawUser := make (map[string]interface{})
+
+  user = (new (factory.UserFactory)).NewUser (rawUser)
 
   return user, err
 }

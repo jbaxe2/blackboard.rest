@@ -2,7 +2,7 @@ package oauth2
 
 import (
   "encoding/json"
-  "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding"
+  "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
   "io/ioutil"
   "net/http"
   "net/url"
@@ -82,8 +82,8 @@ func (authorizer *_RestAuthorizer) RequestAuthorization() (AccessToken, error) {
   request := new (http.Request)
 
   request.URL, err = url.Parse (
-    authorizer.host.String() + _scaffolding.Base +
-    _scaffolding.OAuth2Endpoints()["request_token"],
+    authorizer.host.String() + config.Base +
+    config.OAuth2Endpoints()["request_token"],
   )
 
   if nil != err {
@@ -128,8 +128,8 @@ func (authorizer *_RestUserAuthorizer) RequestAuthorizationCode (
     return err
   }
 
-  authorizeUriStr := authorizer.host.String() + _scaffolding.Base +
-    _scaffolding.OAuth2Endpoints()["authorization_code"] + "?redirect_uri=" +
+  authorizeUriStr := authorizer.host.String() + config.Base +
+    config.OAuth2Endpoints()["authorization_code"] + "?redirect_uri=" +
     encoded.String() + "&client_id=" + authorizer.clientId +
     "&response_type=code&scope=read"
 
@@ -163,8 +163,8 @@ func (authorizer *_RestUserAuthorizer) RequestUserAuthorization (
     encodedRedirect = "&redirect_uri=" + parsedRedirect.String()
   }
 
-  authCodeUriStr := authorizer.host.String() + _scaffolding.Base +
-    _scaffolding.OAuth2Endpoints()["authorization_code"] + "?code=" + authCode +
+  authCodeUriStr := authorizer.host.String() + config.Base +
+    config.OAuth2Endpoints()["authorization_code"] + "?code=" + authCode +
     encodedRedirect
 
   request := new (http.Request)
@@ -202,13 +202,13 @@ func _parseResponse (response *http.Response) (AccessToken, error) {
   err = json.Unmarshal (responseBytes, &parsedResponse)
 
   accessToken = AccessToken {
-    access_token: parsedResponse["access_token"].(string),
-    token_type: parsedResponse["token_type"].(string),
-    expires_in: parsedResponse["expires_in"].(float64),
+    accessToken: parsedResponse["access_token"].(string),
+    tokenType:   parsedResponse["token_type"].(string),
+    expiresIn:   parsedResponse["expires_in"].(float64),
   }
 
   if userId, ok := parsedResponse["user_id"]; ok {
-    accessToken.user_id = userId.(string)
+    accessToken.userId = userId.(string)
   }
 
   if scope, ok := parsedResponse["scope"]; ok {
