@@ -4,21 +4,21 @@ package oauth2
  * The [AccessToken] type...
  */
 type AccessToken struct {
-  accessToken, tokenType, refreshToken, scope, userId string
+  access_token, token_type, refresh_token, scope, user_id string
 
-  expiresIn int
+  expires_in float64
 }
 
 func (accessToken *AccessToken) AccessToken() string {
-  return accessToken.accessToken
+  return accessToken.access_token
 }
 
 func (accessToken *AccessToken) TokenType() string {
-  return accessToken.tokenType
+  return accessToken.token_type
 }
 
 func (accessToken *AccessToken) RefreshToken() string {
-  return accessToken.refreshToken
+  return accessToken.refresh_token
 }
 
 func (accessToken *AccessToken) Scope() string {
@@ -26,9 +26,9 @@ func (accessToken *AccessToken) Scope() string {
 }
 
 func (accessToken *AccessToken) UserId() string {
-  return accessToken.userId
+  return accessToken.user_id
 }
 
-func (accessToken *AccessToken) ExpiresInt() int {
-  return accessToken.expiresIn
+func (accessToken *AccessToken) ExpiresIn() float64 {
+  return accessToken.expires_in
 }

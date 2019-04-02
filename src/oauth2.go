@@ -20,10 +20,10 @@ type BlackboardRestOAuth2 interface {
 }
 
 /**
- * The [BbRestOAuth2] type...
+ * The [_BbRestOAuth2] type...
  */
-type BbRestOAuth2 struct {
-  host *url.URL
+type _BbRestOAuth2 struct {
+  host url.URL
 
   clientId, secret string
 
@@ -32,15 +32,15 @@ type BbRestOAuth2 struct {
   BlackboardRestOAuth2
 }
 
-func (restOAuth2 *BbRestOAuth2) Host() *url.URL {
+func (restOAuth2 *_BbRestOAuth2) Host() url.URL {
   return restOAuth2.host
 }
 
-func (restOAuth2 *BbRestOAuth2) ClientId() string {
+func (restOAuth2 *_BbRestOAuth2) ClientId() string {
   return restOAuth2.clientId
 }
 
-func (restOAuth2 *BbRestOAuth2) Secret() string {
+func (restOAuth2 *_BbRestOAuth2) Secret() string {
   return restOAuth2.secret
 }
 
@@ -48,21 +48,17 @@ func (restOAuth2 *BbRestOAuth2) Secret() string {
  * The [GetOAuth2Instance] function...
  */
 func GetOAuth2Instance (
-  host *url.URL, clientId string, secret string,
+  host url.URL, clientId string, secret string,
 ) BlackboardRestOAuth2 {
-  oauth2Instance :=  new (BbRestOAuth2)
-
-  oauth2Instance.host = host
-  oauth2Instance.clientId = clientId
-  oauth2Instance.secret = secret
-
-  return oauth2Instance
+  return &_BbRestOAuth2 {
+    host: host, clientId: clientId, secret: secret,
+  }
 }
 
 /**
  * The [GetAuthorizationCode] method...
  */
-func (restOAuth2 *BbRestOAuth2) GetAuthorizationCode (
+func (restOAuth2 *_BbRestOAuth2) GetAuthorizationCode (
   redirectUri url.URL, responseType string, response http.Response,
 ) error {
   var err error
@@ -79,7 +75,7 @@ func (restOAuth2 *BbRestOAuth2) GetAuthorizationCode (
 /**
  * The [RequestToken] method...
  */
-func (restOAuth2 *BbRestOAuth2) RequestToken (
+func (restOAuth2 *_BbRestOAuth2) RequestToken (
   grantType string, code string, redirectUri url.URL,
 ) (oauth2.AccessToken, error) {
   var accessToken oauth2.AccessToken
@@ -102,7 +98,7 @@ func (restOAuth2 *BbRestOAuth2) RequestToken (
 /**
  * The [_createAuthorizer] method...
  */
-func (restOAuth2 *BbRestOAuth2) _createAuthorizer (grantType string) {
+func (restOAuth2 *_BbRestOAuth2) _createAuthorizer (grantType string) {
   factory := new (oauth2.AuthorizerFactory)
 
   if "authorization_code" == grantType {

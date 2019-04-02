@@ -1,5 +1,9 @@
 **blackboard.rest (Go)**
 
+## 0.0.4
+- Finished client-based authorization for OAuth2.
+- Start of creating Users service.
+
 ## 0.0.3
 - Moved source code to 'src' folder, and created a 'test' folder at same level.
 - Start of adding tests.

@@ -2,10 +2,11 @@ package oauth2
 
 import (
   "encoding/json"
-  "github.com/jbaxe2/blackboard.rest.go/src/config"
+  "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding"
+  "io/ioutil"
   "net/http"
   "net/url"
-  "strconv"
+  "strings"
 )
 
 /**
@@ -55,15 +56,16 @@ type _RestUserAuthorizer struct {
  * The [BuildAuthorizer] method...
  */
 func (*AuthorizerFactory) BuildAuthorizer (
-  host *url.URL, clientId string, secret string, authType string,
+  host url.URL, clientId string, secret string, authType string,
 ) RestAuthorizer {
   var restAuthorizer RestAuthorizer
 
+  restAuthorizer = &_RestAuthorizer {
+    host: host, clientId: clientId, secret: secret,
+  }
+
   if "user" == authType {
-    restAuthorizer = new (_RestAuthorizer)
     restAuthorizer = restAuthorizer.(RestUserAuthorizer)
-  } else {
-    restAuthorizer = new (_RestAuthorizer)
   }
 
   return restAuthorizer
@@ -77,21 +79,27 @@ func (authorizer *_RestAuthorizer) RequestAuthorization() (AccessToken, error) {
   var err error
   var response *http.Response
 
-  print (authorizer.host.String() + "\n\n")
   request := new (http.Request)
+
+  request.URL, err = url.Parse (
+    authorizer.host.String() + _scaffolding.Base +
+    _scaffolding.OAuth2Endpoints()["request_token"],
+  )
+
+  if nil != err {
+    return accessToken, err
+  }
+
   request.Header = make (http.Header)
+  request.Header.Set ("Content-Type", "application/x-www-form-urlencoded")
 
   request.Method = "POST"
   request.SetBasicAuth (authorizer.clientId, authorizer.secret)
-  request.Header.Set ("Content-Type", "application/x-www-form-urlencoded")
 
-  request.URL, err = url.Parse (
-    authorizer.host.String() + config.Base +
-    config.OAuth2Endpoints()["request_token"],
+  request.Body = ioutil.NopCloser (
+    strings.NewReader ("grant_type=client_credentials"),
   )
 
-  print (request.URL.String())
-  print (authorizer.host.String())
   response, err = (new (http.Client)).Do (request)
 
   if nil != err {
@@ -120,12 +128,13 @@ func (authorizer *_RestUserAuthorizer) RequestAuthorizationCode (
     return err
   }
 
-  authorizeUriStr := authorizer.host.String() + config.Base +
-    config.OAuth2Endpoints()["authorization_code"] + "?redirect_uri=" +
+  authorizeUriStr := authorizer.host.String() + _scaffolding.Base +
+    _scaffolding.OAuth2Endpoints()["authorization_code"] + "?redirect_uri=" +
     encoded.String() + "&client_id=" + authorizer.clientId +
     "&response_type=code&scope=read"
 
   response.Header.Add ("Location", authorizeUriStr)
+
   err = response.Body.Close()
 
   return err
@@ -154,8 +163,8 @@ func (authorizer *_RestUserAuthorizer) RequestUserAuthorization (
     encodedRedirect = "&redirect_uri=" + parsedRedirect.String()
   }
 
-  authCodeUriStr := authorizer.host.String() + config.Base +
-    config.OAuth2Endpoints()["authorization_code"] + "?code=" + authCode +
+  authCodeUriStr := authorizer.host.String() + _scaffolding.Base +
+    _scaffolding.OAuth2Endpoints()["authorization_code"] + "?code=" + authCode +
     encodedRedirect
 
   request := new (http.Request)
@@ -181,16 +190,29 @@ func (authorizer *_RestUserAuthorizer) RequestUserAuthorization (
 func _parseResponse (response *http.Response) (AccessToken, error) {
   var accessToken AccessToken
   var err error
-  var responseMap = make (map[string]string)
-  var expires int
+  var responseBytes []byte
+  var parsedResponse map[string]interface{}
 
-  err = json.NewDecoder (response.Body).Decode (responseMap)
-  expires, err = strconv.Atoi (responseMap["expires_in"])
+  responseBytes, err = ioutil.ReadAll (response.Body)
 
-  accessToken = AccessToken{
-    responseMap["access_token"], responseMap["token_type"],
-    responseMap["refresh_token"], responseMap["scope"],
-    responseMap["user_id"], expires,
+  if nil != err {
+    return accessToken, err
+  }
+
+  err = json.Unmarshal (responseBytes, &parsedResponse)
+
+  accessToken = AccessToken {
+    access_token: parsedResponse["access_token"].(string),
+    token_type: parsedResponse["token_type"].(string),
+    expires_in: parsedResponse["expires_in"].(float64),
+  }
+
+  if userId, ok := parsedResponse["user_id"]; ok {
+    accessToken.user_id = userId.(string)
+  }
+
+  if scope, ok := parsedResponse["scope"]; ok {
+    accessToken.scope = scope.(string)
   }
 
   return accessToken, err

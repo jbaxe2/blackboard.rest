@@ -3,7 +3,7 @@ package test
 import (
   "errors"
   "github.com/jbaxe2/blackboard.rest.go/src"
-  "github.com/jbaxe2/blackboard.rest.go/src/config"
+  "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
   "github.com/jbaxe2/blackboard.rest.go/src/oauth2"
   "net/url"
   "testing"
@@ -35,7 +35,11 @@ func _testGetOAuth2Instance (t *testing.T) {
 
   host, err := url.Parse (config.Host)
 
-  blackboard_rest.GetOAuth2Instance (host, config.ClientId, config.Secret)
+  if nil != err {
+    t.Error ("Parsing the host failed, unable to obtain valid instance")
+  }
+
+  blackboard_rest.GetOAuth2Instance (*host, config.ClientId, config.Secret)
 
   if nil != err {
     t.Error ("Obtaining a valid OAuth2 instance failed\n" + err.Error())
@@ -50,8 +54,12 @@ func _testBuildClientRestAuthorizer (t *testing.T) {
 
   host, err := url.Parse (config.Host)
 
+  if nil != err {
+    t.Error ("Parsing the host failed, so unable to build the authorizer")
+  }
+
   restAuthorizer := (new (oauth2.AuthorizerFactory)).BuildAuthorizer (
-    host, config.ClientId, config.Secret, "",
+    *host, config.ClientId, config.Secret, "",
   )
 
   if (nil == restAuthorizer) || (nil != err) {
@@ -76,7 +84,7 @@ func _testObtainAccessToken (t *testing.T) {
   }
 
   restAuthorizer := (new (oauth2.AuthorizerFactory)).BuildAuthorizer (
-    host, config.ClientId, config.Secret, "",
+    *host, config.ClientId, config.Secret, "",
   )
 
   accessToken, err := restAuthorizer.RequestAuthorization()
