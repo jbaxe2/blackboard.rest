@@ -37,12 +37,15 @@ func _testGetOAuth2Instance (t *testing.T) {
 
   if nil != err {
     t.Error ("Parsing the host failed, unable to obtain valid instance")
+
+    return
   }
 
-  blackboard_rest.GetOAuth2Instance (*host, config.ClientId, config.Secret)
+  oAuth2Service :=
+    blackboard_rest.GetOAuth2Instance (*host, config.ClientId, config.Secret)
 
-  if nil != err {
-    t.Error ("Obtaining a valid OAuth2 instance failed\n" + err.Error())
+  if nil == oAuth2Service {
+    t.Error ("Obtaining a valid OAuth2 instance failed\n")
   }
 }
 
@@ -56,6 +59,8 @@ func _testBuildClientRestAuthorizer (t *testing.T) {
 
   if nil != err {
     t.Error ("Parsing the host failed, so unable to build the authorizer")
+
+    return
   }
 
   restAuthorizer := (new (oauth2.AuthorizerFactory)).BuildAuthorizer (
@@ -81,6 +86,8 @@ func _testObtainAccessToken (t *testing.T) {
 
   if nil != err {
     t.Error ("Parsing the host failed, so unable to obtain the access token")
+
+    return
   }
 
   oauth2Service := blackboard_rest.GetOAuth2Instance (

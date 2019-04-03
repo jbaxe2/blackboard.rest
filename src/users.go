@@ -2,6 +2,7 @@ package blackboard_rest
 
 import (
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
+  error2 "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/error"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/factory"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/services"
   "github.com/jbaxe2/blackboard.rest.go/src/oauth2"
@@ -62,19 +63,36 @@ func (restUsers *_BbRestUsers) GetUser (userId string) (users.User, error) {
   var result interface{}
 
   endpoint := config.UserEndpoints()["user"]
-  endpoint = strings.Replace (endpoint, "{user_id}", userId, -1)
+  endpoint = strings.Replace (endpoint, "{userId}", userId, -1)
 
   rawUser := make (map[string]interface{})
 
-  connector := restUsers.service.Connector()
-
-  result, err = connector.SendBbRequest (
+  result, err = restUsers.service.Connector.SendBbRequest (
     endpoint, "GET", make (map[string]interface{}), 1,
   )
+
+  if nil != err {
+    return user, restUsers.HandleError (err.(error2.RestError))
+  }
 
   rawUser = result.(map[string]interface{})
 
   user = (new (factory.UserFactory)).NewUser (rawUser)
 
   return user, err
+}
+
+/**
+ * The [HandleError] method...
+ */
+func (restUsers *_BbRestUsers) HandleError (err error2.RestError) error2.UsersError {
+  usersErr := error2.UsersError{}
+
+  usersErr.SetStatus (err.Status())
+  usersErr.SetCode (err.Code())
+  usersErr.SetMessage (err.Message())
+  usersErr.SetDeveloperMessage (err.DeveloperMessage())
+  usersErr.SetExtraInfo (err.ExtraInfo())
+
+  return usersErr
 }

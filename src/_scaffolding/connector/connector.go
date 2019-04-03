@@ -4,10 +4,12 @@ import (
   "encoding/json"
   "errors"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
+  error2 "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/error"
   "github.com/jbaxe2/blackboard.rest.go/src/oauth2"
   "io/ioutil"
   "net/http"
   "net/url"
+  "reflect"
   "strings"
 )
 
@@ -76,9 +78,10 @@ func (connector *BbRestConnector) SendBbRequest (
   }
 
   responseBytes, err = ioutil.ReadAll (response.Body)
-  err = json.Unmarshal (responseBytes, &result)
 
+  err = json.Unmarshal (responseBytes, &result)
   err = response.Body.Close()
+  err = _checkForError (result)
 
   return result, err
 }
@@ -92,13 +95,15 @@ func _handleGetRequest (
   var response *http.Response
   var err error
 
-  queryString := ""
+  if 0 < len (query) {
+    queryString := ""
 
-  for k, v := range query {
-    queryString += k + "=" + v.(string) + "&"
+    for k, v := range query {
+      queryString += k + "=" + v.(string) + "&"
+    }
+
+    endpoint.RawQuery = queryString[:(len(queryString) - 1)]
   }
-
-  endpoint.RawQuery = queryString[:(len (queryString) - 1)]
 
   request := new (http.Request)
   request.URL = endpoint
@@ -124,4 +129,37 @@ func _handlePostRequest (
   var err error
 
   return response, err
+}
+
+/**
+ * The [_checkForError] function...
+ */
+func _checkForError (potentialError interface{}) error2.RestableError {
+  err := error2.RestError{}
+
+  if strings.Contains (reflect.TypeOf (potentialError).String(), "map") {
+    errorMap := potentialError.(map[string]interface{})
+
+    if nil != errorMap["status"] {
+      err.SetStatus (errorMap["status"].(float64))
+    }
+
+    if nil != errorMap["code"] {
+      err.SetCode (errorMap["code"].(string))
+    }
+
+    if nil != errorMap["message"] {
+      err.SetMessage (errorMap["message"].(string))
+    }
+
+    if nil != errorMap["developerMessage"] {
+      err.SetDeveloperMessage (errorMap["developerMessage"].(string))
+    }
+
+    if nil != errorMap["extraInfo"] {
+      err.SetExtraInfo (errorMap["extraInfo"].(string))
+    }
+  }
+
+  return err
 }

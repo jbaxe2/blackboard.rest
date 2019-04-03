@@ -1,5 +1,10 @@
 **blackboard.rest (Go)**
 
+## 0.0.6
+- Start of creating custom errors.
+- More work on OAuth2 and Users.
+- More testing.
+
 ## 0.0.5
 - Adding the connector to allow arbitrary REST services to connect to the API.
 

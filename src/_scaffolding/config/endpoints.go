@@ -23,7 +23,7 @@ func UserEndpoints() map[string]string {
   endpoints := make (map[string]string)
 
   endpoints["users"] = "users"
-  endpoints["user"] = "user/{userId}"
+  endpoints["user"] = "users/{userId}"
 
   return endpoints
 }
