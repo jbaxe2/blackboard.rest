@@ -20,7 +20,7 @@ type OAuth2Tester struct {
  * The [Run] method...
  */
 func (tester *OAuth2Tester) Run() {
-  print ("OAuth2:\n")
+  print ("\nOAuth2:\n")
 
   _testGetOAuth2Instance (tester.t)
   _testBuildClientRestAuthorizer (tester.t)
@@ -67,10 +67,8 @@ func _testBuildClientRestAuthorizer (t *testing.T) {
     *host, config.ClientId, config.Secret, "",
   )
 
-  if (nil == restAuthorizer) || (nil != err) {
-    if nil == err {
-      err = errors.New ("could not create the REST Authorizer")
-    }
+  if nil == restAuthorizer {
+    err = errors.New ("could not create the REST Authorizer")
 
     t.Error ("Building a client REST Authorizer failed\n" + err.Error())
   }

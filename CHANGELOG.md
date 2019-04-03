@@ -1,5 +1,8 @@
 **blackboard.rest (Go)**
 
+## 0.0.7
+- Start of Courses code.
+
 ## 0.0.6
 - Start of creating custom errors.
 - More work on OAuth2 and Users.

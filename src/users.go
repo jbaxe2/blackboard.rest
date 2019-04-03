@@ -51,7 +51,10 @@ func (restUsers *_BbRestUsers) AccessToken() oauth2.AccessToken {
 func GetUsersInstance (host string, accessToken oauth2.AccessToken) Users {
   hostUri, _ := url.Parse (host)
 
-  return &_BbRestUsers {host: *hostUri, accessToken: accessToken}
+  usersService := &_BbRestUsers {host: *hostUri, accessToken: accessToken}
+  usersService.service.SetAccessToken (accessToken)
+
+  return usersService
 }
 
 /**
@@ -71,7 +74,7 @@ func (restUsers *_BbRestUsers) GetUser (userId string) (users.User, error) {
     endpoint, "GET", make (map[string]interface{}), 1,
   )
 
-  if nil != err {
+  if (nil != err) && (error2.RestError{} != err) {
     return user, restUsers.HandleError (err.(error2.RestError))
   }
 

@@ -21,7 +21,7 @@ func (authorizer *TestersAuthorizer) AccessToken() oauth2.AccessToken {
 /**
  * The [AuthorizeForTests] method...
  */
-func (authorizer * TestersAuthorizer) AuthorizeForTests() error {
+func (authorizer *TestersAuthorizer) AuthorizeForTests() error {
   var err error
 
   host, _ := url.Parse (config.Host)
