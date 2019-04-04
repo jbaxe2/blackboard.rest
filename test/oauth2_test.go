@@ -14,13 +14,15 @@ import (
  */
 type OAuth2Tester struct {
   t *testing.T
+
+  Testable
 }
 
 /**
  * The [Run] method...
  */
 func (tester *OAuth2Tester) Run() {
-  print ("\nOAuth2:\n")
+  println ("\nOAuth2:")
 
   _testGetOAuth2Instance (tester.t)
   _testBuildClientRestAuthorizer (tester.t)
@@ -31,7 +33,7 @@ func (tester *OAuth2Tester) Run() {
  * The [_testGetOAuth2Instance] function...
  */
 func _testGetOAuth2Instance (t *testing.T) {
-  print ("Obtain a valid OAuth2 instance.\n")
+  println ("Obtain a valid OAuth2 instance.")
 
   host, err := url.Parse (config.Host)
 
@@ -53,7 +55,7 @@ func _testGetOAuth2Instance (t *testing.T) {
  * The [_testBuildClientRestAuthorizer] function...
  */
 func _testBuildClientRestAuthorizer (t *testing.T) {
-  print ("Build a client REST Authorizer.\n")
+  println ("Build a client REST Authorizer.")
 
   host, err := url.Parse (config.Host)
 
@@ -78,7 +80,7 @@ func _testBuildClientRestAuthorizer (t *testing.T) {
  * The [_testObtainAccessToken] function...
  */
 func _testObtainAccessToken (t *testing.T) {
-  print ("Obtain a valid REST access token.\n")
+  println ("Obtain a valid REST access token.")
 
   host, err := url.Parse (config.Host)
 

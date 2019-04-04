@@ -6,14 +6,9 @@ import (
 )
 
 /**
- * The [UserFactory] type...
+ * The [NewUser] function...
  */
-type UserFactory struct {}
-
-/**
- * The [Create] method...
- */
-func (userFactory *UserFactory) NewUser (rawUser map[string]interface{}) users.User {
+func NewUser (rawUser map[string]interface{}) users.User {
   var created, lastLogin time.Time
 
   if nil != rawUser["created"] {

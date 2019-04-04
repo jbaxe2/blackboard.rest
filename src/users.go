@@ -65,10 +65,10 @@ func (restUsers *_BbRestUsers) GetUser (userId string) (users.User, error) {
   var err error
   var result interface{}
 
-  endpoint := config.UserEndpoints()["user"]
+  endpoint := config.UsersEndpoints()["user"]
   endpoint = strings.Replace (endpoint, "{userId}", userId, -1)
 
-  rawUser := make (map[string]interface{})
+  //rawUser := make (map[string]interface{})
 
   result, err = restUsers.service.Connector.SendBbRequest (
     endpoint, "GET", make (map[string]interface{}), 1,
@@ -78,9 +78,7 @@ func (restUsers *_BbRestUsers) GetUser (userId string) (users.User, error) {
     return user, restUsers.HandleError (err.(error2.RestError))
   }
 
-  rawUser = result.(map[string]interface{})
-
-  user = (new (factory.UserFactory)).NewUser (rawUser)
+  user = factory.NewUser (result.(map[string]interface{}))
 
   return user, err
 }

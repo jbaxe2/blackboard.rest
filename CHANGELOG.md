@@ -1,5 +1,11 @@
 **blackboard.rest (Go)**
 
+## 0.0.8
+- Start of CourseMemberships code.
+
+## 0.0.7+1
+- More work on Courses.
+
 ## 0.0.7
 - Start of Courses code.
 

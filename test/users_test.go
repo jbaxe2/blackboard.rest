@@ -12,13 +12,15 @@ import (
  */
 type UsersTester struct {
   t *testing.T
+
+  Testable
 }
 
 /**
  * The [Run] method...
  */
 func (tester *UsersTester) Run() {
-  print ("\nUsers:\n")
+  println ("\nUsers:")
 
   _testGetUsersInstance (tester.t)
   _testGetUserByPrimaryId (tester.t)
@@ -40,14 +42,9 @@ func _getUsersInstance() blackboard_rest.Users {
  * The [_testGetUsersInstance] function...
  */
 func _testGetUsersInstance (t *testing.T) {
-  print ("Obtain a valid Users service instance.\n")
+  println ("Obtain a valid Users service instance.")
 
-  authorizer := TestersAuthorizer{}
-  _ = authorizer.AuthorizeForTests()
-
-  usersService := blackboard_rest.GetUsersInstance (
-    config.Host, authorizer.accessToken,
-  )
+  usersService := _getUsersInstance()
 
   if nil == usersService {
     t.Error ("Obtaining a valid Users service instance failed.\n")
@@ -58,7 +55,7 @@ func _testGetUsersInstance (t *testing.T) {
  * The [_testGetUserByPrimaryId] function...
  */
 func _testGetUserByPrimaryId (t *testing.T) {
-  print ("Get a user by his or her primary ID.\n")
+  println ("Get a user by his or her primary ID.")
 
   usersService := _getUsersInstance()
   user, err := usersService.GetUser ("_27_1")
