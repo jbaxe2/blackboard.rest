@@ -3,6 +3,8 @@ package test
 import (
   "github.com/jbaxe2/blackboard.rest.go/src"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
+  error2 "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/error"
+  "github.com/jbaxe2/blackboard.rest.go/src/course_memberships"
   "testing"
 )
 
@@ -24,6 +26,7 @@ func (tester *CourseMembershipsTester) Run() {
   _testGetCourseMembershipsInstance (tester.t)
   _testGetCourseMembershipsByCoursePrimaryId (tester.t)
   _testGetCourseMembershipsByUserPrimaryId (tester.t)
+  _testGetMembershipByCourseAndUserPrimaryIds (tester.t)
 }
 
 /**
@@ -61,8 +64,8 @@ func _testGetCourseMembershipsByCoursePrimaryId (t *testing.T) {
 
   memberships, err := membershipsService.GetMembershipsForCourse ("_121_1")
 
-  if (nil == memberships) || (nil != err) {
-    t.Error ("Failed to obtain the list of course memberships.\n")
+  if (nil == memberships) || (error2.RestError{} != err) {
+    t.Error ("Failed to obtain the list of course memberships (course).\n")
 
     return
   }
@@ -92,8 +95,8 @@ func _testGetCourseMembershipsByUserPrimaryId (t *testing.T) {
 
   memberships, err := membershipsService.GetMembershipsForUser ("_27_1")
 
-  if (nil == memberships) || (nil != err) {
-    t.Error ("Failed to obtain the list of course memberships.\n")
+  if (nil == memberships) || (error2.RestError{} != err) {
+    t.Error ("Failed to obtain the list of course memberships (user).\n")
 
     return
   }
@@ -110,5 +113,28 @@ func _testGetCourseMembershipsByUserPrimaryId (t *testing.T) {
 
       return
     }
+  }
+}
+
+/**
+ * The [_testGetMembershipByCourseAndUserPrimaryIds] function...
+ */
+func _testGetMembershipByCourseAndUserPrimaryIds (t *testing.T) {
+  println ("Get a membership by the course and user primary ID's.")
+
+  membershipsService := _getCourseMembershipsInstance()
+
+  membership, err := membershipsService.GetMembership ("_121_1", "_27_1")
+
+  if (course_memberships.Membership{} == membership) ||
+     (nil != err) ||
+     (error2.RestError{} != err) {
+    t.Error ("Failed to obtain the membership for the course and user.")
+
+    return
+  }
+
+  if ("_121_1" != membership.CourseId) && ("_27_1" != membership.UserId) {
+    t.Error ("Membership retrieved does not match what was specified.")
   }
 }

@@ -42,7 +42,7 @@ type _BbRestCourseMemberships struct {
 
   accessToken oauth2.AccessToken
 
-  service services.BlackboardRestServices
+  service services.BlackboardRestService
 
   CourseMemberships
 }
@@ -89,6 +89,35 @@ func (restMemberships *_BbRestCourseMemberships) GetMembershipsForUser (
 }
 
 /**
+ * The [GetMembership] method...
+ */
+func (restMemberships *_BbRestCourseMemberships) GetMembership (
+  courseId string, userId string,
+) (course_memberships.Membership, error) {
+  var courseMembership course_memberships.Membership
+  var err error
+  var result interface{}
+
+  endpoint := config.CourseMembershipsEndpoints()["membership"]
+  endpoint = strings.Replace (endpoint, "{courseId}", courseId, -1)
+  endpoint = strings.Replace (endpoint, "{userId}", userId, -1)
+
+  result, err = restMemberships.service.Connector.SendBbRequest (
+    endpoint, "GET", make(map[string]interface{}), 1,
+  )
+
+  if (nil != err) && (error2.RestError{} != err) {
+    err = restMemberships.HandleError (err.(error2.RestError))
+
+    return courseMembership, err
+  }
+
+  courseMembership = factory.NewMembership (result.(map[string]interface{}))
+
+  return courseMembership, err
+}
+
+/**
  * The [_getMemberships] method...
  */
 func (restMemberships *_BbRestCourseMemberships) _getMemberships (
@@ -111,7 +140,7 @@ func (restMemberships *_BbRestCourseMemberships) _getMemberships (
   rawMemberships := result.(map[string]interface{})["results"]
 
   courseMemberships = factory.NewMemberships (
-    rawMemberships.([]map[string]interface{}),
+    _normalizeRawMemberships (rawMemberships.([]interface{})),
   )
 
   return courseMemberships, err
@@ -132,4 +161,19 @@ func (restMemberships *_BbRestCourseMemberships) HandleError (
   membershipsErr.SetExtraInfo (err.ExtraInfo())
 
   return membershipsErr
+}
+
+/**
+ * The [_normalizeRawMemberships] function...
+ */
+func _normalizeRawMemberships (
+  rawMemberships []interface{},
+) []map[string]interface{} {
+  var mappedRawMemberships = make ([]map[string]interface{}, len (rawMemberships))
+
+  for i, rawMembership := range rawMemberships {
+    mappedRawMemberships[i] = rawMembership.(map[string]interface{})
+  }
+
+  return mappedRawMemberships
 }

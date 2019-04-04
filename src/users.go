@@ -32,7 +32,7 @@ type _BbRestUsers struct {
 
   accessToken oauth2.AccessToken
 
-  service services.BlackboardRestServices
+  service services.BlackboardRestService
 
   Users
 }

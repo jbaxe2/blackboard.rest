@@ -7,24 +7,24 @@ import (
 )
 
 /**
- * The [BbRestServices] interface...
+ * The [BbRestService] interface...
  */
-type BbRestServices interface {
+type BbRestService interface {
   HandleError (err error) error2.RestError
 }
 
 /**
- * The [BlackboardRestServices] type...
+ * The [BlackboardRestService] type...
  */
-type BlackboardRestServices struct {
+type BlackboardRestService struct {
   Connector connector.BbRestConnector
 
-  BbRestServices
+  BbRestService
 }
 
 /**
  * The [SetAccessToken] method...
  */
-func (services *BlackboardRestServices) SetAccessToken (token oauth2.AccessToken) {
+func (services *BlackboardRestService) SetAccessToken (token oauth2.AccessToken) {
   services.Connector.SetAccessToken (token)
 }

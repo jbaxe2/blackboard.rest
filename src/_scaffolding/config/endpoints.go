@@ -56,3 +56,15 @@ func UsersEndpoints() map[string]string {
 
   return endpoints
 }
+
+/**
+ * The [SystemEndpoints] function...
+ */
+func SystemEndpoints() map[string]string {
+  endpoints := make (map[string]string)
+
+  endpoints["policies"] = "system/policies/privacy"
+  endpoints["version"] = "system/version"
+
+  return endpoints
+}

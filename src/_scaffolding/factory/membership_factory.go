@@ -13,8 +13,8 @@ func NewMemberships (
 ) []course_memberships.Membership {
   memberships := make ([]course_memberships.Membership, len (rawMemberships))
 
-  for _, rawMembership := range rawMemberships {
-    memberships = append (memberships, NewMembership (rawMembership))
+  for i, rawMembership := range rawMemberships {
+    memberships[i] = NewMembership (rawMembership)
   }
 
   return memberships
