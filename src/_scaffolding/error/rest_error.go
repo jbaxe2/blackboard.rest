@@ -11,56 +11,36 @@ type RestableError interface {
  * The [RestError] type...
  */
 type RestError struct {
-  status float64
+  Status float64
 
-  code, message, developerMessage, extraInfo string
+  Code, Message, DeveloperMessage, ExtraInfo string
 
   RestableError
 }
 
-func (err *RestError) Status() float64 {
-  return err.status
-}
+/**
+ * The [CoursesError] type...
+ */
+type CoursesError RestError
 
-func (err *RestError) Code() string {
-  return err.code
-}
+/**
+ * The [UsersError] type...
+ */
+type UsersError RestError
 
-func (err *RestError) Message() string {
-  return err.message
-}
+/**
+ * The [CourseMembershipsError] type...
+ */
+type CourseMembershipsError RestError
 
-func (err *RestError) DeveloperMessage() string {
-  return err.developerMessage
-}
-
-func (err *RestError) ExtraInfo() string {
-  return err.extraInfo
-}
-
-func (err *RestError) SetStatus (status float64) {
-  err.status = status
-}
-
-func (err *RestError) SetCode (code string) {
-  err.code = code
-}
-
-func (err *RestError) SetMessage (message string) {
-  err.message = message
-}
-
-func (err *RestError) SetDeveloperMessage (developerMessage string) {
-  err.developerMessage = developerMessage
-}
-
-func (err *RestError) SetExtraInfo (extraInfo string) {
-  err.extraInfo = extraInfo
-}
+/**
+ * The [SystemError] type...
+ */
+type SystemError RestError
 
 /**
  * The [Error] method...
  */
 func (err RestError) Error() string {
-  return "Error (" + err.Code() + "): " + err.Message()
+  return "Error (" + err.Code + "): " + err.Message
 }

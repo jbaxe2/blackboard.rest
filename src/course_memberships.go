@@ -107,9 +107,7 @@ func (restMemberships *_BbRestCourseMemberships) GetMembership (
   )
 
   if (nil != err) && (error2.RestError{} != err) {
-    err = restMemberships.HandleError (err.(error2.RestError))
-
-    return courseMembership, err
+    return courseMembership, err.(error2.CourseMembershipsError)
   }
 
   courseMembership = factory.NewMembership (result.(map[string]interface{}))
@@ -132,9 +130,7 @@ func (restMemberships *_BbRestCourseMemberships) _getMemberships (
   )
 
   if (nil != err) && (error2.RestError{} != err) {
-    err = restMemberships.HandleError (err.(error2.RestError))
-
-    return courseMemberships, err
+    return courseMemberships, err.(error2.CourseMembershipsError)
   }
 
   rawMemberships := result.(map[string]interface{})["results"]
@@ -144,23 +140,6 @@ func (restMemberships *_BbRestCourseMemberships) _getMemberships (
   )
 
   return courseMemberships, err
-}
-
-/**
- * The [HandleError] method...
- */
-func (restMemberships *_BbRestCourseMemberships) HandleError (
-  err error2.RestError,
-) error2.CourseMembershipsError {
-  membershipsErr := error2.CourseMembershipsError{}
-
-  membershipsErr.SetStatus (err.Status())
-  membershipsErr.SetCode (err.Code())
-  membershipsErr.SetMessage (err.Message())
-  membershipsErr.SetDeveloperMessage (err.DeveloperMessage())
-  membershipsErr.SetExtraInfo (err.ExtraInfo())
-
-  return membershipsErr
 }
 
 /**

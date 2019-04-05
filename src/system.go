@@ -49,7 +49,7 @@ func GetSystemInstance (
 func (restSystem *_BbRestSystem) GetVersion() (system.VersionInfo, error) {
   var version system.VersionInfo
   var err error
-  var result interface{}
+  //var result interface{}
 
   return version, err
 }

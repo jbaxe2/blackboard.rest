@@ -124,10 +124,10 @@ func _testGetMembershipByCourseAndUserPrimaryIds (t *testing.T) {
 
   membershipsService := _getCourseMembershipsInstance()
 
-  membership, err := membershipsService.GetMembership ("_121_1", "_27_1")
+  membership, err :=
+    membershipsService.GetMembership ("_121_1", "_27_1")
 
   if (course_memberships.Membership{} == membership) ||
-     (nil != err) ||
      (error2.RestError{} != err) {
     t.Error ("Failed to obtain the membership for the course and user.")
 

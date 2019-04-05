@@ -4,14 +4,14 @@ package system
  * The [VersionInfo] type...
  */
 type VersionInfo struct {
-  learn Version
+  Learn Version
 }
 
 /**
  * The [Version] type...
  */
 type Version struct {
-  major, minor, patch int
+  Major, Minor, Patch int
 
-  build string
+  Build string
 }

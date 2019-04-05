@@ -145,23 +145,23 @@ func _checkForError (potentialError interface{}) error2.RestableError {
     errorMap := potentialError.(map[string]interface{})
 
     if nil != errorMap["status"] {
-      err.SetStatus (errorMap["status"].(float64))
+      err.Status = errorMap["status"].(float64)
     }
 
     if nil != errorMap["code"] {
-      err.SetCode (errorMap["code"].(string))
+      err.Code = errorMap["code"].(string)
     }
 
     if nil != errorMap["message"] {
-      err.SetMessage (errorMap["message"].(string))
+      err.Message = errorMap["message"].(string)
     }
 
     if nil != errorMap["developerMessage"] {
-      err.SetDeveloperMessage (errorMap["developerMessage"].(string))
+      err.DeveloperMessage = errorMap["developerMessage"].(string)
     }
 
     if nil != errorMap["extraInfo"] {
-      err.SetExtraInfo (errorMap["extraInfo"].(string))
+      err.ExtraInfo = errorMap["extraInfo"].(string)
     }
   }
 

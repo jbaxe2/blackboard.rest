@@ -1,5 +1,14 @@
 **blackboard.rest (Go)**
 
+## 0.0.10
+- Start of CourseGrades code.
+- Start of Announcements code.
+- Start of Contents code.
+- Start of CourseGroups code.
+- Start of Roles code.
+- Start of Terms code.
+- Refactored to greatly simplify error types.
+
 ## 0.0.9
 - Start of System code.
 

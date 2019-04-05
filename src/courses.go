@@ -87,25 +87,10 @@ func (restCourses *_BbRestCourses) GetCourse (courseId string) (courses.Course, 
   )
 
   if (nil != err) && (error2.RestError{} != err) {
-    return course, restCourses.HandleError (err.(error2.RestError))
+    return course, err.(error2.CoursesError)
   }
 
   course = factory.NewCourse (result.(map[string]interface{}))
 
   return course, err
-}
-
-/**
- * The [HandleError] method...
- */
-func (restCourses *_BbRestCourses) HandleError (err error2.RestError) error2.CoursesError {
-  coursesErr := error2.CoursesError{}
-
-  coursesErr.SetStatus (err.Status())
-  coursesErr.SetCode (err.Code())
-  coursesErr.SetMessage (err.Message())
-  coursesErr.SetDeveloperMessage (err.DeveloperMessage())
-  coursesErr.SetExtraInfo (err.ExtraInfo())
-
-  return coursesErr
 }

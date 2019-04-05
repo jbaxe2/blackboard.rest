@@ -75,25 +75,10 @@ func (restUsers *_BbRestUsers) GetUser (userId string) (users.User, error) {
   )
 
   if (nil != err) && (error2.RestError{} != err) {
-    return user, restUsers.HandleError (err.(error2.RestError))
+    return user, err.(error2.UsersError)
   }
 
   user = factory.NewUser (result.(map[string]interface{}))
 
   return user, err
-}
-
-/**
- * The [HandleError] method...
- */
-func (restUsers *_BbRestUsers) HandleError (err error2.RestError) error2.UsersError {
-  usersErr := error2.UsersError{}
-
-  usersErr.SetStatus (err.Status())
-  usersErr.SetCode (err.Code())
-  usersErr.SetMessage (err.Message())
-  usersErr.SetDeveloperMessage (err.DeveloperMessage())
-  usersErr.SetExtraInfo (err.ExtraInfo())
-
-  return usersErr
 }
