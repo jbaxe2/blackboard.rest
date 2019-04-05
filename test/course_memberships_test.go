@@ -51,6 +51,7 @@ func _testGetCourseMembershipsInstance (t *testing.T) {
 
   if nil == courseMembershipsService {
     t.Error ("Obtaining a valid CourseMemberships instance failed.\n")
+    t.FailNow()
   }
 }
 
@@ -66,21 +67,18 @@ func _testGetCourseMembershipsByCoursePrimaryId (t *testing.T) {
 
   if (nil == memberships) || (error2.RestError{} != err) {
     t.Error ("Failed to obtain the list of course memberships (course).\n")
-
-    return
+    t.FailNow()
   }
 
   if 0 == len (memberships) {
     t.Error ("Retrieved an empty list of enrollments that should not be empty.")
-
-    return
+    t.FailNow()
   }
 
   for _, membership := range memberships {
     if "_121_1" != membership.CourseId {
       t.Error ("Membership retrieved does not match what was specified.")
-
-      return
+      t.FailNow()
     }
   }
 }
@@ -97,21 +95,18 @@ func _testGetCourseMembershipsByUserPrimaryId (t *testing.T) {
 
   if (nil == memberships) || (error2.RestError{} != err) {
     t.Error ("Failed to obtain the list of course memberships (user).\n")
-
-    return
+    t.FailNow()
   }
 
   if 0 == len (memberships) {
     t.Error ("Retrieved an empty list of enrollments that should not be empty.")
-
-    return
+    t.FailNow()
   }
 
   for _, membership := range memberships {
     if "_27_1" != membership.UserId {
       t.Error ("Membership retrieved does not match what was specified.")
-
-      return
+      t.FailNow()
     }
   }
 }
@@ -130,8 +125,7 @@ func _testGetMembershipByCourseAndUserPrimaryIds (t *testing.T) {
   if (course_memberships.Membership{} == membership) ||
      (error2.RestError{} != err) {
     t.Error ("Failed to obtain the membership for the course and user.")
-
-    return
+    t.FailNow()
   }
 
   if ("_121_1" != membership.CourseId) && ("_27_1" != membership.UserId) {

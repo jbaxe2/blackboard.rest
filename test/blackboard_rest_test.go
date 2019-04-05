@@ -42,5 +42,8 @@ func (tester *BlackboardRestTester) Run() {
   membershipsTester := CourseMembershipsTester {t: tester.t}
   membershipsTester.Run()
 
+  termsTester := TermsTester {t: tester.t}
+  termsTester.Run()
+
   println()
 }

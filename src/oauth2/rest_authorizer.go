@@ -83,7 +83,7 @@ func (authorizer *_RestAuthorizer) RequestAuthorization() (AccessToken, error) {
 
   request.URL, err = url.Parse (
     authorizer.host.String() + config.Base +
-    config.OAuth2Endpoints()["request_token"],
+    config.OAuth2Endpoints["request_token"],
   )
 
   if nil != err {
@@ -129,7 +129,7 @@ func (authorizer *_RestUserAuthorizer) RequestAuthorizationCode (
   }
 
   authorizeUriStr := authorizer.host.String() + config.Base +
-    config.OAuth2Endpoints()["authorization_code"] + "?redirect_uri=" +
+    config.OAuth2Endpoints["authorization_code"] + "?redirect_uri=" +
     encoded.String() + "&client_id=" + authorizer.clientId +
     "&response_type=code&scope=read"
 
@@ -164,7 +164,7 @@ func (authorizer *_RestUserAuthorizer) RequestUserAuthorization (
   }
 
   authCodeUriStr := authorizer.host.String() + config.Base +
-    config.OAuth2Endpoints()["authorization_code"] + "?code=" + authCode +
+    config.OAuth2Endpoints["authorization_code"] + "?code=" + authCode +
     encodedRedirect
 
   request := new (http.Request)

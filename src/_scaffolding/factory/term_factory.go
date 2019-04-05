@@ -46,15 +46,27 @@ func _parseTermAvailability (rawAvailability interface{}) terms.TermAvailability
  * The [_parseDuration] function...
  */
 func _parseDuration (rawDuration interface{}) terms.TermDuration {
+  var start, end time.Time
+
   mappedDuration := rawDuration.(map[string]interface{})
 
-  start, _ := time.Parse (time.RFC3339, mappedDuration["start"].(string))
-  end, _ := time.Parse (time.RFC3339, mappedDuration["end"].(string))
+  if nil != mappedDuration["start"] {
+    start, _ = time.Parse(time.RFC3339, mappedDuration["start"].(string))
+  }
 
-  return terms.TermDuration {
+  if nil != mappedDuration["end"] {
+    end, _ = time.Parse(time.RFC3339, mappedDuration["end"].(string))
+  }
+
+  termDuration := terms.TermDuration {
     Type: terms.DurationType (mappedDuration["type"].(string)),
     Start: start,
     End: end,
-    DaysOfUse: mappedDuration["daysOfUse"].(int),
   }
+
+  if nil != mappedDuration["daysOfUse"] {
+    termDuration.DaysOfUse = mappedDuration["daysOfUse"].(int)
+  }
+
+  return termDuration
 }

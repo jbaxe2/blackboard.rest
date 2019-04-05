@@ -5,66 +5,54 @@ const Base = "/learn/api/public/v1/"
 const BaseV2 = "/learn/api/public/v2/"
 
 /**
- * The [OAuth2Endpoints] function...
+ * The [OAuth2Endpoints] map...
  */
-func OAuth2Endpoints() map[string]string {
-  endpoints := make (map[string]string)
-
-  endpoints["authorization_code"] = "oauth2/authorizationcode"
-  endpoints["request_token"] = "oauth2/token"
-
-  return endpoints
+var OAuth2Endpoints = map[string]string {
+  "authorization_code": "oauth2/authorizationcode",
+  "request_token": "oauth2/token",
 }
 
 /**
- * The [CourseMembershipsEndpoints] function...
+ * The [CourseMembershipsEndpoints] map...
  */
-func CourseMembershipsEndpoints() map[string]string {
-  endpoints := make (map[string]string)
-
-  endpoints["course_memberships"] = "courses/{courseId}/users"
-  endpoints["user_memberships"] = "users/{userId}/courses"
-  endpoints["membership"] = "courses/{courseId}/users/{userId}"
-
-  return endpoints
+var CourseMembershipsEndpoints = map[string]string {
+  "course_memberships": "courses/{courseId}/users",
+  "user_memberships": "users/{userId}/courses",
+  "membership": "courses/{courseId}/users/{userId}",
 }
 
 /**
- * The [CoursesEndpoints] function...
+ * The [CoursesEndpoints] map...
  */
-func CoursesEndpoints() map[string]string {
-  endpoints := make (map[string]string)
-
-  endpoints["courses"] = "courses"
-  endpoints["course"] = "courses/{courseId}"
-  endpoints["children"] = "courses/{courseId}/children"
-  endpoints["child"] = "courses/{courseId}/children/{childCourseId}"
-  endpoints["crossListSet"] = "courses/{courseId}/crossListSet"
-  endpoints["copy"] = "courses/{courseId}/copy"
-
-  return endpoints
+var CoursesEndpoints = map[string]string {
+  "courses": "courses",
+  "course": "courses/{courseId}",
+  "children": "courses/{courseId}/children",
+  "child": "courses/{courseId}/children/{childCourseId}",
+  "crossListSet": "courses/{courseId}/crossListSet",
+  "copy": "courses/{courseId}/copy",
 }
 
 /**
- * The [UsersEndpoints] function...
+ * The [SystemEndpoints] map...
  */
-func UsersEndpoints() map[string]string {
-  endpoints := make (map[string]string)
-
-  endpoints["users"] = "users"
-  endpoints["user"] = "users/{userId}"
-
-  return endpoints
+var SystemEndpoints = map[string]string {
+  "policies":"system/policies/privacy",
+  "version": "system/version",
 }
 
 /**
- * The [SystemEndpoints] function...
+ * The [TermsEndpoints] map...
  */
-func SystemEndpoints() map[string]string {
-  endpoints := make (map[string]string)
+var TermsEndpoints = map[string]string {
+  "terms": "terms",
+  "term": "terms/{termId}",
+}
 
-  endpoints["policies"] = "system/policies/privacy"
-  endpoints["version"] = "system/version"
-
-  return endpoints
+/**
+ * The [UsersEndpoints] map...
+ */
+var UsersEndpoints = map[string]string {
+  "users": "users",
+  "user": "users/{userId}",
 }

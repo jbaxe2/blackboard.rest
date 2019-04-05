@@ -19,14 +19,14 @@ type RestError struct {
 }
 
 /**
- * The [CoursesError] type...
+ * The [OAuth2Error] type...
  */
-type CoursesError RestError
+type OAuth2Error RestError
 
 /**
- * The [UsersError] type...
+ * The [CourseGradesError] type...
  */
-type UsersError RestError
+type CourseGradesError RestError
 
 /**
  * The [CourseMembershipsError] type...
@@ -34,9 +34,29 @@ type UsersError RestError
 type CourseMembershipsError RestError
 
 /**
+ * The [CoursesError] type...
+ */
+type CoursesError RestError
+
+/**
+ * The [RolesError] type...
+ */
+type RolesError RestError
+
+/**
  * The [SystemError] type...
  */
 type SystemError RestError
+
+/**
+ * The [TermsError] type...
+ */
+type TermsError RestError
+
+/**
+ * The [UsersError] type...
+ */
+type UsersError RestError
 
 /**
  * The [Error] method...

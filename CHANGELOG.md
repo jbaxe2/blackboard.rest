@@ -1,5 +1,9 @@
 **blackboard.rest (Go)**
 
+## 0.0.11
+- Refactored endpoints to simplify their use, refactoring as necessary.
+- More work on Terms code.
+
 ## 0.0.10
 - Start of CourseGrades code.
 - Start of Announcements code.

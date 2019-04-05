@@ -79,7 +79,7 @@ func (restCourses *_BbRestCourses) GetCourse (courseId string) (courses.Course, 
   var err error
   var result interface{}
 
-  endpoint := config.CoursesEndpoints()["course"]
+  endpoint := config.CoursesEndpoints["course"]
   endpoint = strings.Replace (endpoint, "{courseId}", courseId, -1)
 
   result, err = restCourses.service.Connector.SendBbRequest (

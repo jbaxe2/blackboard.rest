@@ -70,7 +70,7 @@ func GetCourseMembershipsInstance (
 func (restMemberships *_BbRestCourseMemberships) GetMembershipsForCourse (
   courseId string,
 ) ([]course_memberships.Membership, error) {
-  endpoint := config.CourseMembershipsEndpoints()["course_memberships"]
+  endpoint := config.CourseMembershipsEndpoints["course_memberships"]
   endpoint = strings.Replace (endpoint, "{courseId}", courseId, -1)
 
   return restMemberships._getMemberships (endpoint, make(map[string]interface{}))
@@ -82,7 +82,7 @@ func (restMemberships *_BbRestCourseMemberships) GetMembershipsForCourse (
 func (restMemberships *_BbRestCourseMemberships) GetMembershipsForUser (
   userId string,
 ) ([]course_memberships.Membership, error) {
-  endpoint := config.CourseMembershipsEndpoints()["user_memberships"]
+  endpoint := config.CourseMembershipsEndpoints["user_memberships"]
   endpoint = strings.Replace (endpoint, "{userId}", userId, -1)
 
   return restMemberships._getMemberships (endpoint, make(map[string]interface{}))
@@ -98,7 +98,7 @@ func (restMemberships *_BbRestCourseMemberships) GetMembership (
   var err error
   var result interface{}
 
-  endpoint := config.CourseMembershipsEndpoints()["membership"]
+  endpoint := config.CourseMembershipsEndpoints["membership"]
   endpoint = strings.Replace (endpoint, "{courseId}", courseId, -1)
   endpoint = strings.Replace (endpoint, "{userId}", userId, -1)
 
@@ -148,7 +148,7 @@ func (restMemberships *_BbRestCourseMemberships) _getMemberships (
 func _normalizeRawMemberships (
   rawMemberships []interface{},
 ) []map[string]interface{} {
-  var mappedRawMemberships = make ([]map[string]interface{}, len (rawMemberships))
+  mappedRawMemberships := make ([]map[string]interface{}, len (rawMemberships))
 
   for i, rawMembership := range rawMemberships {
     mappedRawMemberships[i] = rawMembership.(map[string]interface{})

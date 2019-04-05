@@ -48,6 +48,7 @@ func _testGetCoursesInstance (t *testing.T) {
 
   if nil == coursesService {
     t.Error ("Obtaining a valid Courses service instance failed.")
+    t.FailNow()
   }
 }
 
@@ -62,11 +63,11 @@ func _testGetCourseByPrimaryId (t *testing.T) {
 
   if (nil != err) && (error2.RestError{} != err) {
     t.Error ("Error while retrieving the course:\n" + err.Error())
-
-    return
+    t.FailNow()
   }
 
   if "_101_1" != course.Id {
     t.Error ("The course retrieved does not match the one selected.")
+    t.FailNow()
   }
 }

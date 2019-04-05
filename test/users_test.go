@@ -48,6 +48,7 @@ func _testGetUsersInstance (t *testing.T) {
 
   if nil == usersService {
     t.Error ("Obtaining a valid Users service instance failed.\n")
+    t.FailNow()
   }
 }
 
@@ -62,8 +63,7 @@ func _testGetUserByPrimaryId (t *testing.T) {
 
   if (nil != err) && (error2.RestError{} != err) {
     t.Error ("Error while retrieving the user:\n" + err.Error())
-
-    return
+    t.FailNow()
   }
 
   if "_27_1" != user.Id {
