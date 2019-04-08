@@ -6,6 +6,21 @@ import (
 )
 
 /**
+ * The [NewColumnAttempts] function...
+ */
+func NewColumnAttempts (
+  rawColumnAttempts []map[string]interface{},
+) []course_grades.Attempt {
+  attempts := make ([]course_grades.Attempt, len (rawColumnAttempts))
+
+  for i, rawAttempt := range rawColumnAttempts {
+    attempts[i] = NewColumnAttempt (rawAttempt)
+  }
+
+  return attempts
+}
+
+/**
  * The [NewColumnAttempt] function...
  */
 func NewColumnAttempt (

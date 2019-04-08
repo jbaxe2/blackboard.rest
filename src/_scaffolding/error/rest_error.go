@@ -11,9 +11,7 @@ type RestableError interface {
  * The [RestError] type...
  */
 type RestError struct {
-  Status float64
-
-  Code, Message, DeveloperMessage, ExtraInfo string
+  Status, Code, Message, DeveloperMessage, ExtraInfo string
 
   RestableError
 }
@@ -21,42 +19,42 @@ type RestError struct {
 /**
  * The [OAuth2Error] type...
  */
-type OAuth2Error RestError
+type OAuth2Error = RestError
 
 /**
  * The [CourseGradesError] type...
  */
-type CourseGradesError RestError
+type CourseGradesError = RestError
 
 /**
  * The [CourseMembershipsError] type...
  */
-type CourseMembershipsError RestError
+type CourseMembershipsError = RestError
 
 /**
  * The [CoursesError] type...
  */
-type CoursesError RestError
+type CoursesError = RestError
 
 /**
  * The [RolesError] type...
  */
-type RolesError RestError
+type RolesError = RestError
 
 /**
  * The [SystemError] type...
  */
-type SystemError RestError
+type SystemError = RestError
 
 /**
  * The [TermsError] type...
  */
-type TermsError RestError
+type TermsError = RestError
 
 /**
  * The [UsersError] type...
  */
-type UsersError RestError
+type UsersError = RestError
 
 /**
  * The [Error] method...

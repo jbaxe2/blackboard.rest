@@ -73,7 +73,7 @@ func (restMemberships *_BbRestCourseMemberships) GetMembershipsForCourse (
   endpoint := config.CourseMembershipsEndpoints["course_memberships"]
   endpoint = strings.Replace (endpoint, "{courseId}", courseId, -1)
 
-  return restMemberships._getMemberships (endpoint, make(map[string]interface{}))
+  return restMemberships._getMemberships (endpoint, make (map[string]interface{}))
 }
 
 /**
@@ -85,7 +85,7 @@ func (restMemberships *_BbRestCourseMemberships) GetMembershipsForUser (
   endpoint := config.CourseMembershipsEndpoints["user_memberships"]
   endpoint = strings.Replace (endpoint, "{userId}", userId, -1)
 
-  return restMemberships._getMemberships (endpoint, make(map[string]interface{}))
+  return restMemberships._getMemberships (endpoint, make (map[string]interface{}))
 }
 
 /**
@@ -103,7 +103,7 @@ func (restMemberships *_BbRestCourseMemberships) GetMembership (
   endpoint = strings.Replace (endpoint, "{userId}", userId, -1)
 
   result, err = restMemberships.service.Connector.SendBbRequest (
-    endpoint, "GET", make(map[string]interface{}), 1,
+    endpoint, "GET", make (map[string]interface{}), 1,
   )
 
   if (nil != err) && (error2.RestError{} != err) {

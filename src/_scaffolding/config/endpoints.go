@@ -13,6 +13,17 @@ var OAuth2Endpoints = map[string]string {
 }
 
 /**
+ * The [CourseGradesEndpoints] map...
+ */
+var CourseGradesEndpoints = map[string]string {
+  "grade_columns": "courses/{courseId}/gradebook/columns",
+  "grade_column": "courses/{courseId}/gradebook/columns/{columnId}",
+  "column_attempts": "courses/{courseId}/gradebook/columns/{columnId}/attempts",
+  "column_attempt":
+    "courses/{courseId}/gradebook/columns/{columnId}/attempts/{attemptId}",
+}
+
+/**
  * The [CourseMembershipsEndpoints] map...
  */
 var CourseMembershipsEndpoints = map[string]string {

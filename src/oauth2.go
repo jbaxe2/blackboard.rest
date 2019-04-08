@@ -1,7 +1,6 @@
 package blackboard_rest
 
 import (
-  error2 "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/error"
   "github.com/jbaxe2/blackboard.rest.go/src/oauth2"
   "net/http"
   "net/url"
@@ -70,7 +69,7 @@ func (restOAuth2 *_BbRestOAuth2) GetAuthorizationCode (
     redirectUri.String(), response,
   )
 
-  return err.(error2.OAuth2Error)
+  return err
 }
 
 /**
@@ -93,7 +92,7 @@ func (restOAuth2 *_BbRestOAuth2) RequestToken (
       userAuthorizer.RequestUserAuthorization (code, redirectUri.String())
   }
 
-  return accessToken, err.(error2.OAuth2Error)
+  return accessToken, err
 }
 
 /**

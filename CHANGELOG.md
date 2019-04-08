@@ -1,5 +1,11 @@
 **blackboard.rest (Go)**
 
+## 0.1.0
+- Reached feature parity with the Dart version of blackboard.rest.
+
+## 0.0.11+1
+- More work on CourseGrades and System code.
+
 ## 0.0.11
 - Refactored endpoints to simplify their use, refactoring as necessary.
 - More work on Terms code.

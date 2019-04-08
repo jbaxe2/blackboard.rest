@@ -82,10 +82,16 @@ func (connector *BbRestConnector) SendBbRequest (
   }
 
   responseBytes, err = ioutil.ReadAll (response.Body)
+  println (string (responseBytes))
 
   err = json.Unmarshal (responseBytes, &result)
   err = response.Body.Close()
-  err = _checkForError (result)
+
+  if response.StatusCode >= 300 {
+    err = _checkForError (result)
+  } else {
+    err = error2.RestError{}
+  }
 
   return result, err
 }
@@ -145,7 +151,7 @@ func _checkForError (potentialError interface{}) error2.RestableError {
     errorMap := potentialError.(map[string]interface{})
 
     if nil != errorMap["status"] {
-      err.Status = errorMap["status"].(float64)
+      err.Status = errorMap["status"].(string)
     }
 
     if nil != errorMap["code"] {

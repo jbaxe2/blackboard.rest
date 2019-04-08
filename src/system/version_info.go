@@ -11,7 +11,7 @@ type VersionInfo struct {
  * The [Version] type...
  */
 type Version struct {
-  Major, Minor, Patch int
+  Major, Minor, Patch float64
 
   Build string
 }

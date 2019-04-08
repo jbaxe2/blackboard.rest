@@ -16,9 +16,9 @@ func NewVersionInfo (rawVersionInfo map[string]interface{}) system.VersionInfo {
  */
 func _parseVersion (rawVersion map[string]interface{}) system.Version {
   return system.Version {
-    Major: rawVersion["major"].(int),
-    Minor: rawVersion["minor"].(int),
-    Patch: rawVersion["patch"].(int),
+    Major: rawVersion["major"].(float64),
+    Minor: rawVersion["minor"].(float64),
+    Patch: rawVersion["patch"].(float64),
     Build: rawVersion["build"].(string),
   }
 }
