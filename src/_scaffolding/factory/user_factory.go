@@ -57,7 +57,7 @@ func _parseInstitutionRoles (rawInstitutionRoles []interface{}) []string {
  * The [_parseSystemRoles] function...
  */
 func _parseSystemRoles (rawSystemRoles []interface{}) []users.SystemRole {
-  var systemRoles = make ([]users.SystemRole, len(rawSystemRoles))
+  var systemRoles = make ([]users.SystemRole, len (rawSystemRoles))
 
   for i, role := range rawSystemRoles {
     systemRoles[i] = users.SystemRole (role.(string))

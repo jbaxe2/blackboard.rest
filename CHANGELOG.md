@@ -1,5 +1,11 @@
 **blackboard.rest (Go)**
 
+## 0.1.0+2
+- Minor refactoring.
+
+## 0.1.0+1
+- All tests pass.
+
 ## 0.1.0
 - Reached feature parity with the Dart version of blackboard.rest.
 

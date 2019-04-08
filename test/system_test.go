@@ -63,7 +63,7 @@ func _testGetVersion (t *testing.T) {
 
   versionInfo, err := systemService.GetVersion()
 
-  if (system.VersionInfo{} == versionInfo) || (error2.RestError{} == err) {
+  if (system.VersionInfo{} == versionInfo) || (error2.RestError{} != err) {
     t.Error ("Failed to obtain the Blackboard Learn version information.")
     t.FailNow()
   }

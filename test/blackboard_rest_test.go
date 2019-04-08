@@ -30,12 +30,12 @@ type BlackboardRestTester struct {
  * The [Run] method...
  */
 func (tester *BlackboardRestTester) Run() {
-  //oauth2Tester := OAuth2Tester {t: tester.t}
-  //oauth2Tester.Run()
+  oauth2Tester := OAuth2Tester {t: tester.t}
+  oauth2Tester.Run()
 
   systemTester := SystemTester {t: tester.t}
   systemTester.Run()
-/*
+
   usersTester := UsersTester {t: tester.t}
   usersTester.Run()
 
@@ -50,6 +50,6 @@ func (tester *BlackboardRestTester) Run() {
 
   courseGradesTester := CourseGradesTester {t: tester.t}
   courseGradesTester.Run()
-*/
+
   println()
 }

@@ -58,9 +58,7 @@ func (connector *BbRestConnector) SendBbRequest (
     base = config.BaseV2
   }
 
-  endpointUri, err = url.Parse (config.Host + base + endpoint)
-
-  if nil != err {
+  if endpointUri, err = url.Parse (config.Host + base + endpoint); nil != err {
     return result, err
   }
 
@@ -82,7 +80,6 @@ func (connector *BbRestConnector) SendBbRequest (
   }
 
   responseBytes, err = ioutil.ReadAll (response.Body)
-  println (string (responseBytes))
 
   err = json.Unmarshal (responseBytes, &result)
   err = response.Body.Close()
@@ -112,7 +109,7 @@ func _handleGetRequest (
       queryString += k + "=" + v.(string) + "&"
     }
 
-    endpoint.RawQuery = queryString[:(len(queryString) - 1)]
+    endpoint.RawQuery = queryString[:(len (queryString) - 1)]
   }
 
   request := new (http.Request)

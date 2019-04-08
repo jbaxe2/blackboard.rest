@@ -59,7 +59,7 @@ func (restSystem *_BbRestSystem) GetVersion() (system.VersionInfo, error) {
   )
 
   if (nil != err) && (error2.RestError{} != err) {
-    return version, err
+    return version, err.(error2.SystemError)
   }
 
   version = factory.NewVersionInfo (result.(map[string]interface{}))
