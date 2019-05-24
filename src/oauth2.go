@@ -75,18 +75,20 @@ func (restOAuth2 *_BbRestOAuth2) GetAuthorizationCode (
  */
 func (restOAuth2 *_BbRestOAuth2) RequestToken (
   grantType string, code string, redirectUri url.URL,
-) (oauth2.AccessToken, error) {println ("got into request token method")
+) (oauth2.AccessToken, error) {
   var accessToken oauth2.AccessToken
   var err error
-
+println ("before building the authorizer")
   restOAuth2._buildAuthorizer (grantType)
-
+println ("after building the authorizer")
   if "client_credentials" == grantType {
     accessToken, err = restOAuth2.authorizer.RequestAuthorization()
   } else if "authorization_code" == grantType {
+    println ("before requesting user authorization")
     accessToken, err = restOAuth2.userAuthorizer.RequestUserAuthorization (
       code, redirectUri.String(),
     )
+    println ("after requesting user authorization")
   }
 
   return accessToken, err
