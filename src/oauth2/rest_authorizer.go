@@ -152,7 +152,7 @@ func (authorizer *_RestUserAuthorizer) RequestAuthorizationCode (
  */
 func (authorizer *_RestUserAuthorizer) RequestUserAuthorization (
   authCode string, redirectUri string,
-) (AccessToken, error) {
+) (AccessToken, error) {println ("in request user auth, start")
   var accessToken AccessToken
   var err error
   var encodedRedirect string

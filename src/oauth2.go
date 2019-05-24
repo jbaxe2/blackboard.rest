@@ -4,6 +4,7 @@ import (
   "github.com/jbaxe2/blackboard.rest.go/src/oauth2"
   "net/http"
   "net/url"
+  "reflect"
 )
 
 /**
@@ -89,9 +90,11 @@ println ("after creating authorizer")
     println ("before casting rest user authorizer")
     userAuthorizer, _ := restOAuth2.authorizer.(oauth2.RestUserAuthorizer)
 println ("after casting rest authorizer")
-    println ("before requesting user authorization")
+    println ("before requesting user authorization...")
+    println (reflect.TypeOf (userAuthorizer))
     accessToken, err =
       userAuthorizer.RequestUserAuthorization (code, redirectUri.String())
+      println ("made it here...")
   }
 println ("after creating access token, or encountered error")
   return accessToken, err
