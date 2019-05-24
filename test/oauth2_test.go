@@ -64,8 +64,8 @@ func _testBuildClientRestAuthorizer (t *testing.T) {
     t.FailNow()
   }
 
-  restAuthorizer := (new (oauth2.AuthorizerFactory)).BuildAuthorizer (
-    *host, config.ClientId, config.Secret, "",
+  restAuthorizer := oauth2.NewRestAuthorizer (
+    *host, config.ClientId, config.Secret,
   )
 
   if nil == restAuthorizer {

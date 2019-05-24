@@ -1,7 +1,7 @@
 **blackboard.rest (Go)**
 
 ## 0.1.1
-- Reworked authorization scheme.
+- Reworking authorization scheme.
 
 ## 0.1.0+2
 - Minor refactoring.

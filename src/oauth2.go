@@ -75,7 +75,7 @@ func (restOAuth2 *_BbRestOAuth2) GetAuthorizationCode (
  */
 func (restOAuth2 *_BbRestOAuth2) RequestToken (
   grantType string, code string, redirectUri url.URL,
-) (oauth2.AccessToken, error) {
+) (oauth2.AccessToken, error) {println ("got into request token method")
   var accessToken oauth2.AccessToken
   var err error
 
