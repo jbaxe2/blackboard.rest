@@ -145,6 +145,8 @@ func (authorizer *RestUserAuthorizer) RequestUserAuthorization (
 println ("before setting up request client")
   request := new (http.Request)
   println ("before setting up basic auth")
+  println (authorizer.clientId)
+  println (authorizer.secret)
   request.SetBasicAuth (authorizer.clientId, authorizer.secret)
   println ("before parsing the auth code uri string")
   request.URL, err = url.Parse (authCodeUriStr)
