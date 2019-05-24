@@ -114,6 +114,13 @@ func (authorizer _RestAuthorizer) RequestAuthorization() (AccessToken, error) {
 }
 
 /**
+ * The [RequestAuthorization] method...
+ */
+func (authorizer _RestUserAuthorizer) RequestAuthorization() (AccessToken, error) {
+  return authorizer._RestAuthorizer.RequestAuthorization()
+}
+
+/**
  * The [RequestAuthorizationCode] method...
  */
 func (authorizer *_RestUserAuthorizer) RequestAuthorizationCode (
