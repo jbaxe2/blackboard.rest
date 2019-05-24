@@ -143,25 +143,24 @@ func (authorizer *RestUserAuthorizer) RequestUserAuthorization (
   authCodeUriStr := authorizer.host.String() + config.Base +
     config.OAuth2Endpoints["authorization_code"] + "?code=" + authCode +
     encodedRedirect
-println ("before setting up request client")
+
   request := new (http.Request)
-  println ("before setting up basic auth")
+
   encoded := base64.StdEncoding.EncodeToString (
     []byte (authorizer.clientId + ":" + authorizer.secret),
   )
-  println (encoded)
-  println (authorizer.clientId)
-  println (authorizer.secret)
-  request.SetBasicAuth (authorizer.clientId, authorizer.secret)
-  println ("before parsing the auth code uri string")
+
+  request.Header.Set ("Authorization", "Basic " + encoded)
+  //request.SetBasicAuth (authorizer.clientId, authorizer.secret)
+
   request.URL, err = url.Parse (authCodeUriStr)
-println ("before sending the client request")
+
   response, err  := (new (http.Client)).Do (request)
 
-  if nil != err {println ("encountered error: " + err.Error())
+  if nil != err {
     return accessToken, err
   }
-println ("before parsing the response")
+
   accessToken, err = _parseResponse (response)
 
   err = response.Body.Close()
