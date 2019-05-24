@@ -122,12 +122,11 @@ func (authorizer *RestUserAuthorizer) RequestAuthorizationCode (
 func (authorizer *RestUserAuthorizer) RequestUserAuthorization (
   authCode string, redirectUri string,
 ) (AccessToken, error) {
-  println ("in request user authorization, start")
   var accessToken AccessToken
   var err error
   var encodedRedirect string
   var parsedRedirect *url.URL
-println ("before setting up encoded redirect")
+
   if "" == redirectUri {
     encodedRedirect = ""
   } else {
@@ -139,13 +138,15 @@ println ("before setting up encoded redirect")
 
     encodedRedirect = "&redirect_uri=" + parsedRedirect.String()
   }
-println ("after setting up encoded redirect")
+
   authCodeUriStr := authorizer.host.String() + config.Base +
     config.OAuth2Endpoints["authorization_code"] + "?code=" + authCode +
     encodedRedirect
 println ("before setting up request client")
   request := new (http.Request)
+  println ("before setting up basic auth")
   request.SetBasicAuth (authorizer.clientId, authorizer.secret)
+  println ("before parsing the auth code uri string")
   request.URL, err = url.Parse (authCodeUriStr)
 println ("before sending the client request")
   response, err  := (new (http.Client)).Do (request)
