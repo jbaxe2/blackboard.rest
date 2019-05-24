@@ -1,6 +1,7 @@
 package oauth2
 
 import (
+  "encoding/base64"
   "encoding/json"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
   "io/ioutil"
@@ -145,6 +146,10 @@ func (authorizer *RestUserAuthorizer) RequestUserAuthorization (
 println ("before setting up request client")
   request := new (http.Request)
   println ("before setting up basic auth")
+  encoded := base64.StdEncoding.EncodeToString (
+    []byte (authorizer.clientId + ":" + authorizer.secret),
+  )
+  println (encoded)
   println (authorizer.clientId)
   println (authorizer.secret)
   request.SetBasicAuth (authorizer.clientId, authorizer.secret)
