@@ -1,7 +1,6 @@
 package oauth2
 
 import (
-  "encoding/base64"
   "encoding/json"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
   "io/ioutil"
@@ -143,20 +142,18 @@ func (authorizer *RestUserAuthorizer) RequestUserAuthorization (
   authCodeUriStr := authorizer.host.String() + config.Base +
     config.OAuth2Endpoints["authorization_code"] + "?code=" + authCode +
     encodedRedirect
-
-  request := new (http.Request)
-
-  encoded := base64.StdEncoding.EncodeToString (
-    []byte (authorizer.clientId + ":" + authorizer.secret),
-  )
-println ("before setting auth header")
-  request.Header.Set ("Authorization", "Basic " + encoded)
-  //request.SetBasicAuth (authorizer.clientId, authorizer.secret)
-println ("after setting auth header")
-  request.URL, err = url.Parse (authCodeUriStr)
-
+println ("before creating new request")
+  request, err := http.NewRequest ("GET", authCodeUriStr, nil)
+println ("after creating new request")
+  if nil != err {
+    return accessToken, err
+  }
+println ("before setting basic auth")
+  request.SetBasicAuth (authorizer.clientId, authorizer.secret)
+  //request.URL, err = url.Parse (authCodeUriStr)
+println ("after setting basic auth")
   response, err  := (new (http.Client)).Do (request)
-
+println ("after doing request")
   if nil != err {
     return accessToken, err
   }
