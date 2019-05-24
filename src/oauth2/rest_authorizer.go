@@ -10,71 +10,58 @@ import (
 )
 
 /**
- * The [RestAuthorizer] interface...
+ * The [Authorizer] interface...
  */
-type RestAuthorizer interface {
-  RequestAuthorization() (AccessToken, error)
-}
+type Authorizer interface {}
 
 /**
- * The [RestUserAuthorizer] interface...
+ * The [RestAuthorizer] type...
  */
-type RestUserAuthorizer interface {
-  RequestAuthorizationCode (redirectUri string, response http.Response)
-
-  RequestUserAuthorization (authCode string, redirectUri string) (AccessToken, error)
-
-  RestAuthorizer
-}
-
-/**
- * The [AuthorizerFactory] type...
- */
-type AuthorizerFactory struct {}
-
-/**
- * The [_RestAuthorizer] type...
- */
-type _RestAuthorizer struct {
+type RestAuthorizer struct {
   host url.URL
 
   clientId, secret string
 
-  RestAuthorizer
+  Authorizer
 }
 
 /**
- * The [_RestUserAuthorizer] type...
+ * The [RestUserAuthorizer] type...
  */
-type _RestUserAuthorizer struct {
-  _RestAuthorizer
+type RestUserAuthorizer struct {
+  host url.URL
 
-  RestUserAuthorizer
+  clientId, secret string
+
+  Authorizer
 }
 
 /**
- * The [BuildAuthorizer] method...
+ * The [NewRestAuthorizer] function...
  */
-func (*AuthorizerFactory) BuildAuthorizer (
-  host url.URL, clientId string, secret string, authType string,
+func NewRestAuthorizer (
+  host url.URL, clientId string, secret string,
 ) RestAuthorizer {
-  var restAuthorizer RestAuthorizer
-
-  restAuthorizer = &_RestAuthorizer {
+  return RestAuthorizer {
     host: host, clientId: clientId, secret: secret,
   }
+}
 
-  if "user" == authType {
-    restAuthorizer, _ = restAuthorizer.(_RestUserAuthorizer)
+/**
+ * The [NewRestUserAuthorizer] function...
+ */
+func NewRestUserAuthorizer (
+  host url.URL, clientId string, secret string,
+) RestUserAuthorizer {
+  return RestUserAuthorizer {
+    host: host, clientId: clientId, secret: secret,
   }
-
-  return restAuthorizer
 }
 
 /**
  * The [RequestAuthorization] method...
  */
-func (authorizer _RestAuthorizer) RequestAuthorization() (AccessToken, error) {
+func (authorizer RestAuthorizer) RequestAuthorization() (AccessToken, error) {
   var accessToken AccessToken
   var err error
   var response *http.Response
@@ -114,16 +101,9 @@ func (authorizer _RestAuthorizer) RequestAuthorization() (AccessToken, error) {
 }
 
 /**
- * The [RequestAuthorization] method...
- */
-func (authorizer _RestUserAuthorizer) RequestAuthorization() (AccessToken, error) {
-  return authorizer._RestAuthorizer.RequestAuthorization()
-}
-
-/**
  * The [RequestAuthorizationCode] method...
  */
-func (authorizer *_RestUserAuthorizer) RequestAuthorizationCode (
+func (authorizer *RestUserAuthorizer) RequestAuthorizationCode (
   redirectUri string, response *http.Response,
 ) error {
   var err error
@@ -142,22 +122,20 @@ func (authorizer *_RestUserAuthorizer) RequestAuthorizationCode (
 
   response.Header.Add ("Location", authorizeUriStr)
 
-  err = response.Body.Close()
-
-  return err
+  return response.Body.Close()
 }
 
 /**
  * The [RequestUserAuthorization] method...
  */
-func (authorizer *_RestUserAuthorizer) RequestUserAuthorization (
+func (authorizer *RestUserAuthorizer) RequestUserAuthorization (
   authCode string, redirectUri string,
-) (AccessToken, error) {println ("in request user auth, start")
+) (AccessToken, error) {
   var accessToken AccessToken
   var err error
   var encodedRedirect string
   var parsedRedirect *url.URL
-println ("in request user authorization, with auth code")
+
   if "" == redirectUri {
     encodedRedirect = ""
   } else {
@@ -169,23 +147,23 @@ println ("in request user authorization, with auth code")
 
     encodedRedirect = "&redirect_uri=" + parsedRedirect.String()
   }
-println ("before creating the auth code uri string")
+
   authCodeUriStr := authorizer.host.String() + config.Base +
     config.OAuth2Endpoints["authorization_code"] + "?code=" + authCode +
     encodedRedirect
-println ("before creating the new request and setting the basic auth")
+
   request := new (http.Request)
   request.SetBasicAuth (authorizer.clientId, authorizer.secret)
   request.URL, err = url.Parse (authCodeUriStr)
-println ("before creating the new client request")
+
   response, err  := (new (http.Client)).Do (request)
 
   if nil != err {
     return accessToken, err
   }
-println ("before parsing the response")
+
   accessToken, err = _parseResponse (response)
-println ("parsed response, closing the response body")
+
   err = response.Body.Close()
 
   return accessToken, err

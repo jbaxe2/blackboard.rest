@@ -4,7 +4,6 @@ import (
   "github.com/jbaxe2/blackboard.rest.go/src/oauth2"
   "net/http"
   "net/url"
-  "reflect"
 )
 
 /**
@@ -28,7 +27,7 @@ type _BbRestOAuth2 struct {
 
   clientId, secret string
 
-  authorizer oauth2.RestAuthorizer
+  authorizer oauth2.Authorizer
 
   BlackboardRestOAuth2
 }
@@ -62,15 +61,11 @@ func GetOAuth2Instance (
 func (restOAuth2 *_BbRestOAuth2) GetAuthorizationCode (
   redirectUri url.URL, responseType string, response http.Response,
 ) error {
-  var err error
-
   restOAuth2._createAuthorizer ("authorization_code")
 
-  restOAuth2.authorizer.(oauth2.RestUserAuthorizer).RequestAuthorizationCode (
-    redirectUri.String(), response,
+  return restOAuth2.authorizer.(oauth2.RestUserAuthorizer).RequestAuthorizationCode (
+    redirectUri.String(), &response,
   )
-
-  return err
 }
 
 /**
@@ -81,22 +76,19 @@ func (restOAuth2 *_BbRestOAuth2) RequestToken (
 ) (oauth2.AccessToken, error) {
   var accessToken oauth2.AccessToken
   var err error
-println ("before creating authorizer")
+
   restOAuth2._createAuthorizer (grantType)
-println ("after creating authorizer")
+
   if "client_credentials" == grantType {
-    accessToken, err = restOAuth2.authorizer.RequestAuthorization()
+    accessToken, err =
+      restOAuth2.authorizer.(oauth2.RestAuthorizer).RequestAuthorization()
   } else if "authorization_code" == grantType {
-    println ("before casting rest user authorizer")
     userAuthorizer, _ := restOAuth2.authorizer.(oauth2.RestUserAuthorizer)
-println ("after casting rest authorizer")
-    println ("before requesting user authorization...")
-    println (reflect.TypeOf (userAuthorizer))
+
     accessToken, err =
       userAuthorizer.RequestUserAuthorization (code, redirectUri.String())
-      println ("made it here...")
   }
-println ("after creating access token, or encountered error")
+
   return accessToken, err
 }
 
@@ -104,15 +96,13 @@ println ("after creating access token, or encountered error")
  * The [_createAuthorizer] method...
  */
 func (restOAuth2 *_BbRestOAuth2) _createAuthorizer (grantType string) {
-  factory := new (oauth2.AuthorizerFactory)
-
   if "authorization_code" == grantType {
-    restOAuth2.authorizer = factory.BuildAuthorizer (
-      restOAuth2.host, restOAuth2.clientId, restOAuth2.secret, "user",
+    restOAuth2.authorizer = oauth2.NewRestAuthorizer (
+      restOAuth2.host, restOAuth2.clientId, restOAuth2.secret,
     )
   } else {
-    restOAuth2.authorizer = factory.BuildAuthorizer (
-      restOAuth2.host, restOAuth2.clientId, restOAuth2.secret, "",
+    restOAuth2.authorizer = oauth2.NewRestUserAuthorizer (
+      restOAuth2.host, restOAuth2.clientId, restOAuth2.secret,
     )
   }
 }
