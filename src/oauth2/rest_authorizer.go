@@ -65,7 +65,7 @@ func (*AuthorizerFactory) BuildAuthorizer (
   }
 
   if "user" == authType {
-    restAuthorizer = restAuthorizer.(RestUserAuthorizer)
+    restAuthorizer, _ = restAuthorizer.(RestUserAuthorizer)
   }
 
   return restAuthorizer
