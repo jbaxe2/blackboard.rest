@@ -149,10 +149,10 @@ func (authorizer *RestUserAuthorizer) RequestUserAuthorization (
   encoded := base64.StdEncoding.EncodeToString (
     []byte (authorizer.clientId + ":" + authorizer.secret),
   )
-
+println ("before setting auth header")
   request.Header.Set ("Authorization", "Basic " + encoded)
   //request.SetBasicAuth (authorizer.clientId, authorizer.secret)
-
+println ("after setting auth header")
   request.URL, err = url.Parse (authCodeUriStr)
 
   response, err  := (new (http.Client)).Do (request)
