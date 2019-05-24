@@ -150,7 +150,7 @@ func (authorizer *_RestUserAuthorizer) RequestUserAuthorization (
   var err error
   var encodedRedirect string
   var parsedRedirect *url.URL
-
+println ("in request user authorization, with auth code")
   if "" == redirectUri {
     encodedRedirect = ""
   } else {
@@ -162,23 +162,23 @@ func (authorizer *_RestUserAuthorizer) RequestUserAuthorization (
 
     encodedRedirect = "&redirect_uri=" + parsedRedirect.String()
   }
-
+println ("before creating the auth code uri string")
   authCodeUriStr := authorizer.host.String() + config.Base +
     config.OAuth2Endpoints["authorization_code"] + "?code=" + authCode +
     encodedRedirect
-
+println ("before creating the new request and setting the basic auth")
   request := new (http.Request)
   request.SetBasicAuth (authorizer.clientId, authorizer.secret)
   request.URL, err = url.Parse (authCodeUriStr)
-
+println ("before creating the new client request")
   response, err  := (new (http.Client)).Do (request)
 
   if nil != err {
     return accessToken, err
   }
-
+println ("before parsing the response")
   accessToken, err = _parseResponse (response)
-
+println ("parsed response, closing the response body")
   err = response.Body.Close()
 
   return accessToken, err
