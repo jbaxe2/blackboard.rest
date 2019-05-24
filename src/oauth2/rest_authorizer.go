@@ -65,7 +65,7 @@ func (*AuthorizerFactory) BuildAuthorizer (
   }
 
   if "user" == authType {
-    restAuthorizer, _ = restAuthorizer.(RestUserAuthorizer)
+    restAuthorizer, _ = restAuthorizer.(_RestUserAuthorizer)
   }
 
   return restAuthorizer
@@ -74,7 +74,7 @@ func (*AuthorizerFactory) BuildAuthorizer (
 /**
  * The [RequestAuthorization] method...
  */
-func (authorizer *_RestAuthorizer) RequestAuthorization() (AccessToken, error) {
+func (authorizer _RestAuthorizer) RequestAuthorization() (AccessToken, error) {
   var accessToken AccessToken
   var err error
   var response *http.Response
