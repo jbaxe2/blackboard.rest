@@ -63,9 +63,9 @@ func (restOAuth2 *_BbRestOAuth2) GetAuthorizationCode (
 ) error {
   restOAuth2._createAuthorizer ("authorization_code")
 
-  return restOAuth2.authorizer.(oauth2.RestUserAuthorizer).RequestAuthorizationCode (
-    redirectUri.String(), &response,
-  )
+  authorizer := restOAuth2.authorizer.(oauth2.RestUserAuthorizer)
+
+  return authorizer.RequestAuthorizationCode (redirectUri.String(), &response)
 }
 
 /**

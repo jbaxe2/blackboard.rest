@@ -61,7 +61,7 @@ func NewRestUserAuthorizer (
 /**
  * The [RequestAuthorization] method...
  */
-func (authorizer RestAuthorizer) RequestAuthorization() (AccessToken, error) {
+func (authorizer *RestAuthorizer) RequestAuthorization() (AccessToken, error) {
   var accessToken AccessToken
   var err error
   var response *http.Response
