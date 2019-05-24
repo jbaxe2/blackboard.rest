@@ -10,19 +10,12 @@ import (
 )
 
 /**
- * The [Authorizer] interface...
- */
-type Authorizer interface {}
-
-/**
  * The [RestAuthorizer] type...
  */
 type RestAuthorizer struct {
   host url.URL
 
   clientId, secret string
-
-  Authorizer
 }
 
 /**
@@ -32,8 +25,6 @@ type RestUserAuthorizer struct {
   host url.URL
 
   clientId, secret string
-
-  Authorizer
 }
 
 /**

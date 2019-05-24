@@ -27,7 +27,9 @@ type _BbRestOAuth2 struct {
 
   clientId, secret string
 
-  authorizer oauth2.Authorizer
+  authorizer oauth2.RestAuthorizer
+
+  userAuthorizer oauth2.RestUserAuthorizer
 
   BlackboardRestOAuth2
 }
@@ -61,11 +63,11 @@ func GetOAuth2Instance (
 func (restOAuth2 *_BbRestOAuth2) GetAuthorizationCode (
   redirectUri url.URL, responseType string, response http.Response,
 ) error {
-  restOAuth2._createAuthorizer ("authorization_code")
+  restOAuth2._buildAuthorizer ("authorization_code")
 
-  authorizer := restOAuth2.authorizer.(oauth2.RestUserAuthorizer)
-
-  return authorizer.RequestAuthorizationCode (redirectUri.String(), &response)
+  return restOAuth2.userAuthorizer.RequestAuthorizationCode (
+    redirectUri.String(), &response,
+  )
 }
 
 /**
@@ -77,31 +79,29 @@ func (restOAuth2 *_BbRestOAuth2) RequestToken (
   var accessToken oauth2.AccessToken
   var err error
 
-  restOAuth2._createAuthorizer (grantType)
+  restOAuth2._buildAuthorizer (grantType)
 
   if "client_credentials" == grantType {
-    accessToken, err =
-      restOAuth2.authorizer.(oauth2.RestAuthorizer).RequestAuthorization()
+    accessToken, err = restOAuth2.authorizer.RequestAuthorization()
   } else if "authorization_code" == grantType {
-    userAuthorizer, _ := restOAuth2.authorizer.(oauth2.RestUserAuthorizer)
-
-    accessToken, err =
-      userAuthorizer.RequestUserAuthorization (code, redirectUri.String())
+    accessToken, err = restOAuth2.userAuthorizer.RequestUserAuthorization (
+      code, redirectUri.String(),
+    )
   }
 
   return accessToken, err
 }
 
 /**
- * The [_createAuthorizer] method...
+ * The [_buildAuthorizer] method...
  */
-func (restOAuth2 *_BbRestOAuth2) _createAuthorizer (grantType string) {
-  if "authorization_code" == grantType {
+func (restOAuth2 *_BbRestOAuth2) _buildAuthorizer (grantType string) {
+  if "client_credentials" == grantType {
     restOAuth2.authorizer = oauth2.NewRestAuthorizer (
       restOAuth2.host, restOAuth2.clientId, restOAuth2.secret,
     )
-  } else {
-    restOAuth2.authorizer = oauth2.NewRestUserAuthorizer (
+  } else if "authorization_code" == grantType {
+    restOAuth2.userAuthorizer = oauth2.NewRestUserAuthorizer (
       restOAuth2.host, restOAuth2.clientId, restOAuth2.secret,
     )
   }
