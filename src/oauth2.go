@@ -80,9 +80,9 @@ func (restOAuth2 *_BbRestOAuth2) RequestToken (
 ) (oauth2.AccessToken, error) {
   var accessToken oauth2.AccessToken
   var err error
-
+println ("before creating authorizer")
   restOAuth2._createAuthorizer (grantType)
-
+println ("after creating authorizer")
   if "client_credentials" == grantType {
     accessToken, err = restOAuth2.authorizer.RequestAuthorization()
   } else if "authorization_code" == grantType {
@@ -91,7 +91,7 @@ func (restOAuth2 *_BbRestOAuth2) RequestToken (
     accessToken, err =
       userAuthorizer.RequestUserAuthorization (code, redirectUri.String())
   }
-
+println ("after creating access token, or encountered error")
   return accessToken, err
 }
 
