@@ -86,8 +86,10 @@ println ("after creating authorizer")
   if "client_credentials" == grantType {
     accessToken, err = restOAuth2.authorizer.RequestAuthorization()
   } else if "authorization_code" == grantType {
-    var userAuthorizer = restOAuth2.authorizer.(oauth2.RestUserAuthorizer)
-
+    println ("before casting rest user authorizer")
+    userAuthorizer, _ := restOAuth2.authorizer.(oauth2.RestUserAuthorizer)
+println ("after casting rest authorizer")
+    println ("before requesting user authorization")
     accessToken, err =
       userAuthorizer.RequestUserAuthorization (code, redirectUri.String())
   }
