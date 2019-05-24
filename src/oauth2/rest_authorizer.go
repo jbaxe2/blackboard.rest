@@ -140,20 +140,20 @@ func (authorizer *RestUserAuthorizer) RequestUserAuthorization (
   }
 
   authCodeUriStr := authorizer.host.String() + config.Base +
-    config.OAuth2Endpoints["authorization_code"] + "?code=" + authCode +
+    config.OAuth2Endpoints["request_token"] + "?code=" + authCode +
     encodedRedirect
-println ("before creating new request")
+
+  println (authCodeUriStr)
   request, err := http.NewRequest ("GET", authCodeUriStr, nil)
-println ("after creating new request")
+
   if nil != err {
     return accessToken, err
   }
-println ("before setting basic auth")
+
   request.SetBasicAuth (authorizer.clientId, authorizer.secret)
-  //request.URL, err = url.Parse (authCodeUriStr)
-println ("after setting basic auth")
+
   response, err  := (new (http.Client)).Do (request)
-println ("after doing request")
+
   if nil != err {
     return accessToken, err
   }
