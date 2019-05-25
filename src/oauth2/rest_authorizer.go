@@ -157,6 +157,7 @@ func (authorizer *RestUserAuthorizer) RequestUserAuthorization (
     return accessToken, err
   }
 println ("before parsing the response")
+  println (response.ContentLength)
   accessToken, err = _parseResponse (response)
 println ("before closing body")
   err = response.Body.Close()
