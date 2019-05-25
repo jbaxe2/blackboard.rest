@@ -143,7 +143,7 @@ func (authorizer *RestUserAuthorizer) RequestUserAuthorization (
     config.OAuth2Endpoints["request_token"] + "?code=" + authCode +
     encodedRedirect
 
-  request, err := http.NewRequest ("POST", authCodeUriStr, nil)
+  request, err := http.NewRequest (http.MethodPost, authCodeUriStr, nil)
 
   if nil != err {
     return accessToken, err
@@ -151,16 +151,17 @@ func (authorizer *RestUserAuthorizer) RequestUserAuthorization (
 
   request.SetBasicAuth (authorizer.clientId, authorizer.secret)
 
-  response, err  := (new (http.Client)).Do (request)
+  response, err := (new (http.Client)).Do (request)
 
   if nil != err {
     return accessToken, err
   }
 println ("before parsing the response")
-  println (response.ContentLength)
+  println (response.Status)
+  println (response.StatusCode)
   accessToken, err = _parseResponse (response)
 println ("before closing body")
-  err = response.Body.Close()
+  //err = response.Body.Close()
 
   return accessToken, err
 }
@@ -174,6 +175,7 @@ func _parseResponse (response *http.Response) (AccessToken, error) {
   var responseBytes []byte
   var parsedResponse map[string]interface{}
 println ("before reading response body")
+  defer response.Body.Close()
   responseBytes, err = ioutil.ReadAll (response.Body)
 
   println (string (responseBytes))
