@@ -150,6 +150,7 @@ func (authorizer *RestUserAuthorizer) RequestUserAuthorization (
   }
 
   request.SetBasicAuth (authorizer.clientId, authorizer.secret)
+  request.Header.Set ("Content-Type", "application/x-www-form-urlencoded")
 
   response, err := (new (http.Client)).Do (request)
 
