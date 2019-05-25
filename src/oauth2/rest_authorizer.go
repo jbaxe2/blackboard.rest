@@ -142,15 +142,15 @@ func (authorizer *RestUserAuthorizer) RequestUserAuthorization (
   authCodeUriStr := authorizer.host.String() + config.Base +
     config.OAuth2Endpoints["request_token"] + "?code=" + authCode +
     encodedRedirect
-println ("before creating new request")
+
   request, err := http.NewRequest ("GET", authCodeUriStr, nil)
 
   if nil != err {
     return accessToken, err
   }
-println ("before setting basic auth")
+
   request.SetBasicAuth (authorizer.clientId, authorizer.secret)
-println ("before creating client and sending request")
+
   response, err  := (new (http.Client)).Do (request)
 
   if nil != err {
@@ -172,15 +172,16 @@ func _parseResponse (response *http.Response) (AccessToken, error) {
   var err error
   var responseBytes []byte
   var parsedResponse map[string]interface{}
-
+println ("before reading response body")
   responseBytes, err = ioutil.ReadAll (response.Body)
 
+  println (string (responseBytes))
   if nil != err {
     return accessToken, err
   }
-
+println ("before unmarshalling response")
   err = json.Unmarshal (responseBytes, &parsedResponse)
-
+println ("before creating access token")
   accessToken = AccessToken {
     accessToken: parsedResponse["access_token"].(string),
     tokenType:   parsedResponse["token_type"].(string),
@@ -194,6 +195,6 @@ func _parseResponse (response *http.Response) (AccessToken, error) {
   if scope, ok := parsedResponse["scope"]; ok {
     accessToken.scope = scope.(string)
   }
-
+println ("before returning access token")
   return accessToken, err
 }
