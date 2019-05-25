@@ -143,7 +143,6 @@ func (authorizer *RestUserAuthorizer) RequestUserAuthorization (
     config.OAuth2Endpoints["request_token"] + "?code=" + authCode +
     encodedRedirect
 
-  println (authCodeUriStr)
   request, err := http.NewRequest ("GET", authCodeUriStr, nil)
 
   if nil != err {
