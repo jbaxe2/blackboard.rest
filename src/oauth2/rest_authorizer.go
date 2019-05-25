@@ -142,23 +142,23 @@ func (authorizer *RestUserAuthorizer) RequestUserAuthorization (
   authCodeUriStr := authorizer.host.String() + config.Base +
     config.OAuth2Endpoints["request_token"] + "?code=" + authCode +
     encodedRedirect
-
+println ("before creating new request")
   request, err := http.NewRequest ("GET", authCodeUriStr, nil)
 
   if nil != err {
     return accessToken, err
   }
-
+println ("before setting basic auth")
   request.SetBasicAuth (authorizer.clientId, authorizer.secret)
-
+println ("before creating client and sending request")
   response, err  := (new (http.Client)).Do (request)
 
   if nil != err {
     return accessToken, err
   }
-
+println ("before parsing the response")
   accessToken, err = _parseResponse (response)
-
+println ("before closing body")
   err = response.Body.Close()
 
   return accessToken, err
