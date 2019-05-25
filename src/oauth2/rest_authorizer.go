@@ -141,7 +141,7 @@ func (authorizer *RestUserAuthorizer) RequestUserAuthorization (
 
   authCodeUriStr := authorizer.host.String() + config.Base +
     config.OAuth2Endpoints["request_token"] + "?code=" + authCode +
-    encodedRedirect
+    encodedRedirect + "&grant_type=authorization_code"
 
   request, err := http.NewRequest (http.MethodPost, authCodeUriStr, nil)
 
