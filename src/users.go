@@ -67,16 +67,16 @@ func (restUsers *_BbRestUsers) GetUser (userId string) (users.User, error) {prin
 
   endpoint := config.UsersEndpoints["user"]
   endpoint = strings.Replace (endpoint, "{userId}", userId, -1)
-
+println ("before sending the rest request")
   result, err = restUsers.service.Connector.SendBbRequest (
     endpoint, "GET", make (map[string]interface{}), 1,
   )
-
+println ("after sending the rest request")
   if (nil != err) && (error2.RestError{} != err) {
     return user, err.(error2.UsersError)
   }
-
+println ("before creating the new user")
   user = factory.NewUser (result.(map[string]interface{}))
-
+println ("after creating the new user")
   return user, err
 }
