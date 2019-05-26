@@ -58,7 +58,7 @@ func (connector *BbRestConnector) SendBbRequest (
     base = config.BaseV2
   }
 
-  if endpointUri, err = url.Parse (config.Host + base + endpoint); nil != err {
+  if endpointUri, err = url.Parse (connector.host + base + endpoint); nil != err {
     return result, err
   }
 
@@ -72,7 +72,7 @@ func (connector *BbRestConnector) SendBbRequest (
   } else if "post" == strings.ToLower (method) {
     response, err = _handlePostRequest (endpointUri, headers, data)
   } else {
-    return result, errors.New ("specified protocol is currently unsupported")
+    return result, errors.New ("specified method is currently unsupported")
   }
 
   if nil != err {
