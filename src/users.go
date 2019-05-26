@@ -60,7 +60,7 @@ func GetUsersInstance (host string, accessToken oauth2.AccessToken) Users {
 /**
  * The [GetUser] method...
  */
-func (restUsers *_BbRestUsers) GetUser (userId string) (users.User, error) {
+func (restUsers *_BbRestUsers) GetUser (userId string) (users.User, error) {println ("got here in get user")
   var user users.User
   var err error
   var result interface{}
