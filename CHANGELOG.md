@@ -1,5 +1,8 @@
 **blackboard.rest (Go)**
 
+## 0.1.1+2
+- Resolved a host issue.
+
 ## 0.1.1+1
 - Resolved new authorization scheme issues.
 

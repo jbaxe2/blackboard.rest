@@ -74,12 +74,10 @@ func (restUsers *_BbRestUsers) GetUser (userId string) (users.User, error) {
   )
 
   if (nil != err) && (error2.RestError{} != err) {
-    println ("found error")
-    println (err.Error())
     return user, err.(error2.UsersError)
   }
-println ("before creating the new user")
+
   user = factory.NewUser (result.(map[string]interface{}))
-println ("after creating the new user")
+
   return user, err
 }
