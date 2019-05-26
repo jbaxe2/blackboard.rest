@@ -72,14 +72,12 @@ func (restUsers *_BbRestUsers) GetUser (userId string) (users.User, error) {
   result, err = restUsers.service.Connector.SendBbRequest (
     endpoint, "GET", make (map[string]interface{}), 1,
   )
-println ("got here")
+
   if (nil != err) && (error2.RestError{} != err) {
-    println ("found error")
-    println (err.Error())
     return user, err.(error2.UsersError)
   }
-println ("before creating new user")
+
   user = factory.NewUser (result.(map[string]interface{}))
-println ("after creating new user")
+
   return user, err
 }
