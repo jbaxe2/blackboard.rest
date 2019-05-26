@@ -60,19 +60,21 @@ func GetUsersInstance (host string, accessToken oauth2.AccessToken) Users {
 /**
  * The [GetUser] method...
  */
-func (restUsers *_BbRestUsers) GetUser (userId string) (users.User, error) {println ("got here in get user")
+func (restUsers *_BbRestUsers) GetUser (userId string) (users.User, error) {
   var user users.User
   var err error
   var result interface{}
 
   endpoint := config.UsersEndpoints["user"]
   endpoint = strings.Replace (endpoint, "{userId}", userId, -1)
-println ("before sending the rest request")
+
   result, err = restUsers.service.Connector.SendBbRequest (
     endpoint, "GET", make (map[string]interface{}), 1,
   )
-println ("after sending the rest request")
+
   if (nil != err) && (error2.RestError{} != err) {
+    println ("found error")
+    println (err.Error())
     return user, err.(error2.UsersError)
   }
 println ("before creating the new user")
