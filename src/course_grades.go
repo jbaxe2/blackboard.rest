@@ -83,6 +83,7 @@ func GetCourseGradesInstance (
     host: *hostUri, accessToken: accessToken,
   }
 
+  courseGradesService.service.SetHost (host)
   courseGradesService.service.SetAccessToken (accessToken)
 
   return courseGradesService

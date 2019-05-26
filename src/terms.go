@@ -44,6 +44,7 @@ func GetTermsInstance (host string, accessToken oauth2.AccessToken) Terms {
   hostUri, _ := url.Parse (host)
 
   termsService := &_BbRestTerms {host: *hostUri, accessToken: accessToken}
+  termsService.service.SetHost (host)
   termsService.service.SetAccessToken (accessToken)
 
   return termsService

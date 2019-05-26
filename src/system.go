@@ -41,6 +41,7 @@ func GetSystemInstance (
   hostUri, _ := url.Parse (host)
 
   systemService := &_BbRestSystem {host: *hostUri, accessToken: accessToken}
+  systemService.service.SetHost (host)
   systemService.service.SetAccessToken (accessToken)
 
   return systemService

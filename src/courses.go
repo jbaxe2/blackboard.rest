@@ -66,6 +66,7 @@ func GetCoursesInstance (host string, accessToken oauth2.AccessToken) Courses {
   hostUri, _ := url.Parse (host)
 
   coursesService := &_BbRestCourses {host: *hostUri, accessToken: accessToken}
+  coursesService.service.SetHost (host)
   coursesService.service.SetAccessToken (accessToken)
 
   return coursesService

@@ -59,6 +59,7 @@ func GetCourseMembershipsInstance (
     host: *hostUri, accessToken: accessToken,
   }
 
+  membershipsService.service.SetHost (host)
   membershipsService.service.SetAccessToken (accessToken)
 
   return membershipsService

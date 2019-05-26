@@ -52,6 +52,7 @@ func GetUsersInstance (host string, accessToken oauth2.AccessToken) Users {
   hostUri, _ := url.Parse (host)
 
   usersService := &_BbRestUsers {host: *hostUri, accessToken: accessToken}
+  usersService.service.SetHost (host)
   usersService.service.SetAccessToken (accessToken)
 
   return usersService

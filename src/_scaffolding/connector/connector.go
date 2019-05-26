@@ -33,6 +33,10 @@ type BbRestConnector struct {
   BlackboardRestConnector
 }
 
+func (connector *BbRestConnector) SetHost (host string) {
+  connector.host = host
+}
+
 func (connector *BbRestConnector) SetAccessToken (token oauth2.AccessToken) {
   connector.accessToken = token
 }
