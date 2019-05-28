@@ -125,26 +125,21 @@ func (restMemberships *_BbRestCourseMemberships) _getMemberships (
   var courseMemberships []course_memberships.Membership
   var err error
   var result interface{}
-println ("before sending the get memberships request")
+
   result, err = restMemberships.service.Connector.SendBbRequest (
     endpoint, "GET", data, 1,
   )
-println ("after sending get memberships request")
+
   if (nil != err) && (error2.RestError{} != err) {
-    println ("encountered an error in getting memberships request")
-    println (err.Error())
     return courseMemberships, err.(error2.CourseMembershipsError)
   }
 
-  println ("before setting the raw memberships")
   rawMemberships := result.(map[string]interface{})["results"]
 
-  println ("before creating memberships via the factory")
   courseMemberships = factory.NewMemberships (
     _normalizeRawMemberships (rawMemberships.([]interface{})),
   )
 
-  println ("returning course memberships and (possibly nil or empty) error")
   return courseMemberships, err
 }
 
