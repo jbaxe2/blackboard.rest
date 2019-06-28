@@ -68,7 +68,7 @@ func _testBuildClientRestAuthorizer (t *testing.T) {
     *host, config.ClientId, config.Secret,
   )
 
-  if nil == restAuthorizer {
+  if *new (oauth2.RestAuthorizer) == restAuthorizer {
     err = errors.New ("could not create the REST Authorizer")
 
     t.Error ("Building a client REST Authorizer failed\n" + err.Error())

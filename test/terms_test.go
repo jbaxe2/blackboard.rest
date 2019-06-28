@@ -3,7 +3,6 @@ package test
 import (
   blackboard_rest "github.com/jbaxe2/blackboard.rest.go/src"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
-  error2 "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/error"
   "github.com/jbaxe2/blackboard.rest.go/src/terms"
   "testing"
 )
@@ -64,7 +63,7 @@ func _testGetAllTerms (t *testing.T) {
 
   theTerms, err := termsService.GetTerms()
 
-  if (nil == theTerms) || (error2.RestError{} != err) {
+  if (nil == theTerms) || (nil != err) {
     t.Error ("Failed to retrieve the list of terms.\n")
     t.FailNow()
   }
@@ -85,7 +84,7 @@ func _testGetTermByPrimaryId (t *testing.T) {
 
   term, err := termsService.GetTerm ("_380_1")
 
-  if (terms.Term{} == term) || (error2.RestError{} != err) {
+  if (terms.Term{} == term) || (nil != err) {
     t.Error ("Failed to obtain the specified term.\n")
     t.Fail()
   }

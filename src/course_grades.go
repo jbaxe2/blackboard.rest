@@ -2,7 +2,6 @@ package blackboard_rest
 
 import (
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
-  error2 "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/error"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/factory/course_grades"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/services"
   "github.com/jbaxe2/blackboard.rest.go/src/course_grades"
@@ -106,8 +105,8 @@ func (restGrades *_BbRestCourseGrades) GetGradeColumns (
     endpoint, "GET", make (map[string]interface{}), 2,
   )
 
-  if (nil != err) && (error2.RestError{} != err) {
-    return columns, err.(error2.CourseGradesError)
+  if nil != err {
+    return columns, err
   }
 
   rawColumns := result.(map[string]interface{})["results"]
@@ -137,8 +136,8 @@ func (restGrades *_BbRestCourseGrades) GetGradeColumn (
     endpoint, "GET", make (map[string]interface{}), 2,
   )
 
-  if (nil != err) && (error2.RestError{} != err) {
-    return column, err.(error2.CourseGradesError)
+  if nil != err {
+    return column, err
   }
 
   column = factory.NewGradeColumn (result.(map[string]interface{}))
@@ -164,8 +163,8 @@ func (restGrades *_BbRestCourseGrades) GetColumnAttempts (
     endpoint, "GET", make (map[string]interface{}), 2,
   )
 
-  if (nil != err) && (error2.RestError{} != err) {
-    return attempts, err.(error2.CourseGradesError)
+  if nil != err {
+    return attempts, err
   }
 
   rawAttempts := result.(map[string]interface{})["results"]
@@ -196,8 +195,8 @@ func (restGrades *_BbRestCourseGrades) GetColumnAttempt (
     endpoint, "GET", make (map[string]interface{}), 2,
   )
 
-  if (nil != err) && (error2.RestError{} != err) {
-    return attempt, err.(error2.CourseGradesError)
+  if nil != err {
+    return attempt, err
   }
 
   attempt = factory.NewColumnAttempt (result.(map[string]interface{}))

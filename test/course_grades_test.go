@@ -3,7 +3,6 @@ package test
 import (
   blackboard_rest "github.com/jbaxe2/blackboard.rest.go/src"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
-  error2 "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/error"
   "github.com/jbaxe2/blackboard.rest.go/src/course_grades"
   "testing"
 )
@@ -66,7 +65,7 @@ func _testGetGradeColumnsForCourseByPrimaryId (t *testing.T) {
 
   columns, err := gradesService.GetGradeColumns ("_121_1")
 
-  if (nil == columns) || (error2.RestError{} != err) {
+  if (nil == columns) || (nil != err) {
     t.Error ("Failed to obtain the grade columns for the course.")
     t.FailNow()
   }
@@ -88,7 +87,7 @@ func _testGetGradeColumnForCourseByPrimaryIds (t *testing.T) {
   columns, err := gradesService.GetGradeColumns ("_121_1")
   column, err := gradesService.GetGradeColumn ("_121_1", columns[0].Id)
 
-  if (course_grades.GradeColumn{} == column) || (error2.RestError{} != err) {
+  if (course_grades.GradeColumn{} == column) || (nil != err) {
     t.Error ("Failed to retrieve the grade column.")
     t.FailNow()
   }
@@ -110,7 +109,7 @@ func _testGetColumnAttemptsByColumnPrimaryId (t *testing.T) {
   columns, err := gradesService.GetGradeColumns ("_121_1")
   attempts, err := gradesService.GetColumnAttempts ("_121_1", columns[1].Id)
 
-  if (nil == attempts) || (error2.RestError{} != err) {
+  if (nil == attempts) || (nil != err) {
     t.Error ("Failed to obtain the attempts for the grade column.")
     t.FailNow()
   }
@@ -136,7 +135,7 @@ func _testGetColumnAttemptByColumnAndAttemptPrimaryId (t *testing.T) {
     "_121_1", columns[1].Id, attempts[0].Id,
   )
 
-  if (course_grades.Attempt{} == attempt) || (error2.RestError{} != err) {
+  if (course_grades.Attempt{} == attempt) || (nil != err) {
     t.Error ("Failed to retrieve the column attempt.")
     t.FailNow()
   }

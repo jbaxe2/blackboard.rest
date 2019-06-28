@@ -2,7 +2,6 @@ package blackboard_rest
 
 import (
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
-  error2 "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/error"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/factory"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/services"
   "github.com/jbaxe2/blackboard.rest.go/src/courses"
@@ -87,8 +86,8 @@ func (restCourses *_BbRestCourses) GetCourse (courseId string) (courses.Course, 
     endpoint, "GET", make (map[string]interface{}), 1,
   )
 
-  if (nil != err) && (error2.RestError{} != err) {
-    return course, err.(error2.CoursesError)
+  if nil != err {
+    return course, err
   }
 
   course = factory.NewCourse (result.(map[string]interface{}))

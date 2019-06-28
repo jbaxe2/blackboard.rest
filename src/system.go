@@ -2,7 +2,6 @@ package blackboard_rest
 
 import (
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
-  error2 "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/error"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/factory"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/services"
   "github.com/jbaxe2/blackboard.rest.go/src/oauth2"
@@ -59,8 +58,8 @@ func (restSystem *_BbRestSystem) GetVersion() (system.VersionInfo, error) {
     config.SystemEndpoints["version"], "GET", make (map[string]interface{}), 1,
   )
 
-  if (nil != err) && (error2.RestError{} != err) {
-    return version, err.(error2.SystemError)
+  if nil != err {
+    return version, err
   }
 
   version = factory.NewVersionInfo (result.(map[string]interface{}))

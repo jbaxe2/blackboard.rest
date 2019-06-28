@@ -2,7 +2,6 @@ package services
 
 import (
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/connector"
-  error2 "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/error"
   "github.com/jbaxe2/blackboard.rest.go/src/oauth2"
 )
 
@@ -10,7 +9,7 @@ import (
  * The [BbRestService] interface...
  */
 type BbRestService interface {
-  HandleError (err error) error2.RestError
+  HandleError (err error)
 }
 
 /**

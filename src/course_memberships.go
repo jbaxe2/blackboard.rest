@@ -2,7 +2,6 @@ package blackboard_rest
 
 import (
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
-  error2 "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/error"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/factory"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/services"
   "github.com/jbaxe2/blackboard.rest.go/src/course_memberships"
@@ -107,8 +106,8 @@ func (restMemberships *_BbRestCourseMemberships) GetMembership (
     endpoint, "GET", make (map[string]interface{}), 1,
   )
 
-  if (nil != err) && (error2.RestError{} != err) {
-    return courseMembership, err.(error2.CourseMembershipsError)
+  if nil != err {
+    return courseMembership, err
   }
 
   courseMembership = factory.NewMembership (result.(map[string]interface{}))
@@ -130,8 +129,8 @@ func (restMemberships *_BbRestCourseMemberships) _getMemberships (
     endpoint, "GET", data, 1,
   )
 
-  if (nil != err) && (error2.RestError{} != err) {
-    return courseMemberships, err.(error2.CourseMembershipsError)
+  if nil != err {
+    return courseMemberships, err
   }
 
   rawMemberships := result.(map[string]interface{})["results"]

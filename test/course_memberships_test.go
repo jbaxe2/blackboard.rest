@@ -3,7 +3,6 @@ package test
 import (
   "github.com/jbaxe2/blackboard.rest.go/src"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
-  error2 "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/error"
   "github.com/jbaxe2/blackboard.rest.go/src/course_memberships"
   "testing"
 )
@@ -65,7 +64,7 @@ func _testGetCourseMembershipsByCoursePrimaryId (t *testing.T) {
 
   memberships, err := membershipsService.GetMembershipsForCourse ("_121_1")
 
-  if (nil == memberships) || (error2.RestError{} != err) {
+  if (nil == memberships) || (nil != err) {
     t.Error ("Failed to obtain the list of course memberships (course).\n")
     t.FailNow()
   }
@@ -93,7 +92,7 @@ func _testGetCourseMembershipsByUserPrimaryId (t *testing.T) {
 
   memberships, err := membershipsService.GetMembershipsForUser ("_27_1")
 
-  if (nil == memberships) || (error2.RestError{} != err) {
+  if (nil == memberships) || (nil != err) {
     t.Error ("Failed to obtain the list of course memberships (user).\n")
     t.FailNow()
   }
@@ -122,8 +121,7 @@ func _testGetMembershipByCourseAndUserPrimaryIds (t *testing.T) {
   membership, err :=
     membershipsService.GetMembership ("_121_1", "_27_1")
 
-  if (course_memberships.Membership{} == membership) ||
-     (error2.RestError{} != err) {
+  if (course_memberships.Membership{} == membership) || (nil != err) {
     t.Error ("Failed to obtain the membership for the course and user.")
     t.FailNow()
   }

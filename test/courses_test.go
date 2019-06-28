@@ -3,7 +3,6 @@ package test
 import (
   "github.com/jbaxe2/blackboard.rest.go/src"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
-  error2 "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/error"
   "testing"
 )
 
@@ -61,7 +60,7 @@ func _testGetCourseByPrimaryId (t *testing.T) {
   coursesService := _getCoursesInstance()
   course, err := coursesService.GetCourse ("_101_1")
 
-  if (nil != err) && (error2.RestError{} != err) {
+  if nil != err {
     t.Error ("Error while retrieving the course:\n" + err.Error())
     t.FailNow()
   }

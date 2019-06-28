@@ -2,7 +2,6 @@ package blackboard_rest
 
 import (
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
-  error2 "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/error"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/factory"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/services"
   "github.com/jbaxe2/blackboard.rest.go/src/oauth2"
@@ -64,8 +63,8 @@ func (restTerms *_BbRestTerms) GetTerms() ([]terms.Term, error) {
     endpoint, "GET", make (map[string]interface{}), 1,
   )
 
-  if (nil != err) && (error2.RestError{} != err) {
-    return theTerms, err.(error2.TermsError)
+  if nil != err {
+    return theTerms, err
   }
 
   rawTerms := result.(map[string]interface{})["results"]

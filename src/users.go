@@ -2,7 +2,6 @@ package blackboard_rest
 
 import (
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
-  error2 "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/error"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/factory"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/services"
   "github.com/jbaxe2/blackboard.rest.go/src/oauth2"
@@ -73,8 +72,8 @@ func (restUsers *_BbRestUsers) GetUser (userId string) (users.User, error) {
     endpoint, "GET", make (map[string]interface{}), 1,
   )
 
-  if (nil != err) && (error2.RestError{} != err) {
-    return user, err.(error2.UsersError)
+  if nil != err {
+    return user, err
   }
 
   user = factory.NewUser (result.(map[string]interface{}))

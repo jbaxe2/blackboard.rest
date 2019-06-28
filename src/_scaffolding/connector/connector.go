@@ -4,12 +4,10 @@ import (
   "encoding/json"
   "errors"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
-  error2 "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/error"
   "github.com/jbaxe2/blackboard.rest.go/src/oauth2"
   "io/ioutil"
   "net/http"
   "net/url"
-  "reflect"
   "strings"
 )
 
@@ -89,9 +87,7 @@ func (connector *BbRestConnector) SendBbRequest (
   err = response.Body.Close()
 
   if response.StatusCode >= 300 {
-    err = _checkForError (result)
-  } else {
-    err = error2.RestError{}
+    return result, errors.New ("the returned response resulted in error")
   }
 
   return result, err
@@ -140,37 +136,4 @@ func _handlePostRequest (
   var err error
 
   return response, err
-}
-
-/**
- * The [_checkForError] function...
- */
-func _checkForError (potentialError interface{}) error2.RestableError {
-  err := error2.RestError{}
-
-  if strings.Contains (reflect.TypeOf (potentialError).String(), "map") {
-    errorMap := potentialError.(map[string]interface{})
-
-    if nil != errorMap["status"] {
-      err.Status = errorMap["status"].(string)
-    }
-
-    if nil != errorMap["code"] {
-      err.Code = errorMap["code"].(string)
-    }
-
-    if nil != errorMap["message"] {
-      err.Message = errorMap["message"].(string)
-    }
-
-    if nil != errorMap["developerMessage"] {
-      err.DeveloperMessage = errorMap["developerMessage"].(string)
-    }
-
-    if nil != errorMap["extraInfo"] {
-      err.ExtraInfo = errorMap["extraInfo"].(string)
-    }
-  }
-
-  return err
 }

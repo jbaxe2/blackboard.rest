@@ -1,5 +1,9 @@
 **blackboard.rest (Go)**
 
+## 0.1.2
+- Removing custom errors.
+  - While seems like a good idea, they have issues for users of the library.
+
 ## 0.1.1+2
 - Resolved a host issue.
 
