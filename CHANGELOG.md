@@ -1,5 +1,8 @@
 **blackboard.rest (Go)**
 
+## 0.1.2+1
+- Added check for empty response for retrieving an access token.
+
 ## 0.1.2
 - Removing custom errors.
   - While seems like a good idea, they have issues for users of the library.

@@ -2,6 +2,7 @@ package oauth2
 
 import (
   "encoding/json"
+  "errors"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
   "io/ioutil"
   "net/http"
@@ -182,10 +183,15 @@ func _parseResponse (response *http.Response) (AccessToken, error) {
 
   err = json.Unmarshal (responseBytes, &parsedResponse)
 
+  if _, haveAccessToken := parsedResponse["access_token"];
+      !haveAccessToken {
+    return accessToken, errors.New ("missing access token from response")
+  }
+
   accessToken = AccessToken {
     accessToken: parsedResponse["access_token"].(string),
-    tokenType:   parsedResponse["token_type"].(string),
-    expiresIn:   parsedResponse["expires_in"].(float64),
+    tokenType: parsedResponse["token_type"].(string),
+    expiresIn: parsedResponse["expires_in"].(float64),
   }
 
   if userId, ok := parsedResponse["user_id"]; ok {
