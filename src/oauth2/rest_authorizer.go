@@ -161,9 +161,11 @@ func (authorizer *RestUserAuthorizer) RequestUserAuthorization (
 
   accessToken, err = _parseResponse (response)
 
-  err = response.Body.Close()
+  if nil != err {
+    return accessToken, err
+  }
 
-  return accessToken, err
+  return accessToken, response.Body.Close()
 }
 
 /**
