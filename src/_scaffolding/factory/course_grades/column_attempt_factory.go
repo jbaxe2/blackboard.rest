@@ -47,9 +47,16 @@ func NewColumnAttempt (
 func _parseDisplayGrade (
   rawDisplayGrade map[string]interface{},
 ) course_grades.DisplayGrade {
-  return course_grades.DisplayGrade {
-    ScaleType: course_grades.ScaleType (rawDisplayGrade["scaleType"].(string)),
-    Score: rawDisplayGrade["score"].(float64),
-    Text: rawDisplayGrade["text"].(string),
+  displayGrade := new (course_grades.DisplayGrade)
+  displayGrade.ScaleType =
+    course_grades.ScaleType (rawDisplayGrade["scaleType"].(string))
+  displayGrade.Score = rawDisplayGrade["score"].(float64)
+
+  if nil == rawDisplayGrade["text"] {
+    rawDisplayGrade["text"] = ""
   }
+
+  displayGrade.Text = rawDisplayGrade["text"].(string)
+
+  return *displayGrade
 }

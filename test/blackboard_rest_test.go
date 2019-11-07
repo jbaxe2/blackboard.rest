@@ -6,7 +6,7 @@ import "testing"
  * The [TestBlackboardRest] function...
  */
 func TestBlackboardRest (t *testing.T) {
-  blackboardRestTester := BlackboardRestTester{t: t}
+  blackboardRestTester := BlackboardRestTester {t: t}
   blackboardRestTester.Run()
 }
 

@@ -20,7 +20,7 @@ type SystemTester struct {
  * The [Run] method...
  */
 func (tester *SystemTester) Run() {
-  println ("System:\n")
+  println ("\nSystem:")
 
   _testGetValidSystemInstance (tester.t)
   _testGetVersion (tester.t)

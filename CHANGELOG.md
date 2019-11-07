@@ -1,5 +1,8 @@
 **blackboard.rest (Go)**
 
+## 0.1.2+2
+- Minor refactoring.
+
 ## 0.1.2+1
 - Added check for empty response for retrieving an access token.
 
