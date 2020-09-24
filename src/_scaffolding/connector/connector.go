@@ -3,12 +3,13 @@ package connector
 import (
   "encoding/json"
   "errors"
-  "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
-  "github.com/jbaxe2/blackboard.rest.go/src/oauth2"
   "io/ioutil"
   "net/http"
   "net/url"
   "strings"
+
+  "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
+  "github.com/jbaxe2/blackboard.rest.go/src/oauth2"
 )
 
 /**

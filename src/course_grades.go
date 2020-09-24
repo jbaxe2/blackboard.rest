@@ -1,13 +1,14 @@
 package blackboard_rest
 
 import (
+  "net/url"
+  "strings"
+
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/factory/course_grades"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/services"
   "github.com/jbaxe2/blackboard.rest.go/src/course_grades"
   "github.com/jbaxe2/blackboard.rest.go/src/oauth2"
-  "net/url"
-  "strings"
 )
 
 /**

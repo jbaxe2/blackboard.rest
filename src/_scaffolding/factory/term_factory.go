@@ -1,8 +1,9 @@
 package factory
 
 import (
-  "github.com/jbaxe2/blackboard.rest.go/src/terms"
   "time"
+
+  "github.com/jbaxe2/blackboard.rest.go/src/terms"
 )
 
 /**

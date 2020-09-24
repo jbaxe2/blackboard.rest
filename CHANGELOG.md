@@ -1,5 +1,8 @@
 **blackboard.rest (Go)**
 
+## 0.1.2+3
+- Minor refactoring.
+
 ## 0.1.2+2
 - Minor refactoring.
 

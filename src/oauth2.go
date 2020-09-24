@@ -1,9 +1,10 @@
 package blackboard_rest
 
 import (
-  "github.com/jbaxe2/blackboard.rest.go/src/oauth2"
   "net/http"
   "net/url"
+
+  "github.com/jbaxe2/blackboard.rest.go/src/oauth2"
 )
 
 /**
