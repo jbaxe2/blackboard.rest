@@ -1,5 +1,8 @@
 **blackboard.rest (Go)**
 
+## 0.1.3
+- Start of adding course grade attempts.
+
 ## 0.1.2+3
 - Minor refactoring.
 

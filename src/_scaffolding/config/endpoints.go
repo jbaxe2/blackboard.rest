@@ -13,6 +13,16 @@ var OAuth2Endpoints = map[string]string {
 }
 
 /**
+ * The [CourseGradeAttemptsEndpoints] map...
+ */
+var CourseGradeAttemptsEndpoints = map[string]string {
+  "file_metadata_list": "courses/{courseId}/gradebook/attempts/{attemptId}/files",
+  "attach_file": "courses/{courseId}/gradebook/attempts/{attemptId}/files",
+  "file_metadata": "courses/{courseId}/gradebook/attempts/{attemptId}/files/{attemptFileId}",
+  "download": "courses/{courseId}/gradebook/attempts/{attemptId}/files/{attemptFileId}/download",
+}
+
+/**
  * The [CourseGradesEndpoints] map...
  */
 var CourseGradesEndpoints = map[string]string {
