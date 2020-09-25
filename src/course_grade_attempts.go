@@ -75,7 +75,7 @@ func (restGradeAttempts *_BbRestCourseGradeAttempts) GetAttemptFileMetadataList 
   endpoint = strings.Replace (endpoint, "{attemptId}", attemptId, -1)
 
   result, err = restGradeAttempts.service.Connector.SendBbRequest (
-    endpoint, "GET", make (map[string]interface{}), 1
+    endpoint, "GET", make (map[string]interface{}), 1,
   )
 
   return attemptFiles, err
