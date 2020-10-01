@@ -14,6 +14,10 @@ func NewAttemptFiles (
 ) []course_grade_attempts.AttemptFile {
   attemptFiles := make ([]course_grade_attempts.AttemptFile, len (rawAttemptFiles))
 
+  for i, rawAttemptFile := range rawAttemptFiles {
+    attemptFiles[i] = NewAttemptFile (rawAttemptFile)
+  }
+
   return attemptFiles
 }
 

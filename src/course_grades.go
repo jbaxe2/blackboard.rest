@@ -4,6 +4,7 @@ import (
   "net/url"
   "strings"
 
+  "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/factory/course_grades"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/services"
@@ -113,7 +114,7 @@ func (restGrades *_BbRestCourseGrades) GetGradeColumns (
   rawColumns := result.(map[string]interface{})["results"]
 
   columns = factory.NewGradeColumns (
-    _normalizeRawResponse (rawColumns.([]interface{})),
+    _scaffolding.NormalizeRawResponse (rawColumns.([]interface{})),
   )
 
   return columns, err
@@ -171,7 +172,7 @@ func (restGrades *_BbRestCourseGrades) GetColumnAttempts (
   rawAttempts := result.(map[string]interface{})["results"]
 
   attempts = factory.NewColumnAttempts (
-    _normalizeRawResponse (rawAttempts.([]interface{})),
+    _scaffolding.NormalizeRawResponse (rawAttempts.([]interface{})),
   )
 
   return attempts, err
@@ -203,17 +204,4 @@ func (restGrades *_BbRestCourseGrades) GetColumnAttempt (
   attempt = factory.NewColumnAttempt (result.(map[string]interface{}))
 
   return attempt, err
-}
-
-/**
- * The [_normalizeRawResponse] function...
- */
-func _normalizeRawResponse(rawResponse []interface{}) []map[string]interface{} {
-  mappedResponse := make ([]map[string]interface{}, len (rawResponse))
-
-  for i, rawColumn := range rawResponse {
-    mappedResponse[i] = rawColumn.(map[string]interface{})
-  }
-
-  return mappedResponse
 }

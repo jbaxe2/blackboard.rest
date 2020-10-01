@@ -4,7 +4,9 @@ import (
   "net/url"
   "strings"
 
+  "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
+  "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/factory"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/services"
   "github.com/jbaxe2/blackboard.rest.go/src/course_grade_attempts"
   "github.com/jbaxe2/blackboard.rest.go/src/oauth2"
@@ -76,6 +78,16 @@ func (restGradeAttempts *_BbRestCourseGradeAttempts) GetAttemptFileMetadataList 
 
   result, err = restGradeAttempts.service.Connector.SendBbRequest (
     endpoint, "GET", make (map[string]interface{}), 1,
+  )
+
+  if nil != err {
+    return attemptFiles, err
+  }
+
+  rawAttemptFiles := result.(map[string]interface{})["results"]
+
+  attemptFiles = factory.NewAttemptFiles (
+    _scaffolding.NormalizeRawResponse (rawAttemptFiles.([]interface{})),
   )
 
   return attemptFiles, err
