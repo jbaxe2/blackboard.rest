@@ -7,7 +7,6 @@ import (
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/factory/course_grades"
-  "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/services"
   "github.com/jbaxe2/blackboard.rest.go/src/course_grades"
   "github.com/jbaxe2/blackboard.rest.go/src/oauth2"
 )
@@ -63,11 +62,7 @@ type CourseGrades interface {
  * The [_BbRestCourseGrades] type...
  */
 type _BbRestCourseGrades struct {
-  host url.URL
-
-  accessToken oauth2.AccessToken
-
-  service services.BlackboardRestService
+  _BlackboardRest
 
   CourseGrades
 }
@@ -80,9 +75,10 @@ func GetCourseGradesInstance (
 ) CourseGrades {
   hostUri, _ := url.Parse (host)
 
-  courseGradesService := &_BbRestCourseGrades {
-    host: *hostUri, accessToken: accessToken,
-  }
+  courseGradesService := new (_BbRestCourseGrades)
+
+  courseGradesService.host = *hostUri
+  courseGradesService.accessToken = accessToken
 
   courseGradesService.service.SetHost (host)
   courseGradesService.service.SetAccessToken (accessToken)

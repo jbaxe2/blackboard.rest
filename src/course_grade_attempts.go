@@ -69,14 +69,12 @@ func (restGradeAttempts *_BbRestCourseGradeAttempts) GetAttemptFileMetadataList 
   courseId string, attemptId string,
 ) ([]course_grade_attempts.AttemptFile, error) {
   var attemptFiles []course_grade_attempts.AttemptFile
-  var err error
-  var result interface{}
 
   endpoint := config.CourseGradeAttemptsEndpoints["file_metadata_list"]
   endpoint = strings.Replace (endpoint, "{courseId}", courseId, -1)
   endpoint = strings.Replace (endpoint, "{attemptId}", attemptId, -1)
 
-  result, err = restGradeAttempts.service.Connector.SendBbRequest (
+  result, err := restGradeAttempts.service.Connector.SendBbRequest (
     endpoint, "GET", make (map[string]interface{}), 1,
   )
 

@@ -6,7 +6,6 @@ import (
 
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/factory"
-  "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/services"
   "github.com/jbaxe2/blackboard.rest.go/src/courses"
   "github.com/jbaxe2/blackboard.rest.go/src/oauth2"
 )
@@ -42,11 +41,7 @@ type Courses interface {
  * The [_BbRestCourses] type...
  */
 type _BbRestCourses struct {
-  host url.URL
-
-  accessToken oauth2.AccessToken
-
-  service services.BlackboardRestService
+  _BlackboardRest
 
   Courses
 }
@@ -65,7 +60,11 @@ func (restCourses *_BbRestCourses) AccessToken() oauth2.AccessToken {
 func GetCoursesInstance (host string, accessToken oauth2.AccessToken) Courses {
   hostUri, _ := url.Parse (host)
 
-  coursesService := &_BbRestCourses {host: *hostUri, accessToken: accessToken}
+  coursesService := new (_BbRestCourses)
+
+  coursesService.host = *hostUri
+  coursesService.accessToken = accessToken
+
   coursesService.service.SetHost (host)
   coursesService.service.SetAccessToken (accessToken)
 
@@ -75,7 +74,9 @@ func GetCoursesInstance (host string, accessToken oauth2.AccessToken) Courses {
 /**
  * The [GetCourse] method...
  */
-func (restCourses *_BbRestCourses) GetCourse (courseId string) (courses.Course, error) {
+func (restCourses *_BbRestCourses) GetCourse (
+  courseId string,
+) (courses.Course, error) {
   var course courses.Course
   var err error
   var result interface{}

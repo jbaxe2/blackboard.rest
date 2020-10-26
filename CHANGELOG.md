@@ -1,5 +1,9 @@
 **blackboard.rest (Go)**
 
+## 0.1.4
+- Start of working on course groups.
+- Refactoring of service structures.
+
 ## 0.1.3+1
 - More work on course grade attempts.
 

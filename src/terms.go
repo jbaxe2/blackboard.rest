@@ -6,7 +6,6 @@ import (
 
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/factory"
-  "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/services"
   "github.com/jbaxe2/blackboard.rest.go/src/oauth2"
   "github.com/jbaxe2/blackboard.rest.go/src/terms"
 )
@@ -28,11 +27,7 @@ type Terms interface {
  * The [_BbRestTerms] type...
  */
 type _BbRestTerms struct {
-  host url.URL
-
-  accessToken oauth2.AccessToken
-
-  service services.BlackboardRestService
+  _BlackboardRest
 
   Terms
 }
@@ -43,7 +38,11 @@ type _BbRestTerms struct {
 func GetTermsInstance (host string, accessToken oauth2.AccessToken) Terms {
   hostUri, _ := url.Parse (host)
 
-  termsService := &_BbRestTerms {host: *hostUri, accessToken: accessToken}
+  termsService := new (_BbRestTerms)
+
+  termsService.host = *hostUri
+  termsService.accessToken = accessToken
+
   termsService.service.SetHost (host)
   termsService.service.SetAccessToken (accessToken)
 

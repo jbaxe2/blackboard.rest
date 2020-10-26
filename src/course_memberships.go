@@ -6,7 +6,6 @@ import (
 
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/factory"
-  "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/services"
   "github.com/jbaxe2/blackboard.rest.go/src/course_memberships"
   "github.com/jbaxe2/blackboard.rest.go/src/oauth2"
 )
@@ -38,11 +37,7 @@ type CourseMemberships interface {
  * The [_BbRestCourseMemberships] type...
  */
 type _BbRestCourseMemberships struct {
-  host url.URL
-
-  accessToken oauth2.AccessToken
-
-  service services.BlackboardRestService
+  _BlackboardRest
 
   CourseMemberships
 }
@@ -55,9 +50,10 @@ func GetCourseMembershipsInstance (
 ) CourseMemberships {
   hostUri, _ := url.Parse (host)
 
-  membershipsService := &_BbRestCourseMemberships {
-    host: *hostUri, accessToken: accessToken,
-  }
+  membershipsService := new (_BbRestCourseMemberships)
+
+  membershipsService.host = *hostUri
+  membershipsService.accessToken = accessToken
 
   membershipsService.service.SetHost (host)
   membershipsService.service.SetAccessToken (accessToken)

@@ -1,14 +1,26 @@
 package course_groups
 
+import (
+  "time"
+
+  "github.com/google/uuid"
+)
+
 /**
  * The [Group] type...
  */
 type Group struct {
-  Id, ExternalId, ParentId, Name, Description string
+  Id, ExternalId, GroupSetId, Name, Description string
+
+  Uuid uuid.UUID
 
   Availability GroupAvailability
 
   Enrollment GroupEnrollment
+
+  Created time.Time
+
+  Modified time.Time
 }
 
 /**

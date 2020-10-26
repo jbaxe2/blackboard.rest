@@ -5,7 +5,6 @@ import (
 
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/factory"
-  "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/services"
   "github.com/jbaxe2/blackboard.rest.go/src/oauth2"
   "github.com/jbaxe2/blackboard.rest.go/src/system"
 )
@@ -23,11 +22,7 @@ type System interface {
  * The [_BbRestSystem] type...
  */
 type _BbRestSystem struct {
-  host url.URL
-
-  accessToken oauth2.AccessToken
-
-  service services.BlackboardRestService
+  _BlackboardRest
 
   System
 }
@@ -40,7 +35,11 @@ func GetSystemInstance (
 ) System {
   hostUri, _ := url.Parse (host)
 
-  systemService := &_BbRestSystem {host: *hostUri, accessToken: accessToken}
+  systemService := new (_BbRestSystem)
+
+  systemService.host = *hostUri
+  systemService.accessToken = accessToken
+
   systemService.service.SetHost (host)
   systemService.service.SetAccessToken (accessToken)
 

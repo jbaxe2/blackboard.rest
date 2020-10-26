@@ -6,7 +6,6 @@ import (
 
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/factory"
-  "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/services"
   "github.com/jbaxe2/blackboard.rest.go/src/oauth2"
   "github.com/jbaxe2/blackboard.rest.go/src/users"
 )
@@ -28,11 +27,7 @@ type Users interface {
  * The [_BbRestUsers] type...
  */
 type _BbRestUsers struct {
-  host url.URL
-
-  accessToken oauth2.AccessToken
-
-  service services.BlackboardRestService
+  _BlackboardRest
 
   Users
 }
@@ -51,7 +46,11 @@ func (restUsers *_BbRestUsers) AccessToken() oauth2.AccessToken {
 func GetUsersInstance (host string, accessToken oauth2.AccessToken) Users {
   hostUri, _ := url.Parse (host)
 
-  usersService := &_BbRestUsers {host: *hostUri, accessToken: accessToken}
+  usersService := new (_BbRestUsers)
+
+  usersService.host = *hostUri
+  usersService.accessToken = accessToken
+
   usersService.service.SetHost (host)
   usersService.service.SetAccessToken (accessToken)
 
