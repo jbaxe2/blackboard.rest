@@ -1,5 +1,9 @@
 **blackboard.rest (Go)**
 
+## 0.1.4+1
+- Minor refactoring across code base to clean it up.
+- Work on services.
+
 ## 0.1.4
 - Start of working on course groups.
 - Refactoring of service structures.

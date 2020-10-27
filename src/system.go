@@ -51,10 +51,8 @@ func GetSystemInstance (
  */
 func (restSystem *_BbRestSystem) GetVersion() (system.VersionInfo, error) {
   var version system.VersionInfo
-  var err error
-  var result interface{}
 
-  result, err = restSystem.service.Connector.SendBbRequest (
+  result, err := restSystem.service.Connector.SendBbRequest (
     config.SystemEndpoints["version"], "GET", make (map[string]interface{}), 1,
   )
 

@@ -7,7 +7,6 @@ import (
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
   "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/factory"
-  "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/services"
   "github.com/jbaxe2/blackboard.rest.go/src/course_grade_attempts"
   "github.com/jbaxe2/blackboard.rest.go/src/oauth2"
 )
@@ -35,11 +34,7 @@ type CourseGradeAttempts interface {
  * The [_BbRestCourseGradeAttempts] type...
  */
 type _BbRestCourseGradeAttempts struct {
-  host url.URL
-
-  accessToken oauth2.AccessToken
-
-  service services.BlackboardRestService
+  _BlackboardRest
 
   CourseGradeAttempts
 }
@@ -52,9 +47,10 @@ func GetCourseGradeAttemptsInstance (
 ) CourseGradeAttempts {
   hostUri, _ := url.Parse (host)
 
-  courseGradeAttemptsService := &_BbRestCourseGradeAttempts {
-    host: *hostUri, accessToken: accessToken,
-  }
+  courseGradeAttemptsService := new (_BbRestCourseGradeAttempts)
+
+  courseGradeAttemptsService.host = *hostUri
+  courseGradeAttemptsService.accessToken = accessToken
 
   courseGradeAttemptsService.service.SetHost (host)
   courseGradeAttemptsService.service.SetAccessToken (accessToken)
@@ -68,8 +64,6 @@ func GetCourseGradeAttemptsInstance (
 func (restGradeAttempts *_BbRestCourseGradeAttempts) GetAttemptFileMetadataList (
   courseId string, attemptId string,
 ) ([]course_grade_attempts.AttemptFile, error) {
-  var attemptFiles []course_grade_attempts.AttemptFile
-
   endpoint := config.CourseGradeAttemptsEndpoints["file_metadata_list"]
   endpoint = strings.Replace (endpoint, "{courseId}", courseId, -1)
   endpoint = strings.Replace (endpoint, "{attemptId}", attemptId, -1)
@@ -79,14 +73,36 @@ func (restGradeAttempts *_BbRestCourseGradeAttempts) GetAttemptFileMetadataList 
   )
 
   if nil != err {
-    return attemptFiles, err
+    return []course_grade_attempts.AttemptFile{}, err
   }
 
   rawAttemptFiles := result.(map[string]interface{})["results"]
 
-  attemptFiles = factory.NewAttemptFiles (
+  attemptFiles := factory.NewAttemptFiles (
     _scaffolding.NormalizeRawResponse (rawAttemptFiles.([]interface{})),
   )
 
   return attemptFiles, err
+}
+
+/**
+ * The [DownloadAttemptFile] method...
+ */
+func (restGradeAttempts *_BbRestCourseGradeAttempts) DownloadAttemptFile (
+  courseId string, attemptId string, attemptFileId string,
+) ([]byte, error) {
+  endpoint := config.CourseGradeAttemptsEndpoints["download"]
+  endpoint = strings.Replace (endpoint, "{courseId}", courseId, -1)
+  endpoint = strings.Replace (endpoint, "{attemptId}", attemptId, -1)
+  endpoint = strings.Replace (endpoint, "{attemptFileId}", attemptFileId, -1)
+
+  result, err := restGradeAttempts.service.Connector.SendBbRequest (
+    endpoint, "GET", make (map[string]interface{}), 1,
+  )
+
+  if nil != err {
+    return []byte{}, err
+  }
+
+  return result.([]byte), err
 }

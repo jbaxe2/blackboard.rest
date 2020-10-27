@@ -3,11 +3,12 @@ package oauth2
 import (
   "encoding/json"
   "errors"
-  "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
   "io/ioutil"
   "net/http"
   "net/url"
   "strings"
+
+  "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
 )
 
 /**
@@ -98,10 +99,7 @@ func (authorizer *RestAuthorizer) RequestAuthorization() (AccessToken, error) {
 func (authorizer *RestUserAuthorizer) RequestAuthorizationCode (
   redirectUri string, response *http.Response,
 ) error {
-  var err error
-  var encoded *url.URL
-
-  encoded, err = url.Parse (redirectUri)
+  encoded, err := url.Parse (redirectUri)
 
   if nil != err {
     return err
@@ -173,11 +171,9 @@ func (authorizer *RestUserAuthorizer) RequestUserAuthorization (
  */
 func _parseResponse (response *http.Response) (AccessToken, error) {
   var accessToken AccessToken
-  var err error
-  var responseBytes []byte
   var parsedResponse map[string]interface{}
 
-  responseBytes, err = ioutil.ReadAll (response.Body)
+  responseBytes, err := ioutil.ReadAll (response.Body)
 
   if nil != err {
     return accessToken, err

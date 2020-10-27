@@ -24,13 +24,13 @@ type BlackboardRestService struct {
 /**
  * The [SetHost] method...
  */
-func (services *BlackboardRestService) SetHost (host string) {
-  services.Connector.SetHost (host)
+func (service *BlackboardRestService) SetHost (host string) {
+  service.Connector.SetHost (host)
 }
 
 /**
  * The [SetAccessToken] method...
  */
-func (services *BlackboardRestService) SetAccessToken (token oauth2.AccessToken) {
-  services.Connector.SetAccessToken (token)
+func (service *BlackboardRestService) SetAccessToken (token oauth2.AccessToken) {
+  service.Connector.SetAccessToken (token)
 }

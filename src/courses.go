@@ -46,14 +46,6 @@ type _BbRestCourses struct {
   Courses
 }
 
-func (restCourses *_BbRestCourses) Host() url.URL {
-  return restCourses.host
-}
-
-func (restCourses *_BbRestCourses) AccessToken() oauth2.AccessToken {
-  return restCourses.accessToken
-}
-
 /**
  * The [GetCoursesInstance] function...
  */
@@ -78,13 +70,11 @@ func (restCourses *_BbRestCourses) GetCourse (
   courseId string,
 ) (courses.Course, error) {
   var course courses.Course
-  var err error
-  var result interface{}
 
   endpoint := config.CoursesEndpoints["course"]
   endpoint = strings.Replace (endpoint, "{courseId}", courseId, -1)
 
-  result, err = restCourses.service.Connector.SendBbRequest (
+  result, err := restCourses.service.Connector.SendBbRequest (
     endpoint, "GET", make (map[string]interface{}), 1,
   )
 

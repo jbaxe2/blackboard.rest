@@ -1,3 +1,5 @@
-**blackboard.rest (GO)**
+**blackboard.rest (Go)**
 
-This is a library of porting blackboard.rest from Dart to Go.
+The blackboard.rest library is an implementation of Blackboard's REST API's,
+written in Go.  Not all aspects of Blackboard's REST API has been implemented,
+and it is likely not all parts will be.

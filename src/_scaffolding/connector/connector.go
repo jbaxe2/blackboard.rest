@@ -100,9 +100,6 @@ func (connector *BbRestConnector) SendBbRequest (
 func _handleGetRequest (
   endpoint *url.URL, headers map[string]string, query map[string]interface{},
 ) (*http.Response, error) {
-  var response *http.Response
-  var err error
-
   if 0 < len (query) {
     queryString := ""
 
@@ -122,9 +119,7 @@ func _handleGetRequest (
     request.Header.Set (k, v)
   }
 
-  response, err = (new (http.Client)).Do (request)
-
-  return response, err
+  return (new (http.Client)).Do (request)
 }
 
 /**

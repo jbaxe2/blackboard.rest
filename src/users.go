@@ -62,13 +62,11 @@ func GetUsersInstance (host string, accessToken oauth2.AccessToken) Users {
  */
 func (restUsers *_BbRestUsers) GetUser (userId string) (users.User, error) {
   var user users.User
-  var err error
-  var result interface{}
 
   endpoint := config.UsersEndpoints["user"]
   endpoint = strings.Replace (endpoint, "{userId}", userId, -1)
 
-  result, err = restUsers.service.Connector.SendBbRequest (
+  result, err := restUsers.service.Connector.SendBbRequest (
     endpoint, "GET", make (map[string]interface{}), 1,
   )
 

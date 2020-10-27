@@ -92,14 +92,12 @@ func (restMemberships *_BbRestCourseMemberships) GetMembership (
   courseId string, userId string,
 ) (course_memberships.Membership, error) {
   var courseMembership course_memberships.Membership
-  var err error
-  var result interface{}
 
   endpoint := config.CourseMembershipsEndpoints["membership"]
   endpoint = strings.Replace (endpoint, "{courseId}", courseId, -1)
   endpoint = strings.Replace (endpoint, "{userId}", userId, -1)
 
-  result, err = restMemberships.service.Connector.SendBbRequest (
+  result, err := restMemberships.service.Connector.SendBbRequest (
     endpoint, "GET", make (map[string]interface{}), 1,
   )
 
@@ -118,21 +116,17 @@ func (restMemberships *_BbRestCourseMemberships) GetMembership (
 func (restMemberships *_BbRestCourseMemberships) _getMemberships (
   endpoint string, data map[string]interface{},
 ) ([]course_memberships.Membership, error) {
-  var courseMemberships []course_memberships.Membership
-  var err error
-  var result interface{}
-
-  result, err = restMemberships.service.Connector.SendBbRequest (
+  result, err := restMemberships.service.Connector.SendBbRequest (
     endpoint, "GET", data, 1,
   )
 
   if nil != err {
-    return courseMemberships, err
+    return []course_memberships.Membership{}, err
   }
 
   rawMemberships := result.(map[string]interface{})["results"]
 
-  courseMemberships = factory.NewMemberships (
+  courseMemberships := factory.NewMemberships (
     _normalizeRawMemberships (rawMemberships.([]interface{})),
   )
 

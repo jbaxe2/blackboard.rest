@@ -35,18 +35,6 @@ type _BbRestOAuth2 struct {
   BlackboardRestOAuth2
 }
 
-func (restOAuth2 *_BbRestOAuth2) Host() url.URL {
-  return restOAuth2.host
-}
-
-func (restOAuth2 *_BbRestOAuth2) ClientId() string {
-  return restOAuth2.clientId
-}
-
-func (restOAuth2 *_BbRestOAuth2) Secret() string {
-  return restOAuth2.secret
-}
-
 /**
  * The [GetOAuth2Instance] function...
  */

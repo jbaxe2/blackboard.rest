@@ -53,23 +53,19 @@ func GetTermsInstance (host string, accessToken oauth2.AccessToken) Terms {
  * The [GetTerms] method...
  */
 func (restTerms *_BbRestTerms) GetTerms() ([]terms.Term, error) {
-  var theTerms []terms.Term
-  var err error
-  var result interface{}
-
   endpoint := config.TermsEndpoints["terms"]
 
-  result, err = restTerms.service.Connector.SendBbRequest (
+  result, err := restTerms.service.Connector.SendBbRequest (
     endpoint, "GET", make (map[string]interface{}), 1,
   )
 
   if nil != err {
-    return theTerms, err
+    return []terms.Term{}, err
   }
 
   rawTerms := result.(map[string]interface{})["results"]
 
-  theTerms = factory.NewTerms (_normalizeRawTerms (rawTerms.([]interface{})))
+  theTerms := factory.NewTerms (_normalizeRawTerms (rawTerms.([]interface{})))
 
   return theTerms, err
 }
@@ -78,18 +74,14 @@ func (restTerms *_BbRestTerms) GetTerms() ([]terms.Term, error) {
  * The [GetTerm] method...
  */
 func (restTerms *_BbRestTerms) GetTerm (termId string) (terms.Term, error) {
-  var term terms.Term
-  var err error
-  var result interface{}
-
   endpoint := config.TermsEndpoints["term"]
   endpoint = strings.Replace (endpoint, "{termId}", termId, -1)
 
-  result, err = restTerms.service.Connector.SendBbRequest (
+  result, err := restTerms.service.Connector.SendBbRequest (
     endpoint, "GET", make (map[string]interface{}), 1,
   )
 
-  term = factory.NewTerm (result.(map[string]interface{}))
+  term := factory.NewTerm (result.(map[string]interface{}))
 
   return term, err
 }

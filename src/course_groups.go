@@ -70,8 +70,6 @@ func GetCourseGroupsInstance (
 func (restCourseGroups *_BbRestCourseGroups) GetGroups (
   courseId string,
 ) ([]course_groups.Group, error) {
-  var courseGroups []course_groups.Group
-
   endpoint := config.CourseGroupsEndpoints["groups"]
   endpoint = strings.Replace (endpoint, "{courseId}", courseId, -1)
 
@@ -80,12 +78,12 @@ func (restCourseGroups *_BbRestCourseGroups) GetGroups (
   )
 
   if nil != err {
-    return courseGroups, err
+    return []course_groups.Group{}, err
   }
 
   rawCourseGroups := result.(map[string]interface{})["results"]
 
-  courseGroups = factory.NewCourseGroups (
+  courseGroups := factory.NewCourseGroups (
     _scaffolding.NormalizeRawResponse (rawCourseGroups.([]interface{})),
   )
 

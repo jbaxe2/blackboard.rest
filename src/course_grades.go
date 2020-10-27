@@ -92,24 +92,20 @@ func GetCourseGradesInstance (
 func (restGrades *_BbRestCourseGrades) GetGradeColumns (
   courseId string,
 ) ([]course_grades.GradeColumn, error) {
-  var columns []course_grades.GradeColumn
-  var err error
-  var result interface{}
-
   endpoint := config.CourseGradesEndpoints["grade_columns"]
   endpoint = strings.Replace (endpoint, "{courseId}", courseId, -1)
 
-  result, err = restGrades.service.Connector.SendBbRequest (
+  result, err := restGrades.service.Connector.SendBbRequest (
     endpoint, "GET", make (map[string]interface{}), 2,
   )
 
   if nil != err {
-    return columns, err
+    return []course_grades.GradeColumn{}, err
   }
 
   rawColumns := result.(map[string]interface{})["results"]
 
-  columns = factory.NewGradeColumns (
+  columns := factory.NewGradeColumns (
     _scaffolding.NormalizeRawResponse (rawColumns.([]interface{})),
   )
 
@@ -123,14 +119,12 @@ func (restGrades *_BbRestCourseGrades) GetGradeColumn (
   courseId string, columnId string,
 ) (course_grades.GradeColumn, error) {
   var column course_grades.GradeColumn
-  var err error
-  var result interface{}
 
   endpoint := config.CourseGradesEndpoints["grade_column"]
   endpoint = strings.Replace (endpoint, "{courseId}", courseId, -1)
   endpoint = strings.Replace (endpoint, "{columnId}", columnId, -1)
 
-  result, err = restGrades.service.Connector.SendBbRequest (
+  result, err := restGrades.service.Connector.SendBbRequest (
     endpoint, "GET", make (map[string]interface{}), 2,
   )
 
@@ -149,25 +143,21 @@ func (restGrades *_BbRestCourseGrades) GetGradeColumn (
 func (restGrades *_BbRestCourseGrades) GetColumnAttempts (
   courseId string, columnId string,
 ) ([]course_grades.Attempt, error) {
-  var attempts []course_grades.Attempt
-  var err error
-  var result interface{}
-
   endpoint := config.CourseGradesEndpoints["column_attempts"]
   endpoint = strings.Replace (endpoint, "{courseId}", courseId, -1)
   endpoint = strings.Replace (endpoint, "{columnId}", columnId, -1)
 
-  result, err = restGrades.service.Connector.SendBbRequest (
+  result, err := restGrades.service.Connector.SendBbRequest (
     endpoint, "GET", make (map[string]interface{}), 2,
   )
 
   if nil != err {
-    return attempts, err
+    return []course_grades.Attempt{}, err
   }
 
   rawAttempts := result.(map[string]interface{})["results"]
 
-  attempts = factory.NewColumnAttempts (
+  attempts := factory.NewColumnAttempts (
     _scaffolding.NormalizeRawResponse (rawAttempts.([]interface{})),
   )
 
@@ -181,15 +171,13 @@ func (restGrades *_BbRestCourseGrades) GetColumnAttempt (
   courseId string, columnId string, attemptId string,
 ) (course_grades.Attempt, error) {
   var attempt course_grades.Attempt
-  var err error
-  var result interface{}
 
   endpoint := config.CourseGradesEndpoints["column_attempt"]
   endpoint = strings.Replace (endpoint, "{courseId}", courseId, -1)
   endpoint = strings.Replace (endpoint, "{columnId}", columnId, -1)
   endpoint = strings.Replace (endpoint, "{attemptId}", attemptId, -1)
 
-  result, err = restGrades.service.Connector.SendBbRequest (
+  result, err := restGrades.service.Connector.SendBbRequest (
     endpoint, "GET", make (map[string]interface{}), 2,
   )
 
