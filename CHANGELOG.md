@@ -1,5 +1,9 @@
 **blackboard.rest (Go)**
 
+## 0.1.5
+- Fleshed out the README a bit (more is obviously needed).
+- Start of creating the course group users service.
+
 ## 0.1.4+1
 - Minor refactoring across code base to clean it up.
 - Work on services.

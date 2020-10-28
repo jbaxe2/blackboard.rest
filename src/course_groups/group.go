@@ -42,13 +42,6 @@ type GroupEnrollment struct {
 }
 
 /**
- * The [GroupMembership] type...
- */
-type GroupMembership struct {
-  UserId string
-}
-
-/**
  * The [SignupSheet] type...
  */
 type SignupSheet struct {

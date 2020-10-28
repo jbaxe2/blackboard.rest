@@ -34,6 +34,14 @@ var CourseGradesEndpoints = map[string]string {
 }
 
 /**
+ * The [CourseGroupUsersEndpoints] map...
+ */
+var CourseGroupUsersEndpoints = map[string]string {
+  "group_memberships": "courses/{courseId}/groups/{groupId}/users",
+  "group_membership": "courses/{courseId}/groups/{groupId}/users/{userId}",
+}
+
+/**
  * The [CourseGroupsEndpoints] map...
  */
 var CourseGroupsEndpoints = map[string]string {
