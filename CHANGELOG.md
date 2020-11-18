@@ -1,5 +1,10 @@
 **blackboard.rest (Go)**
 
+## 0.1.6
+- Renaming and restructuring of project.
+- Tweaks (re-establishing imports, formatting, etc.) to code to reflect the
+renaming/restructuring.
+
 ## 0.1.5
 - Fleshed out the README a bit (more is obviously needed).
 - Start of creating the course group users service.

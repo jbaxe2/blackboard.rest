@@ -1,10 +1,11 @@
 package test
 
 import (
-  blackboard_rest "github.com/jbaxe2/blackboard.rest.go/src"
-  "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
-  "github.com/jbaxe2/blackboard.rest.go/src/system"
   "testing"
+
+  blackboardRest "github.com/jbaxe2/blackboard.rest"
+  "github.com/jbaxe2/blackboard.rest/_scaffolding/config"
+  "github.com/jbaxe2/blackboard.rest/system"
 )
 
 /**
@@ -29,11 +30,11 @@ func (tester *SystemTester) Run() {
 /**
  * The [_getSystemInstance] function...
  */
-func _getSystemInstance() blackboard_rest.System {
+func _getSystemInstance() blackboardRest.System {
   authorizer := TestersAuthorizer{}
   _ = authorizer.AuthorizeForTests()
 
-  return blackboard_rest.GetSystemInstance (
+  return blackboardRest.GetSystemInstance (
     config.Host, authorizer.accessToken,
   )
 }

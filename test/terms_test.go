@@ -1,10 +1,11 @@
 package test
 
 import (
-  blackboard_rest "github.com/jbaxe2/blackboard.rest.go/src"
-  "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
-  "github.com/jbaxe2/blackboard.rest.go/src/terms"
   "testing"
+
+  blackboardRest "github.com/jbaxe2/blackboard.rest"
+  "github.com/jbaxe2/blackboard.rest/_scaffolding/config"
+  "github.com/jbaxe2/blackboard.rest/terms"
 )
 
 /**
@@ -30,11 +31,11 @@ func (tester *TermsTester) Run() {
 /**
  * The [_getTermsInstance] function...
  */
-func _getTermsInstance() blackboard_rest.Terms {
+func _getTermsInstance() blackboardRest.Terms {
   authorizer := TestersAuthorizer{}
   _ = authorizer.AuthorizeForTests()
 
-  return blackboard_rest.GetTermsInstance (
+  return blackboardRest.GetTermsInstance (
     config.Host, authorizer.accessToken,
   )
 }

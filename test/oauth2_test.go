@@ -2,11 +2,12 @@ package test
 
 import (
   "errors"
-  "github.com/jbaxe2/blackboard.rest.go/src"
-  "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
-  "github.com/jbaxe2/blackboard.rest.go/src/oauth2"
   "net/url"
   "testing"
+
+  "github.com/jbaxe2/blackboard.rest"
+  "github.com/jbaxe2/blackboard.rest/_scaffolding/config"
+  "github.com/jbaxe2/blackboard.rest/oauth2"
 )
 
 /**

@@ -1,10 +1,11 @@
 package test
 
 import (
-  blackboard_rest "github.com/jbaxe2/blackboard.rest.go/src"
-  "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
-  "github.com/jbaxe2/blackboard.rest.go/src/course_grades"
   "testing"
+
+  blackboardRest "github.com/jbaxe2/blackboard.rest"
+  "github.com/jbaxe2/blackboard.rest/_scaffolding/config"
+  "github.com/jbaxe2/blackboard.rest/course_grades"
 )
 
 /**
@@ -32,11 +33,11 @@ func (tester *CourseGradesTester) Run() {
 /**
  * The [_getCourseGradesInstance] function...
  */
-func _getCourseGradesInstance() blackboard_rest.CourseGrades {
+func _getCourseGradesInstance() blackboardRest.CourseGrades {
   authorizer := TestersAuthorizer{}
   _ = authorizer.AuthorizeForTests()
 
-  return blackboard_rest.GetCourseGradesInstance (
+  return blackboardRest.GetCourseGradesInstance (
     config.Host, authorizer.accessToken,
   )
 }

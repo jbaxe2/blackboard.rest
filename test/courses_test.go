@@ -1,9 +1,10 @@
 package test
 
 import (
-  "github.com/jbaxe2/blackboard.rest.go/src"
-  "github.com/jbaxe2/blackboard.rest.go/src/_scaffolding/config"
   "testing"
+
+  "github.com/jbaxe2/blackboard.rest"
+  "github.com/jbaxe2/blackboard.rest/_scaffolding/config"
 )
 
 /**
