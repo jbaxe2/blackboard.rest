@@ -1,5 +1,8 @@
 **blackboard.rest (Go)**
 
+## 0.1.6+1
+- Work on course groups factory.
+
 ## 0.1.6
 - Renaming and restructuring of project.
 - Tweaks (re-establishing imports, formatting, etc.) to code to reflect the

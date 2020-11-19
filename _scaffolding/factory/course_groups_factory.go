@@ -1,6 +1,9 @@
 package factory
 
-import "github.com/jbaxe2/blackboard.rest/course_groups"
+import (
+  "github.com/google/uuid"
+  "github.com/jbaxe2/blackboard.rest/course_groups"
+)
 
 /**
  * The [NewCourseGroups] function...
@@ -21,5 +24,14 @@ func NewCourseGroups (
  * The [NewCourseGroup] function...
  */
 func NewCourseGroup (rawCourseGroup map[string]interface{}) course_groups.Group {
-  return course_groups.Group{}
+  groupUuid, _ := uuid.Parse (rawCourseGroup["uuid"].(string))
+
+  return course_groups.Group {
+    Id: rawCourseGroup["id"].(string),
+    ExternalId: rawCourseGroup["externalId"].(string),
+    GroupSetId: rawCourseGroup["groupSetId"].(string),
+    Name: rawCourseGroup["name"].(string),
+    Description: rawCourseGroup["description"].(string),
+    Uuid: groupUuid,
+  }
 }
