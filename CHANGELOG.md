@@ -1,5 +1,8 @@
 **blackboard.rest (Go)**
 
+## 0.1.6+2
+- More work on course groups.
+
 ## 0.1.6+1
 - Work on course groups factory.
 

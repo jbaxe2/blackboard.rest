@@ -51,5 +51,8 @@ func (tester *BlackboardRestTester) Run() {
   courseGradesTester := CourseGradesTester {t: tester.t}
   courseGradesTester.Run()
 
+  courseGroupsTester := CourseGroupsTester {t: tester.t}
+  courseGroupsTester.Run()
+
   println()
 }

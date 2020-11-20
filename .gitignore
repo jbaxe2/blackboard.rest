@@ -3,4 +3,4 @@
 .idea
 *.iml
 
-src/config/connection_info.go
+_scaffolding/config/connection_info.go
