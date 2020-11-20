@@ -1,5 +1,8 @@
 **blackboard.rest (Go)**
 
+## 0.1.6+3
+- Added ability to retrieve group sets for a course ID.
+
 ## 0.1.6+2
 - More work on course groups.
 

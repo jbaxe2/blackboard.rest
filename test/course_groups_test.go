@@ -23,6 +23,7 @@ func (tester *CourseGroupsTester) Run() {
   println ("Course groups:\n")
 
   _testGetGroupsForCourse (tester.t)
+  _testGetGroupSetsForCourse (tester.t)
 }
 
 /**
@@ -49,6 +50,24 @@ func _testGetGroupsForCourse (t *testing.T) {
 
   if nil != err {
     t.Error ("Failed to retrieve the groups for the course.")
+    t.Error (err.Error())
+
+    t.FailNow()
+  }
+}
+
+/**
+ * The [_testGetGroupSetsForCourse] function...
+ */
+func _testGetGroupSetsForCourse (t *testing.T) {
+  println ("Obtain the group sets for a course by external ID.")
+
+  groupsService := _getCourseGroupsInstance()
+
+  _, err := groupsService.GetGroupSets ("externalId:wsu_educ_cap_2020spring")
+
+  if nil != err {
+    t.Error ("Failed to retrieve the group sets for the course.")
     t.Error (err.Error())
 
     t.FailNow()

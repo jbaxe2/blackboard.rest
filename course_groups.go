@@ -89,3 +89,29 @@ func (restCourseGroups *_BbRestCourseGroups) GetGroups (
 
   return courseGroups, err
 }
+
+/**
+ * The [GetGroupSets] method...
+ */
+func (restCourseGroups *_BbRestCourseGroups) GetGroupSets (
+  courseId string,
+) ([]course_groups.Group, error) {
+  endpoint := config.CourseGroupsEndpoints["group_sets"]
+  endpoint = strings.Replace (endpoint, "{courseId}", courseId, -1)
+
+  result, err := restCourseGroups.service.Connector.SendBbRequest (
+    endpoint, "GET", make (map[string]interface{}), 2,
+  )
+
+  if nil != err {
+    return []course_groups.Group{}, err
+  }
+
+  rawCourseGroupSets := result.(map[string]interface{})["results"]
+
+  courseGroupSets := factory.NewCourseGroups (
+    _scaffolding.NormalizeRawResponse (rawCourseGroupSets.([]interface{})),
+  )
+
+  return courseGroupSets, err
+}
