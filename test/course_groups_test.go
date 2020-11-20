@@ -45,7 +45,7 @@ func _testGetGroupsForCourse (t *testing.T) {
 
   groupsService := _getCourseGroupsInstance()
 
-  _, err := groupsService.GetGroups ("externalId:wsu_educ_cap_2020fall")
+  _, err := groupsService.GetGroups ("externalId:wsu_educ_cap_2020spring")
 
   if nil != err {
     t.Error ("Failed to retrieve the groups for the course.")
