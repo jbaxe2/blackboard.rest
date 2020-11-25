@@ -56,9 +56,9 @@ var CourseGroupsEndpoints = map[string]string {
  * The [CourseMembershipsEndpoints] map...
  */
 var CourseMembershipsEndpoints = map[string]string {
-  "course_memberships": "courses/{courseId}/users",
+  "course_memberships": "courses/{courseId}/users?expand=user",
   "user_memberships": "users/{userId}/courses",
-  "membership": "courses/{courseId}/users/{userId}",
+  "membership": "courses/{courseId}/users/{userId}?expand=user",
 }
 
 /**

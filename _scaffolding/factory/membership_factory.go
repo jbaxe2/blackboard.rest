@@ -30,8 +30,10 @@ func NewMembership (
   created, _ := time.Parse (time.RFC3339, rawMembership["created"].(string))
 
   return course_memberships.Membership {
+    Id: rawMembership["id"].(string),
     CourseId: rawMembership["courseId"].(string),
     UserId: rawMembership["userId"].(string),
+    User: NewUser (rawMembership["user"].(map[string]interface{})),
     Created: created,
     CourseRoleId: _parseCourseRole (rawMembership["courseRoleId"].(string)),
     Availability:

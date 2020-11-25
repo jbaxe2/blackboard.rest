@@ -1,5 +1,8 @@
 **blackboard.rest (Go)**
 
+## 0.1.6+4
+- Added inclusion of user information when loading enrollments.
+
 ## 0.1.6+3
 - Added ability to retrieve group sets for a course ID.
 
