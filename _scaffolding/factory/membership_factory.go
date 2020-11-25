@@ -4,6 +4,7 @@ import (
   "time"
 
   "github.com/jbaxe2/blackboard.rest/course_memberships"
+  "github.com/jbaxe2/blackboard.rest/users"
 )
 
 /**
@@ -33,12 +34,25 @@ func NewMembership (
     Id: rawMembership["id"].(string),
     CourseId: rawMembership["courseId"].(string),
     UserId: rawMembership["userId"].(string),
-    User: NewUser (rawMembership["user"].(map[string]interface{})),
+    User: _parseUser (rawMembership["user"]),
     Created: created,
     CourseRoleId: _parseCourseRole (rawMembership["courseRoleId"].(string)),
     Availability:
       _parseAvailability (rawMembership["availability"].(map[string]interface{})),
   }
+}
+
+/**
+ * The [_parseUser] function...
+ */
+func _parseUser (user interface{}) users.User {
+  var newUser users.User
+
+  if rawUser, haveUser := user.(map[string]interface{}); haveUser {
+    newUser = NewUser (rawUser)
+  }
+
+  return newUser
 }
 
 /**

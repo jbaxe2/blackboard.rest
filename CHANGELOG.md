@@ -1,5 +1,9 @@
 **blackboard.rest (Go)**
 
+## 0.1.6+5
+- Worked to resolve issues with course user parsing, including for loading
+course and user memberships.
+
 ## 0.1.6+4
 - Added inclusion of user information when loading enrollments.
 

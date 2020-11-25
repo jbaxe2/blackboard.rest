@@ -5,7 +5,6 @@ import (
 
   "github.com/jbaxe2/blackboard.rest"
   "github.com/jbaxe2/blackboard.rest/_scaffolding/config"
-  "github.com/jbaxe2/blackboard.rest/course_memberships"
 )
 
 /**
@@ -122,7 +121,7 @@ func _testGetMembershipByCourseAndUserPrimaryIds (t *testing.T) {
   membership, err :=
     membershipsService.GetMembership ("_121_1", "_27_1")
 
-  if (course_memberships.Membership{} == membership) || (nil != err) {
+  if (nil != err) || ("" == membership.Id) {
     t.Error ("Failed to obtain the membership for the course and user.")
     t.FailNow()
   }

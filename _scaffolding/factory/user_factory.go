@@ -20,6 +20,10 @@ func NewUser (rawUser map[string]interface{}) users.User {
     lastLogin, _ = time.Parse (time.RFC3339, rawUser["lastLogin"].(string))
   }
 
+  if nil == rawUser["studentId"] {
+    rawUser["studentId"] = ""
+  }
+
   return users.User {
     Id: rawUser["id"].(string),
     Uuid: rawUser["uuid"].(string),
@@ -31,8 +35,8 @@ func NewUser (rawUser map[string]interface{}) users.User {
     Created: created,
     LastLogin: lastLogin,
     InstitutionRoleIds:
-      _parseInstitutionRoles (rawUser["institutionRoleIds"].([]interface{})),
-    SystemRoleIds: _parseSystemRoles (rawUser["systemRoleIds"].([]interface{})),
+      _parseInstitutionRoles (rawUser["institutionRoleIds"]),
+    SystemRoleIds: _parseSystemRoles (rawUser["systemRoleIds"]),
     Availability:
       _parseUserAvailability (
         rawUser["availability"].(map[string]interface{})["available"].(string),
@@ -44,11 +48,13 @@ func NewUser (rawUser map[string]interface{}) users.User {
 /**
  * The [_parseInstitutionRoles] function...
  */
-func _parseInstitutionRoles (rawInstitutionRoles []interface{}) []string {
+func _parseInstitutionRoles (rawInstitutionRoles ...interface{}) []string {
   var institutionRoles = make ([]string, len (rawInstitutionRoles))
 
-  for i, role := range rawInstitutionRoles {
-    institutionRoles[i] = role.(string)
+  for _, rawRole := range rawInstitutionRoles {
+    if institutionRole, haveInstRole := rawRole.(string); haveInstRole {
+      institutionRoles = append (institutionRoles, institutionRole)
+    }
   }
 
   return institutionRoles
@@ -57,11 +63,13 @@ func _parseInstitutionRoles (rawInstitutionRoles []interface{}) []string {
 /**
  * The [_parseSystemRoles] function...
  */
-func _parseSystemRoles (rawSystemRoles []interface{}) []users.SystemRole {
+func _parseSystemRoles (rawSystemRoles ...interface{}) []users.SystemRole {
   var systemRoles = make ([]users.SystemRole, len (rawSystemRoles))
 
-  for i, role := range rawSystemRoles {
-    systemRoles[i] = users.SystemRole (role.(string))
+  for _, rawRole := range rawSystemRoles {
+    if systemRole, haveSystemRole := rawRole.(string); haveSystemRole {
+      systemRoles = append (systemRoles, users.SystemRole (systemRole))
+    }
   }
 
   return systemRoles
