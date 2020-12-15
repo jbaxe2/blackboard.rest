@@ -29,16 +29,20 @@ func NewColumnAttempt (
 ) course_grades.Attempt {
   created, _ := time.Parse (time.RFC3339, rawColumnAttempt["created"].(string))
 
+  if nil == rawColumnAttempt["text"] {
+    rawColumnAttempt["text"] = ""
+  }
+
   return course_grades.Attempt {
     Id: rawColumnAttempt["id"].(string),
     UserId: rawColumnAttempt["userId"].(string),
     Status: course_grades.AttemptStatus (rawColumnAttempt["status"].(string)),
     DisplayGrade:
-      _parseDisplayGrade (rawColumnAttempt["displayGrade"].(map[string]interface{})),
-    Text: rawColumnAttempt["text"].(string),
+      _parseDisplayGrade (rawColumnAttempt["displayGrade"]),
     Score: rawColumnAttempt["score"].(float64),
     Exempt: rawColumnAttempt["exempt"].(bool),
     Created: created,
+    Text: rawColumnAttempt["text"].(string),
   }
 }
 
@@ -46,18 +50,25 @@ func NewColumnAttempt (
  * The [_parseDisplayGrade] function...
  */
 func _parseDisplayGrade (
-  rawDisplayGrade map[string]interface{},
+  rawDisplayGrade interface{}, // map[string]interface{},
 ) course_grades.DisplayGrade {
   displayGrade := new (course_grades.DisplayGrade)
-  displayGrade.ScaleType =
-    course_grades.ScaleType (rawDisplayGrade["scaleType"].(string))
-  displayGrade.Score = rawDisplayGrade["score"].(float64)
 
-  if nil == rawDisplayGrade["text"] {
-    rawDisplayGrade["text"] = ""
+  semiRawDisplayGrade, haveDisplayGrade := rawDisplayGrade.(map[string]interface{})
+
+  if !haveDisplayGrade {
+    return *displayGrade
   }
 
-  displayGrade.Text = rawDisplayGrade["text"].(string)
+  displayGrade.ScaleType =
+    course_grades.ScaleType (semiRawDisplayGrade["scaleType"].(string))
+  displayGrade.Score = semiRawDisplayGrade["score"].(float64)
+
+  if nil == semiRawDisplayGrade["text"] {
+    semiRawDisplayGrade["text"] = ""
+  }
+
+  displayGrade.Text = semiRawDisplayGrade["text"].(string)
 
   return *displayGrade
 }

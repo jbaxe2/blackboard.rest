@@ -1,5 +1,8 @@
 **blackboard.rest (Go)**
 
+## 0.1.6+6
+- Resolved a column attempt factory parsing issue.
+
 ## 0.1.6+5
 - Worked to resolve issues with course user parsing, including for loading
 course and user memberships.
