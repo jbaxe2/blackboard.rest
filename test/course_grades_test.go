@@ -48,9 +48,7 @@ func _getCourseGradesInstance() blackboardRest.CourseGrades {
 func _testGetValidCourseGradesInstance (t *testing.T) {
   println ("Obtain a valid CourseGrades service instance.")
 
-  courseGradesService := _getCourseGradesInstance()
-
-  if nil == courseGradesService {
+  if nil == _getCourseGradesInstance() {
     t.Error ("Obtaining a valid CourseGrades service instance failed.")
     t.FailNow()
   }

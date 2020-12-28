@@ -1,5 +1,9 @@
 **blackboard.rest (Go)**
 
+## 0.1.7
+- Added some tests.
+- Included group attempt ID for column attempts.
+
 ## 0.1.6+6
 - Resolved a column attempt factory parsing issue.
 

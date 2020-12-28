@@ -33,9 +33,14 @@ func NewColumnAttempt (
     rawColumnAttempt["text"] = ""
   }
 
+  if nil == rawColumnAttempt["groupAttemptId"] {
+    rawColumnAttempt["groupAttemptId"] = ""
+  }
+
   return course_grades.Attempt {
     Id: rawColumnAttempt["id"].(string),
     UserId: rawColumnAttempt["userId"].(string),
+    GroupAttemptId: rawColumnAttempt["groupAttemptId"].(string),
     Status: course_grades.AttemptStatus (rawColumnAttempt["status"].(string)),
     DisplayGrade:
       _parseDisplayGrade (rawColumnAttempt["displayGrade"]),

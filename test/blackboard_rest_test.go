@@ -29,7 +29,7 @@ type BlackboardRestTester struct {
 /**
  * The [Run] method...
  */
-func (tester *BlackboardRestTester) Run() {
+func (tester *BlackboardRestTester) Run() {/*
   oauth2Tester := OAuth2Tester {t: tester.t}
   oauth2Tester.Run()
 
@@ -49,10 +49,13 @@ func (tester *BlackboardRestTester) Run() {
   termsTester.Run()
 
   courseGradesTester := CourseGradesTester {t: tester.t}
-  courseGradesTester.Run()
+  courseGradesTester.Run()*/
 
+  courseGradeAttemptsTester := CourseGradeAttemptsTester {t: tester.t}
+  courseGradeAttemptsTester.Run()
+/*
   courseGroupsTester := CourseGroupsTester {t: tester.t}
   courseGroupsTester.Run()
-
+*/
   println()
 }
