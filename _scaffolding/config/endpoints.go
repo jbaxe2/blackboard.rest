@@ -1,8 +1,6 @@
 package config
 
-const Base = "/learn/api/public/v1/"
-
-const BaseV2 = "/learn/api/public/v2/"
+const Base = "/learn/api/public/v{v}/"
 
 /**
  * The [OAuth2Endpoints] map...
@@ -18,8 +16,10 @@ var OAuth2Endpoints = map[string]string {
 var CourseGradeAttemptsEndpoints = map[string]string {
   "file_metadata_list": "courses/{courseId}/gradebook/attempts/{attemptId}/files",
   "attach_file": "courses/{courseId}/gradebook/attempts/{attemptId}/files",
-  "file_metadata": "courses/{courseId}/gradebook/attempts/{attemptId}/files/{attemptFileId}",
-  "download": "courses/{courseId}/gradebook/attempts/{attemptId}/files/{attemptFileId}/download",
+  "file_metadata":
+    "courses/{courseId}/gradebook/attempts/{attemptId}/files/{attemptFileId}",
+  "download":
+    "courses/{courseId}/gradebook/attempts/{attemptId}/files/{attemptFileId}/download",
 }
 
 /**

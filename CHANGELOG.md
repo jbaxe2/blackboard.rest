@@ -1,4 +1,10 @@
-**blackboard.rest (Go)**
+**blackboard.rest**
+
+## 0.2.0 - ** BREAKING CHANGES **
+- Some redesign of the library.
+
+## 0.1.8
+- Updating code base to newer REST API definitions.
 
 ## 0.1.7
 - Added some tests.

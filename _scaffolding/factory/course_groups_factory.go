@@ -2,6 +2,7 @@ package factory
 
 import (
   "github.com/google/uuid"
+
   "github.com/jbaxe2/blackboard.rest/course_groups"
 )
 

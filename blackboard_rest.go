@@ -8,7 +8,8 @@ import (
 )
 
 /**
- * The [_BlackboardRest] type...
+ * The [_BlackboardRest] type provides some internal components needed by all of
+ * the services implemented by this library.
  */
 type _BlackboardRest struct {
   host url.URL

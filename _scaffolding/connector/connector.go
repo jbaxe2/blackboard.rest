@@ -6,6 +6,7 @@ import (
   "io/ioutil"
   "net/http"
   "net/url"
+  "strconv"
   "strings"
 
   "github.com/jbaxe2/blackboard.rest/_scaffolding/config"
@@ -55,11 +56,7 @@ func (connector *BbRestConnector) SendBbRequest (
     return result, errors.New ("no endpoint to send a REST request to")
   }
 
-  base := config.Base
-
-  if 2 == useVersion {
-    base = config.BaseV2
-  }
+  base := strings.Replace (config.Base, "{v}", strconv.Itoa (useVersion), 1)
 
   if endpointUri, err = url.Parse (connector.host + base + endpoint); nil != err {
     return result, err
@@ -107,16 +104,15 @@ func _handleGetRequest (
       queryString += k + "=" + v.(string) + "&"
     }
 
-    endpoint.RawQuery = queryString[:(len (queryString) - 1)]
+    endpoint.RawQuery = url.QueryEscape (queryString[:(len (queryString) - 1)])
   }
 
   request := new (http.Request)
+  request.Header = make (http.Header)
   request.URL = endpoint
 
-  request.Header = make (http.Header)
-
   for k, v := range headers {
-    request.Header.Set (k, v)
+    request.Header.Add (k, v)
   }
 
   return (new (http.Client)).Do (request)
@@ -128,8 +124,18 @@ func _handleGetRequest (
 func _handlePostRequest (
   endpoint *url.URL, headers map[string]string, body map[string]interface{},
 ) (*http.Response, error) {
-  var response *http.Response
-  var err error
+  request := new (http.Request)
+  request.Header = make (http.Header)
+  request.URL = endpoint
+  request.Method = "POST"
 
-  return response, err
+  for k, v := range headers {
+    request.Header.Add (k, v)
+  }
+
+  for k, v := range body {
+    request.Form.Add (k, v.(string))
+  }
+
+  return (new (http.Client)).Do (request)
 }
