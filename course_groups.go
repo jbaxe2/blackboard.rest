@@ -6,7 +6,6 @@ import (
 
   "github.com/jbaxe2/blackboard.rest/_scaffolding"
   "github.com/jbaxe2/blackboard.rest/_scaffolding/config"
-  "github.com/jbaxe2/blackboard.rest/_scaffolding/factory"
   "github.com/jbaxe2/blackboard.rest/course_groups"
   "github.com/jbaxe2/blackboard.rest/oauth2"
 )
@@ -83,7 +82,7 @@ func (restCourseGroups *_BbRestCourseGroups) GetGroups (
 
   rawCourseGroups := result.(map[string]interface{})["results"]
 
-  courseGroups := factory.NewCourseGroups (
+  courseGroups := course_groups.NewCourseGroups(
     _scaffolding.NormalizeRawResponse (rawCourseGroups.([]interface{})),
   )
 
@@ -109,7 +108,7 @@ func (restCourseGroups *_BbRestCourseGroups) GetGroupSets (
 
   rawCourseGroupSets := result.(map[string]interface{})["results"]
 
-  courseGroupSets := factory.NewCourseGroups (
+  courseGroupSets := course_groups.NewCourseGroups(
     _scaffolding.NormalizeRawResponse (rawCourseGroupSets.([]interface{})),
   )
 

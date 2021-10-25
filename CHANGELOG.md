@@ -1,5 +1,8 @@
 **blackboard.rest**
 
+## 0.2.1
+- More work on redesign.
+
 ## 0.2.0 - ** BREAKING CHANGES **
 - Some redesign of the library.
 

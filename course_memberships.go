@@ -5,7 +5,6 @@ import (
   "strings"
 
   "github.com/jbaxe2/blackboard.rest/_scaffolding/config"
-  "github.com/jbaxe2/blackboard.rest/_scaffolding/factory"
   "github.com/jbaxe2/blackboard.rest/course_memberships"
   "github.com/jbaxe2/blackboard.rest/oauth2"
 )
@@ -105,7 +104,7 @@ func (restMemberships *_BbRestCourseMemberships) GetMembership (
     return courseMembership, err
   }
 
-  courseMembership = factory.NewMembership (result.(map[string]interface{}))
+  courseMembership = course_memberships.NewMembership(result.(map[string]interface{}))
 
   return courseMembership, err
 }
@@ -126,7 +125,7 @@ func (restMemberships *_BbRestCourseMemberships) _getMemberships (
 
   rawMemberships := result.(map[string]interface{})["results"]
 
-  courseMemberships := factory.NewMemberships (
+  courseMemberships := course_memberships.NewMemberships(
     _normalizeRawMemberships(rawMemberships.([]interface{})),
   )
 

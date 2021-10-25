@@ -8,6 +8,16 @@ import (
 )
 
 /**
+ * The [OAuth2] interface provides the base type for interacting with the REST
+ * API's oauth service.
+ */
+type OAuth2 interface {
+  AuthorizationCode (url.URL, string, string, string) string
+
+  RequestToken (string, string, url.URL) oauth2.Token
+}
+
+/**
  * The [BlackboardRestOAuth2] interface...
  */
 type BlackboardRestOAuth2 interface {
@@ -17,7 +27,7 @@ type BlackboardRestOAuth2 interface {
 
   RequestToken (
     grantType string, code string, redirectUri url.URL,
-  ) (oauth2.AccessToken, error)
+  ) (oauth2.Token, error)
 }
 
 /**
@@ -64,7 +74,7 @@ func (restOAuth2 *_BbRestOAuth2) GetAuthorizationCode (
  */
 func (restOAuth2 *_BbRestOAuth2) RequestToken (
   grantType string, code string, redirectUri url.URL,
-) (oauth2.AccessToken, error) {
+) (oauth2.Token, error) {
   var accessToken oauth2.AccessToken
   var err error
 

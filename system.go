@@ -4,7 +4,6 @@ import (
   "net/url"
 
   "github.com/jbaxe2/blackboard.rest/_scaffolding/config"
-  "github.com/jbaxe2/blackboard.rest/_scaffolding/factory"
   "github.com/jbaxe2/blackboard.rest/oauth2"
   "github.com/jbaxe2/blackboard.rest/system"
 )
@@ -60,7 +59,7 @@ func (restSystem *_BbRestSystem) GetVersion() (system.VersionInfo, error) {
     return version, err
   }
 
-  version = factory.NewVersionInfo (result.(map[string]interface{}))
+  version = system.NewVersionInfo(result.(map[string]interface{}))
 
   return version, err
 }

@@ -1,15 +1,13 @@
-package factory
+package users
 
 import (
   "time"
-
-  "github.com/jbaxe2/blackboard.rest/users"
 )
 
 /**
  * The [NewUser] function...
  */
-func NewUser (rawUser map[string]interface{}) users.User {
+func NewUser (rawUser map[string]interface{}) User {
   var created, lastLogin time.Time
 
   if nil != rawUser["created"] {
@@ -24,7 +22,7 @@ func NewUser (rawUser map[string]interface{}) users.User {
     rawUser["studentId"] = ""
   }
 
-  return users.User {
+  return User {
     Id: rawUser["id"].(string),
     Uuid: rawUser["uuid"].(string),
     ExternalId: rawUser["externalId"].(string),
@@ -63,12 +61,12 @@ func _parseInstitutionRoles (rawInstitutionRoles ...interface{}) []string {
 /**
  * The [_parseSystemRoles] function...
  */
-func _parseSystemRoles (rawSystemRoles ...interface{}) []users.SystemRole {
-  var systemRoles = make ([]users.SystemRole, len (rawSystemRoles))
+func _parseSystemRoles (rawSystemRoles ...interface{}) []SystemRole {
+  var systemRoles = make ([]SystemRole, len (rawSystemRoles))
 
   for _, rawRole := range rawSystemRoles {
     if systemRole, haveSystemRole := rawRole.(string); haveSystemRole {
-      systemRoles = append (systemRoles, users.SystemRole (systemRole))
+      systemRoles = append (systemRoles, SystemRole (systemRole))
     }
   }
 
@@ -78,15 +76,15 @@ func _parseSystemRoles (rawSystemRoles ...interface{}) []users.SystemRole {
 /**
  * The [_parseUserAvailability] function...
  */
-func _parseUserAvailability (rawUserAvailability string) users.UserAvailability {
-  return users.UserAvailability (rawUserAvailability)
+func _parseUserAvailability (rawUserAvailability string) UserAvailability {
+  return UserAvailability (rawUserAvailability)
 }
 
 /**
  * The [_parseName] function...
  */
-func _parseName (rawName map[string]interface{}) users.Name {
-  name := users.Name {
+func _parseName (rawName map[string]interface{}) Name {
+  name := Name {
     Given: rawName["given"].(string),
     Family: rawName["family"].(string),
   }

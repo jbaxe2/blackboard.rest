@@ -5,7 +5,6 @@ import (
   "strings"
 
   "github.com/jbaxe2/blackboard.rest/_scaffolding/config"
-  "github.com/jbaxe2/blackboard.rest/_scaffolding/factory"
   "github.com/jbaxe2/blackboard.rest/oauth2"
   "github.com/jbaxe2/blackboard.rest/users"
 )
@@ -74,7 +73,7 @@ func (restUsers *_BbRestUsers) GetUser (userId string) (users.User, error) {
     return user, err
   }
 
-  user = factory.NewUser (result.(map[string]interface{}))
+  user = users.NewUser(result.(map[string]interface{}))
 
   return user, err
 }

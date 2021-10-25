@@ -1,16 +1,14 @@
-package factory
+package terms
 
 import (
   "time"
-
-  "github.com/jbaxe2/blackboard.rest/terms"
 )
 
 /**
  * The [NewTerms] function...
  */
-func NewTerms (rawTerms []map[string]interface{}) []terms.Term {
-  theTerms := make ([]terms.Term, len (rawTerms))
+func NewTerms (rawTerms []map[string]interface{}) []Term {
+  theTerms := make ([]Term, len (rawTerms))
 
   for i, rawTerm := range rawTerms {
     theTerms[i] = NewTerm (rawTerm)
@@ -22,8 +20,8 @@ func NewTerms (rawTerms []map[string]interface{}) []terms.Term {
 /**
  * The [NewTerm] function...
  */
-func NewTerm (rawTerm map[string]interface{}) terms.Term {
-  return terms.Term {
+func NewTerm (rawTerm map[string]interface{}) Term {
+  return Term {
     Id: rawTerm["id"].(string),
     ExternalId: rawTerm["externalId"].(string),
     Name: rawTerm["name"].(string),
@@ -34,11 +32,11 @@ func NewTerm (rawTerm map[string]interface{}) terms.Term {
 /**
  * The [_parseTermAvailability] function...
  */
-func _parseTermAvailability (rawAvailability interface{}) terms.TermAvailability {
+func _parseTermAvailability (rawAvailability interface{}) TermAvailability {
   mappedAvailability := rawAvailability.(map[string]interface{})
 
-  return terms.TermAvailability {
-    Available: terms.Availability (mappedAvailability["available"].(string)),
+  return TermAvailability {
+    Available: Availability (mappedAvailability["available"].(string)),
     Duration: _parseDuration (mappedAvailability["duration"]),
   }
 }
@@ -46,7 +44,7 @@ func _parseTermAvailability (rawAvailability interface{}) terms.TermAvailability
 /**
  * The [_parseDuration] function...
  */
-func _parseDuration (rawDuration interface{}) terms.TermDuration {
+func _parseDuration (rawDuration interface{}) TermDuration {
   var start, end time.Time
 
   mappedDuration := rawDuration.(map[string]interface{})
@@ -59,8 +57,8 @@ func _parseDuration (rawDuration interface{}) terms.TermDuration {
     end, _ = time.Parse (time.RFC3339, mappedDuration["end"].(string))
   }
 
-  termDuration := terms.TermDuration {
-    Type: terms.DurationType (mappedDuration["type"].(string)),
+  termDuration := TermDuration {
+    Type: DurationType(mappedDuration["type"].(string)),
     Start: start,
     End: end,
   }

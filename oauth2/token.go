@@ -42,7 +42,14 @@ func NewToken (
     return nil
   }
 
-  return new (_Token)
+  return &_Token {
+    accessToken: accessToken,
+    tokenType: tokenType,
+    refreshToken: refreshToken,
+    scope: scope,
+    userId: userId,
+    expiresIn: expiresIn,
+  }
 }
 
 func (token *_Token) AccessToken() string {
@@ -76,11 +83,8 @@ func (token *_Token) ExpiresIn() float64 {
 func _verifyTokenConditions (
   accessToken, tokenType, refreshToken, scope, userId string, expiresIn float64,
 ) bool {
-  if "" == accessToken || "" == tokenType {
-    return false
-  }
-
-  if strings.Contains (scope, "offline") && "" == refreshToken {
+  if "" == accessToken || "" == tokenType || "" == userId || 1 > expiresIn ||
+     (strings.Contains (scope, "offline") && "" == refreshToken) {
     return false
   }
 

@@ -1,18 +1,16 @@
-package factory
+package courses
 
 import (
   "time"
-
-  "github.com/jbaxe2/blackboard.rest/courses"
 )
 
 /**
  * The [NewCourse] function...
  */
-func NewCourse (rawCourse map[string]interface{}) courses.Course {
+func NewCourse (rawCourse map[string]interface{}) Course {
   created, _ := time.Parse (time.RFC3339, rawCourse["created"].(string))
 
-  return courses.Course {
+  return Course{
     Id: rawCourse["id"].(string),
     Uuid: rawCourse["uuid"].(string),
     ExternalId: rawCourse["externalId"].(string),

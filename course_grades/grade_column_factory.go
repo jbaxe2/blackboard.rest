@@ -1,14 +1,10 @@
-package factory
-
-import "github.com/jbaxe2/blackboard.rest/course_grades"
+package course_grades
 
 /**
  * The [NewGradeColumns] function...
  */
-func NewGradeColumns (
-  rawGradeColumns []map[string]interface{},
-) []course_grades.GradeColumn {
-  gradeColumns := make ([]course_grades.GradeColumn, len (rawGradeColumns))
+func NewGradeColumns (rawGradeColumns []map[string]interface{}) []GradeColumn {
+  gradeColumns := make ([]GradeColumn, len (rawGradeColumns))
 
   for i, rawGradeColumn := range rawGradeColumns {
     gradeColumns[i] = NewGradeColumn (rawGradeColumn)
@@ -22,8 +18,8 @@ func NewGradeColumns (
  */
 func NewGradeColumn (
   rawGradeColumn map[string]interface{},
-) course_grades.GradeColumn {
-  return course_grades.GradeColumn {
+) GradeColumn {
+  return GradeColumn {
     Id: rawGradeColumn["id"].(string),
     Name: rawGradeColumn["name"].(string),
     Score: _parseScore (rawGradeColumn["score"].(map[string]interface{})),
@@ -37,8 +33,8 @@ func NewGradeColumn (
 /**
  * The [_parseScore] function...
  */
-func _parseScore (rawScore map[string]interface{}) course_grades.Scoring {
-  return course_grades.Scoring {
+func _parseScore (rawScore map[string]interface{}) Scoring {
+  return Scoring {
     Possible: rawScore["possible"].(float64),
   }
 }
@@ -46,18 +42,16 @@ func _parseScore (rawScore map[string]interface{}) course_grades.Scoring {
 /**
  * The [_parseAvailability] function...
  */
-func _parseAvailability (
-  rawAvailability map[string]interface{},
-) course_grades.GradeAvailability {
-  return course_grades.GradeAvailability (rawAvailability["available"].(string))
+func _parseAvailability (rawAvailability map[string]interface{}) GradeAvailability {
+  return GradeAvailability (rawAvailability["available"].(string))
 }
 
 /**
  * The [_parseGrading] function...
  */
-func _parseGrading (rawGrading map[string]interface{}) course_grades.Grading {
-  return course_grades.Grading {
-    Type: course_grades.GradingType (rawGrading["type"].(string)),
+func _parseGrading (rawGrading map[string]interface{}) Grading {
+  return Grading {
+    Type: GradingType (rawGrading["type"].(string)),
     SchemaId: rawGrading["schemaId"].(string),
   }
 }

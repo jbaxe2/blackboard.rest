@@ -5,7 +5,6 @@ import (
   "strings"
 
   "github.com/jbaxe2/blackboard.rest/_scaffolding/config"
-  "github.com/jbaxe2/blackboard.rest/_scaffolding/factory"
   "github.com/jbaxe2/blackboard.rest/oauth2"
   "github.com/jbaxe2/blackboard.rest/terms"
 )
@@ -65,7 +64,7 @@ func (restTerms *_BbRestTerms) GetTerms() ([]terms.Term, error) {
 
   rawTerms := result.(map[string]interface{})["results"]
 
-  theTerms := factory.NewTerms (_normalizeRawTerms (rawTerms.([]interface{})))
+  theTerms := terms.NewTerms(_normalizeRawTerms (rawTerms.([]interface{})))
 
   return theTerms, err
 }
@@ -81,7 +80,7 @@ func (restTerms *_BbRestTerms) GetTerm (termId string) (terms.Term, error) {
     endpoint, "GET", make (map[string]interface{}), 1,
   )
 
-  term := factory.NewTerm (result.(map[string]interface{}))
+  term := terms.NewTerm(result.(map[string]interface{}))
 
   return term, err
 }

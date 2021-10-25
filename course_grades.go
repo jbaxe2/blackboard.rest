@@ -6,7 +6,7 @@ import (
 
   "github.com/jbaxe2/blackboard.rest/_scaffolding"
   "github.com/jbaxe2/blackboard.rest/_scaffolding/config"
-  "github.com/jbaxe2/blackboard.rest/_scaffolding/factory/course_grades"
+  //"github.com/jbaxe2/blackboard.rest/_scaffolding/factory/course_grades"
   "github.com/jbaxe2/blackboard.rest/course_grades"
   "github.com/jbaxe2/blackboard.rest/oauth2"
 )
@@ -105,7 +105,7 @@ func (restGrades *_BbRestCourseGrades) GetGradeColumns (
 
   rawColumns := result.(map[string]interface{})["results"]
 
-  columns := factory.NewGradeColumns (
+  columns := course_grades.factory.NewGradeColumns(
     _scaffolding.NormalizeRawResponse (rawColumns.([]interface{})),
   )
 
@@ -132,7 +132,7 @@ func (restGrades *_BbRestCourseGrades) GetGradeColumn (
     return column, err
   }
 
-  column = factory.NewGradeColumn (result.(map[string]interface{}))
+  column = course_grades.factory.NewGradeColumn(result.(map[string]interface{}))
 
   return column, err
 }
@@ -157,7 +157,7 @@ func (restGrades *_BbRestCourseGrades) GetColumnAttempts (
 
   rawAttempts := result.(map[string]interface{})["results"]
 
-  attempts := factory.NewColumnAttempts (
+  attempts := course_grades.NewColumnAttempts(
     _scaffolding.NormalizeRawResponse (rawAttempts.([]interface{})),
   )
 
@@ -185,7 +185,7 @@ func (restGrades *_BbRestCourseGrades) GetColumnAttempt (
     return attempt, err
   }
 
-  attempt = factory.NewColumnAttempt (result.(map[string]interface{}))
+  attempt = course_grades.NewColumnAttempt(result.(map[string]interface{}))
 
   return attempt, err
 }

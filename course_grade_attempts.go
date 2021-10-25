@@ -6,7 +6,6 @@ import (
 
   "github.com/jbaxe2/blackboard.rest/_scaffolding"
   "github.com/jbaxe2/blackboard.rest/_scaffolding/config"
-  "github.com/jbaxe2/blackboard.rest/_scaffolding/factory"
   "github.com/jbaxe2/blackboard.rest/course_grade_attempts"
   "github.com/jbaxe2/blackboard.rest/oauth2"
 )
@@ -78,7 +77,7 @@ func (restGradeAttempts *_BbRestCourseGradeAttempts) GetAttemptFileMetadataList 
 
   rawAttemptFiles := result.(map[string]interface{})["results"]
 
-  attemptFiles := factory.NewAttemptFiles (
+  attemptFiles := course_grade_attempts.NewAttemptFiles (
     _scaffolding.NormalizeRawResponse (rawAttemptFiles.([]interface{})),
   )
 

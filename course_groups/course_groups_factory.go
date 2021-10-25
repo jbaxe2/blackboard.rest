@@ -1,18 +1,14 @@
-package factory
+package course_groups
 
 import (
   "github.com/google/uuid"
-
-  "github.com/jbaxe2/blackboard.rest/course_groups"
 )
 
 /**
  * The [NewCourseGroups] function...
  */
-func NewCourseGroups (
-  rawCourseGroups []map[string]interface{},
-) []course_groups.Group {
-  courseGroups := make ([]course_groups.Group, len (rawCourseGroups))
+func NewCourseGroups (rawCourseGroups []map[string]interface{}) []Group {
+  courseGroups := make ([]Group, len (rawCourseGroups))
 
   for i, rawCourseGroup := range rawCourseGroups {
     courseGroups[i] = NewCourseGroup (rawCourseGroup)
@@ -24,10 +20,10 @@ func NewCourseGroups (
 /**
  * The [NewCourseGroup] function...
  */
-func NewCourseGroup (rawCourseGroup map[string]interface{}) course_groups.Group {
+func NewCourseGroup (rawCourseGroup map[string]interface{}) Group {
   groupUuid, _ := uuid.Parse (rawCourseGroup["uuid"].(string))
 
-  return course_groups.Group {
+  return Group {
     Id: rawCourseGroup["id"].(string),
     ExternalId: rawCourseGroup["externalId"].(string),
     GroupSetId: _parseGroupSetId (rawCourseGroup["groupSetId"]),

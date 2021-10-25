@@ -1,18 +1,14 @@
-package factory
+package course_grades
 
 import (
   "time"
-
-  "github.com/jbaxe2/blackboard.rest/course_grades"
 )
 
 /**
  * The [NewColumnAttempts] function...
  */
-func NewColumnAttempts (
-  rawColumnAttempts []map[string]interface{},
-) []course_grades.Attempt {
-  attempts := make ([]course_grades.Attempt, len (rawColumnAttempts))
+func NewColumnAttempts (rawColumnAttempts []map[string]interface{}) []Attempt {
+  attempts := make ([]Attempt, len (rawColumnAttempts))
 
   for i, rawAttempt := range rawColumnAttempts {
     attempts[i] = NewColumnAttempt (rawAttempt)
@@ -24,9 +20,7 @@ func NewColumnAttempts (
 /**
  * The [NewColumnAttempt] function...
  */
-func NewColumnAttempt (
-  rawColumnAttempt map[string]interface{},
-) course_grades.Attempt {
+func NewColumnAttempt (rawColumnAttempt map[string]interface{}) Attempt {
   created, _ := time.Parse (time.RFC3339, rawColumnAttempt["created"].(string))
 
   if nil == rawColumnAttempt["text"] {
@@ -37,11 +31,11 @@ func NewColumnAttempt (
     rawColumnAttempt["groupAttemptId"] = ""
   }
 
-  return course_grades.Attempt {
+  return Attempt {
     Id: rawColumnAttempt["id"].(string),
     UserId: rawColumnAttempt["userId"].(string),
     GroupAttemptId: rawColumnAttempt["groupAttemptId"].(string),
-    Status: course_grades.AttemptStatus (rawColumnAttempt["status"].(string)),
+    Status: AttemptStatus(rawColumnAttempt["status"].(string)),
     DisplayGrade:
       _parseDisplayGrade (rawColumnAttempt["displayGrade"]),
     Score: rawColumnAttempt["score"].(float64),
@@ -54,11 +48,8 @@ func NewColumnAttempt (
 /**
  * The [_parseDisplayGrade] function...
  */
-func _parseDisplayGrade (
-  rawDisplayGrade interface{}, // map[string]interface{},
-) course_grades.DisplayGrade {
-  displayGrade := new (course_grades.DisplayGrade)
-
+func _parseDisplayGrade (rawDisplayGrade interface{}) DisplayGrade {
+  displayGrade := new (DisplayGrade)
   semiRawDisplayGrade, haveDisplayGrade := rawDisplayGrade.(map[string]interface{})
 
   if !haveDisplayGrade {
@@ -66,7 +57,7 @@ func _parseDisplayGrade (
   }
 
   displayGrade.ScaleType =
-    course_grades.ScaleType (semiRawDisplayGrade["scaleType"].(string))
+    ScaleType(semiRawDisplayGrade["scaleType"].(string))
   displayGrade.Score = semiRawDisplayGrade["score"].(float64)
 
   if nil == semiRawDisplayGrade["text"] {

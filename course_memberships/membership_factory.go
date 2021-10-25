@@ -1,19 +1,16 @@
-package factory
+package course_memberships
 
 import (
   "time"
 
-  "github.com/jbaxe2/blackboard.rest/course_memberships"
   "github.com/jbaxe2/blackboard.rest/users"
 )
 
 /**
  * The [NewMemberships] function...
  */
-func NewMemberships (
-  rawMemberships []map[string]interface{},
-) []course_memberships.Membership {
-  memberships := make ([]course_memberships.Membership, len (rawMemberships))
+func NewMemberships (rawMemberships []map[string]interface{}) []Membership {
+  memberships := make ([]Membership, len (rawMemberships))
 
   for i, rawMembership := range rawMemberships {
     memberships[i] = NewMembership (rawMembership)
@@ -25,12 +22,10 @@ func NewMemberships (
 /**
  * The [NewMembership] function...
  */
-func NewMembership (
-  rawMembership map[string]interface{},
-) course_memberships.Membership {
+func NewMembership (rawMembership map[string]interface{}) Membership {
   created, _ := time.Parse (time.RFC3339, rawMembership["created"].(string))
 
-  return course_memberships.Membership {
+  return Membership {
     Id: rawMembership["id"].(string),
     CourseId: rawMembership["courseId"].(string),
     UserId: rawMembership["userId"].(string),
@@ -49,7 +44,7 @@ func _parseUser (user interface{}) users.User {
   var newUser users.User
 
   if rawUser, haveUser := user.(map[string]interface{}); haveUser {
-    newUser = NewUser (rawUser)
+    newUser = users.NewUser (rawUser)
   }
 
   return newUser
@@ -60,8 +55,8 @@ func _parseUser (user interface{}) users.User {
  */
 func _parseAvailability (
   availability map[string]interface{},
-) course_memberships.MembershipAvailability {
-  return course_memberships.MembershipAvailability (
+) MembershipAvailability {
+  return MembershipAvailability(
     availability["available"].(string),
   )
 }
@@ -69,6 +64,6 @@ func _parseAvailability (
 /**
  * The [_parseCourseRole] function...
  */
-func _parseCourseRole (roleId string) course_memberships.MembershipRole {
-  return course_memberships.MembershipRole (roleId)
+func _parseCourseRole (roleId string) MembershipRole {
+  return MembershipRole (roleId)
 }

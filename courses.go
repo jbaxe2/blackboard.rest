@@ -5,7 +5,6 @@ import (
   "strings"
 
   "github.com/jbaxe2/blackboard.rest/_scaffolding/config"
-  "github.com/jbaxe2/blackboard.rest/_scaffolding/factory"
   "github.com/jbaxe2/blackboard.rest/courses"
   "github.com/jbaxe2/blackboard.rest/oauth2"
 )
@@ -82,7 +81,7 @@ func (restCourses *_BbRestCourses) GetCourse (
     return course, err
   }
 
-  course = factory.NewCourse (result.(map[string]interface{}))
+  course = courses.NewCourse(result.(map[string]interface{}))
 
   return course, err
 }
