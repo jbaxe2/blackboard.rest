@@ -1,5 +1,8 @@
 **blackboard.rest**
 
+## 0.2.2
+- Removed most, if not all, of old code that will not be used with redesign.
+
 ## 0.2.1
 - More work on redesign.
 

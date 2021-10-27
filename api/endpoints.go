@@ -1,4 +1,4 @@
-package config
+package api
 
 const Base = "/learn/api/public/v{v}/"
 

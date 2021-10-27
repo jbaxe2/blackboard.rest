@@ -7,6 +7,10 @@ import "github.com/jbaxe2/blackboard.rest/oauth2"
  * API service types.
  */
 type Service interface {
+  Host() string
+
+  Token() oauth2.Token
+
   Request (
     endpoint string, method string, data map[string]interface{},
     options map[string]interface{}, useVersion int,
@@ -28,9 +32,20 @@ type _Service struct {
  * The [NewService] function creates a new Service instance.
  */
 func NewService (host string, token oauth2.Token) Service {
-  if "" == host {
+  if "" == host || nil == token {
     return nil
   }
 
-  return new (_Service)
+  return &_Service {
+    host: host,
+    token: token,
+  }
+}
+
+func (service *_Service) Host() string {
+  return service.host
+}
+
+func (service *_Service) Token() oauth2.Token {
+  return service.token
 }
