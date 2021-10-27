@@ -9,7 +9,7 @@ import (
 /**
  * The [CreateNewOAuth2Instance] function...
  */
-func CreateNewOAuth2Instance (t *testing.T) {
+func TestCreateNewOAuth2Instance (t *testing.T) {
   println ("Create a new OAuth2 service instance.")
 
   if nil == blackboardRest.NewOAuth2() {
