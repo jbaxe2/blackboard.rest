@@ -13,6 +13,10 @@ type OAuth2Error interface {
  * The [_OAuth2Error] type implements the OAuth2 Error interface.
  */
 type _OAuth2Error struct {
+  code string
+
+  description string
+
   OAuth2Error
 }
 
@@ -30,5 +34,20 @@ func NewOAuth2Error (code, description string) OAuth2Error {
     return nil
   }
 
-  return new (_OAuth2Error)
+  return &_OAuth2Error {
+    code: code,
+    description: description,
+  }
+}
+
+func (oauth2Error *_OAuth2Error) Code() string {
+  return oauth2Error.code
+}
+
+func (oauth2Error *_OAuth2Error) Description() string {
+  return oauth2Error.description
+}
+
+func (oauth2Error *_OAuth2Error) Error() string {
+  return "(" + oauth2Error.code + ") " + oauth2Error.description
 }

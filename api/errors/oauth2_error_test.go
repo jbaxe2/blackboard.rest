@@ -88,5 +88,12 @@ func TestNewOAuth2ErrorHasPertinentInformation (t *testing.T) {
   println ("New OAuth2 Error retains the information used to create it.")
 
   code := "invalid_client"
-  description := ""
+  description := "error description"
+
+  oauth2Error := errors.NewOAuth2Error (code, description)
+
+  if !(oauth2Error.Code() == code && oauth2Error.Description() == description) {
+    t.Error ("The OAuth2 Error should retain the information used to create it.")
+    t.FailNow()
+  }
 }
