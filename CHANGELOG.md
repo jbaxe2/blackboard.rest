@@ -1,5 +1,8 @@
 **blackboard.rest**
 
+## 0.2.2+1
+- Work on OAuth2 service.
+
 ## 0.2.2
 - Removed most, if not all, of old code that will not be used with redesign.
 
