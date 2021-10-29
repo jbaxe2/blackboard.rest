@@ -1,5 +1,9 @@
 **blackboard.rest**
 
+## 0.2.2+2
+- Redefined endpoints from mutable maps to immutable constants.
+- More work on OAuth2 service.
+
 ## 0.2.2+1
 - Work on OAuth2 service.
 

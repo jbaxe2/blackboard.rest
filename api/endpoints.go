@@ -3,96 +3,129 @@ package api
 const Base = "/learn/api/public/v{v}/"
 
 /**
- * The [OAuth2Endpoints] map...
+ * The [OAuth2Endpoint] type provides defining typed OAuth2 endpoint constants.
  */
-var OAuth2Endpoints = map[string]string {
-  "authorization_code": "oauth2/authorizationcode",
-  "request_token": "oauth2/token",
-}
+type OAuth2Endpoint string
+
+const (
+  AuthorizationCode OAuth2Endpoint = "oauth2/authorizationcode"
+  RequestToken      OAuth2Endpoint = "oauth2/token"
+)
 
 /**
- * The [CourseGradeAttemptsEndpoints] map...
+ * The [CourseGradeAttemptsEndpoint] type provides defining typed course grade
+ * attempts endpoint constants.
  */
-var CourseGradeAttemptsEndpoints = map[string]string {
-  "file_metadata_list": "courses/{courseId}/gradebook/attempts/{attemptId}/files",
-  "attach_file": "courses/{courseId}/gradebook/attempts/{attemptId}/files",
-  "file_metadata":
-    "courses/{courseId}/gradebook/attempts/{attemptId}/files/{attemptFileId}",
-  "download":
-    "courses/{courseId}/gradebook/attempts/{attemptId}/files/{attemptFileId}/download",
-}
+type CourseGradeAttemptsEndpoint string
+
+const (
+  FileMetadataList  CourseGradeAttemptsEndpoint =
+    "courses/{courseId}/gradebook/attempts/{attemptId}/files"
+  AttachFile        CourseGradeAttemptsEndpoint =
+    "courses/{courseId}/gradebook/attempts/{attemptId}/files"
+  FileMetadata      CourseGradeAttemptsEndpoint =
+    "courses/{courseId}/gradebook/attempts/{attemptId}/files/{attemptFileId}"
+  Download          CourseGradeAttemptsEndpoint =
+    "courses/{courseId}/gradebook/attempts/{attemptId}/files/{attemptFileId}/download"
+)
 
 /**
- * The [CourseGradesEndpoints] map...
+ * The [CourseGradesEndpoint] type provides defining typed course grades endpoint
+ * constants.
  */
-var CourseGradesEndpoints = map[string]string {
-  "grade_columns": "courses/{courseId}/gradebook/columns",
-  "grade_column": "courses/{courseId}/gradebook/columns/{columnId}",
-  "column_attempts": "courses/{courseId}/gradebook/columns/{columnId}/attempts",
-  "column_attempt":
-    "courses/{courseId}/gradebook/columns/{columnId}/attempts/{attemptId}",
-}
+type CourseGradesEndpoint string
+
+const (
+  GradeColumns    CourseGradesEndpoint = "courses/{courseId}/gradebook/columns"
+  GradeColumn     CourseGradesEndpoint =
+    "courses/{courseId}/gradebook/columns/{columnId}"
+  ColumnAttempts  CourseGradesEndpoint =
+    "courses/{courseId}/gradebook/columns/{columnId}/attempts"
+  ColumnAttempt   CourseGradesEndpoint =
+    "courses/{courseId}/gradebook/columns/{columnId}/attempts/{attemptId}"
+)
 
 /**
- * The [CourseGroupUsersEndpoints] map...
+ * The [CourseGroupUsersEndpoint] type provides defining typed course group users
+ * endpoint constants.
  */
-var CourseGroupUsersEndpoints = map[string]string {
-  "group_memberships": "courses/{courseId}/groups/{groupId}/users",
-  "group_membership": "courses/{courseId}/groups/{groupId}/users/{userId}",
-}
+type CourseGroupUsersEndpoint string
+
+const (
+  GroupMemberships  CourseGroupUsersEndpoint =
+    "courses/{courseId}/groups/{groupId}/users"
+  GroupMembership   CourseGroupUsersEndpoint =
+    "courses/{courseId}/groups/{groupId}/users/{userId}"
+)
 
 /**
- * The [CourseGroupsEndpoints] map...
+ * The [CourseGroupsEndpoint] type provides defining typed course group endpoint
+ * constants.
  */
-var CourseGroupsEndpoints = map[string]string {
-  "groups": "courses/{courseId}/groups",
-  "group_sets": "courses/{courseId}/groups/sets",
-  "group_set": "courses/{courseId}/groups/sets/{groupId}",
-  "group_set_groups": "courses/{courseId}/groups/sets/{groupId}/groups",
-  "group": "/courses/{courseId}/groups/{groupId}",
-}
+type CourseGroupsEndpoint string
+
+const (
+  Groups          CourseGroupsEndpoint = "courses/{courseId}/groups"
+  GroupSets       CourseGroupsEndpoint = "courses/{courseId}/groups/sets"
+  GroupSet        CourseGroupsEndpoint = "courses/{courseId}/groups/sets/{groupId}"
+  GroupSetGroups  CourseGroupsEndpoint =
+    "courses/{courseId}/groups/sets/{groupId}/groups"
+  Group           CourseGroupsEndpoint = "courses/{courseId}/groups/{groupId}"
+)
 
 /**
- * The [CourseMembershipsEndpoints] map...
+ * The [CourseMembershipsEndpoint] type provides defining typed course
+ * memberships endpoint constants.
  */
-var CourseMembershipsEndpoints = map[string]string {
-  "course_memberships": "courses/{courseId}/users?expand=user",
-  "user_memberships": "users/{userId}/courses",
-  "membership": "courses/{courseId}/users/{userId}?expand=user",
-}
+type CourseMembershipsEndpoint string
+
+const (
+  CourseMemberships CourseMembershipsEndpoint = "courses/{courseId}/users?expand=user"
+  UserMemberships   CourseMembershipsEndpoint = "users/{userId}/courses"
+  Membership        CourseMembershipsEndpoint =
+    "courses/{courseId}/users/{userId}?expand=user"
+)
 
 /**
- * The [CoursesEndpoints] map...
+ * The [CoursesEndpoint] type provides defining typed courses endpoint constants.
  */
-var CoursesEndpoints = map[string]string {
-  "courses": "courses",
-  "course": "courses/{courseId}",
-  "children": "courses/{courseId}/children",
-  "child": "courses/{courseId}/children/{childCourseId}",
-  "crossListSet": "courses/{courseId}/crossListSet",
-  "copy": "courses/{courseId}/copy",
-}
+type CoursesEndpoint string
+
+const (
+  Courses       CoursesEndpoint = "courses"
+  Course        CoursesEndpoint = "courses/{courseId}"
+  Children      CoursesEndpoint = "courses/{courseId}/children"
+  Child         CoursesEndpoint = "courses/{courseId}/children/{childCourseId}"
+  CrossListSet  CoursesEndpoint = "courses/{courseId}/crossListSet"
+  Copy          CoursesEndpoint = "courses/{courseId}/copy"
+)
 
 /**
- * The [SystemEndpoints] map...
+ * The [SystemEndpoint] type provides defining typed system endpoint constants.
  */
-var SystemEndpoints = map[string]string {
-  "policies":"system/policies/privacy",
-  "version": "system/version",
-}
+type SystemEndpoint string
+
+const (
+  Policies  SystemEndpoint = "system/policies/privacy"
+  Version   SystemEndpoint = "system/version"
+)
 
 /**
- * The [TermsEndpoints] map...
+ * The [TermsEndpoint] type provides defining typed terms endpoint constants.
  */
-var TermsEndpoints = map[string]string {
-  "terms": "terms",
-  "term": "terms/{termId}",
-}
+type TermsEndpoint string
+
+const (
+  Terms TermsEndpoint = "terms"
+  Term  TermsEndpoint = "terms/{termId}"
+)
 
 /**
- * The [UsersEndpoints] map...
+ * The [UsersEndpoint] type provides defining typed users endpoint constants.
  */
-var UsersEndpoints = map[string]string {
-  "users": "users",
-  "user": "users/{userId}",
-}
+type UsersEndpoint string
+
+const (
+  Users UsersEndpoint = "users"
+  User  UsersEndpoint = "users/{userId}"
+)

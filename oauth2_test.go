@@ -1,6 +1,7 @@
 package blackboard_rest_test
 
 import (
+  "encoding/json"
   "io"
   "net/http"
   "net/url"
@@ -57,10 +58,32 @@ func TestNewOAuth2ObtainAuthorizationCode (t *testing.T) {
   redirectUri, _ := url.Parse ("localhost")
 
   oAuth2 := blackboardRest.NewOAuth2 ("localhost", mockRoundTripper)
-  response := oAuth2.AuthorizationCode (request, *redirectUri, "clientId", "read")
+  response := oAuth2.AuthorizationCode (request, redirectUri, "clientId", "read")
 
-  if nil == response {
-    t.Error ("The authorization code should not result in nil response.")
+  location, err := response.Location()
+
+  result := nil != response && nil == err && 200 == response.StatusCode &&
+    strings.Contains (location.String(), "&response_type=code")
+
+  if !result {
+    t.Error ("The authorization code response was not properly established.")
+    t.FailNow()
+  }
+}
+
+/**
+ * The [TestNewOAuth2RequestTokenWithClientCredentials] function...
+ */
+func TestNewOAuth2RequestTokenWithClientCredentials (t *testing.T) {
+  println ("Request a new OAuth2 authorization token with client credentials.")
+
+  redirectUri, _ := url.Parse ("localhost")
+
+  oAuth2 := blackboardRest.NewOAuth2 ("localhost", mockRequestTokenRoundTripper)
+  token, err := oAuth2.RequestToken ("client_credentials", "authCode", redirectUri)
+
+  if nil == token || nil != err {
+    t.Error ("Obtaining an authorization token should complete successfully.")
     t.FailNow()
   }
 }
@@ -68,14 +91,22 @@ func TestNewOAuth2ObtainAuthorizationCode (t *testing.T) {
 /**
  * Mocked types and instances to run the above tests with.
  */
-
-var mockRoundTripper = new (_MockRoundTripper)
+var mockRoundTripper = NewMockRoundTripper (NewMockEmptyWriter())
+var mockRequestTokenRoundTripper = NewMockRoundTripper (NewMockTokenInfoWriter())
 
 /**
  * The [_MockRoundTripper] type.
  */
 type _MockRoundTripper struct {
+  writer io.Writer
+
   http.RoundTripper
+}
+
+func NewMockRoundTripper (mockWriter io.Writer) http.RoundTripper {
+  return &_MockRoundTripper {
+    writer: mockWriter,
+  }
 }
 
 func (roundTripper *_MockRoundTripper) RoundTrip (
@@ -88,8 +119,10 @@ func (roundTripper *_MockRoundTripper) RoundTrip (
 
   if strings.Contains (request.URL.Path, "oauth2/authorizationcode") {
     request.Response.Status = "200 OK"
-    _ = request.Response.Write (NewMockWriter())
+    request.Response.StatusCode = 200
   }
+
+  _ = request.Response.Write (roundTripper.writer)
 
   return request.Response, nil
 }
@@ -103,9 +136,26 @@ type _MockWriter struct {
   io.Writer
 }
 
-func NewMockWriter() io.Writer {
+func NewMockEmptyWriter() io.Writer {
   return &_MockWriter {
     data: "",
+  }
+}
+
+func NewMockTokenInfoWriter() io.Writer {
+  tokenInfo := map[string]interface{} {
+    "access_token": "accessTokenValue",
+    "token_type": "someTokenType",
+    "expires_in": 3600,
+    "refresh_token": "",
+    "scope": "read",
+    "user_id": "someUserId",
+  }
+
+  tokenBytes, _ := json.Marshal (tokenInfo)
+
+  return &_MockWriter {
+    data: string (tokenBytes),
   }
 }
 
