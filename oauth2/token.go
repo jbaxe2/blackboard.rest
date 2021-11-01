@@ -16,7 +16,7 @@ type Token interface {
 
   UserId() string
 
-  ExpiresIn() float64
+  ExpiresIn() int32
 }
 
 /**
@@ -25,7 +25,7 @@ type Token interface {
 type _Token struct {
   accessToken, tokenType, refreshToken, scope, userId string
 
-  expiresIn float64
+  expiresIn int32
 
   Token
 }
@@ -34,7 +34,7 @@ type _Token struct {
  * The [NewToken] function creates a new Token instance.
  */
 func NewToken (
-  accessToken, tokenType, refreshToken, scope, userId string, expiresIn float64,
+  accessToken, tokenType, refreshToken, scope, userId string, expiresIn int32,
 ) Token {
   if !_verifyTokenConditions (
     accessToken, tokenType, refreshToken, scope, userId, expiresIn,
@@ -72,7 +72,7 @@ func (token *_Token) UserId() string {
   return token.userId
 }
 
-func (token *_Token) ExpiresIn() float64 {
+func (token *_Token) ExpiresIn() int32 {
   return token.expiresIn
 }
 
@@ -81,7 +81,7 @@ func (token *_Token) ExpiresIn() float64 {
  * an OAuth2 token are as they should be.
  */
 func _verifyTokenConditions (
-  accessToken, tokenType, refreshToken, scope, userId string, expiresIn float64,
+  accessToken, tokenType, refreshToken, scope, userId string, expiresIn int32,
 ) bool {
   if "" == accessToken || "" == tokenType || "" == userId || 1 > expiresIn ||
      (strings.Contains (scope, "offline") && "" == refreshToken) {

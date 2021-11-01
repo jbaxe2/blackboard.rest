@@ -1,6 +1,10 @@
 package api
 
-import "github.com/jbaxe2/blackboard.rest/oauth2"
+import (
+  "net/http"
+
+  "github.com/jbaxe2/blackboard.rest/oauth2"
+)
 
 /**
  * The [Service] interface is the base interface for all Blackboard Learn REST
@@ -25,20 +29,26 @@ type _Service struct {
 
   token oauth2.Token
 
+  roundTripper http.RoundTripper
+
   Service
 }
 
 /**
  * The [NewService] function creates a new Service instance.
  */
-func NewService (host string, token oauth2.Token) Service {
-  if "" == host || nil == token {
+func NewService (
+  host string, token oauth2.Token, roundTripper http.RoundTripper,
+) Service {
+  if "" == host || nil == token || "" == token.AccessToken() ||
+     1 > token.ExpiresIn() || nil == roundTripper {
     return nil
   }
 
   return &_Service {
     host: host,
     token: token,
+    roundTripper: roundTripper,
   }
 }
 

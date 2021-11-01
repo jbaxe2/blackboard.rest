@@ -16,7 +16,6 @@ func TestCreateNewOAuth2Token (t *testing.T) {
     "access_token", "token_type", "refresh_token", "scope", "user_id", 3600,
   ) {
     t.Error ("Creating a new OAuth2 token instance should not be nil.")
-    t.FailNow()
   }
 }
 
@@ -28,7 +27,6 @@ func TestNewOAuth2TokenRequiresAccessToken (t *testing.T) {
 
   if nil != oauth2.NewToken ("", "token_type", "refresh_token", "", "user_id", 3600) {
     t.Error ("Missing access token should result in a nil reference.")
-    t.FailNow()
   }
 }
 
@@ -40,7 +38,6 @@ func TestNewOAuth2TokenRequiresTokenType (t *testing.T) {
 
   if nil != oauth2.NewToken ("access_token", "", "refresh_token", "", "user_id", 3600) {
     t.Error ("Missing token type should result in a nil reference.")
-    t.FailNow()
   }
 }
 
@@ -54,7 +51,6 @@ func TestNewOAuth2TokenCanHaveEmptyRefreshTokenScopeNotOffline (t *testing.T) {
 
   if nil == oauth2.NewToken ("access_token", "token_type", "", "", "user_id", 3600) {
     t.Error ("Missing refresh token should not result in a nil reference.")
-    t.FailNow()
   }
 }
 
@@ -70,8 +66,6 @@ func TestNewOAuth2TokenRefreshTokenNotEmptyIfOfflineScope (t *testing.T) {
     t.Error (
       "Missing refresh token for offline scope should result in nil reference.",
     )
-
-    t.FailNow()
   }
 }
 
@@ -83,7 +77,6 @@ func TestNewOAuth2TokenRequiresUserId (t *testing.T) {
 
   if nil != oauth2.NewToken ("access_token", "token_type", "", "", "", 3600) {
     t.Error ("Missing user ID should result in nil reference.")
-    t.FailNow()
   }
 }
 
@@ -97,7 +90,6 @@ func TestNewOAuth2TokenRequiresExpiresInGreaterThanZero (t *testing.T) {
     "access_token", "token_type", "", "read", "user_id", 0,
   ) {
     t.Error ("Expires in value less than 1 should result in nil reference.")
-    t.FailNow()
   }
 }
 
@@ -112,7 +104,7 @@ func TestNewOAuth2TokenHasPertinentInformation (t *testing.T) {
   refreshToken := "refresh_token"
   scope := "offline"
   userId := "user_id"
-  expiresIn := float64 (3600)
+  expiresIn := int32 (3600)
 
   token :=
     oauth2.NewToken (accessToken, tokenType, refreshToken, scope, userId, expiresIn)

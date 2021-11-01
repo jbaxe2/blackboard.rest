@@ -1,8 +1,9 @@
 package blackboard_rest_test
 
 import (
+  "bytes"
   "encoding/json"
-  "io"
+  "io/ioutil"
   "net/http"
   "net/url"
   "strings"
@@ -19,7 +20,6 @@ func TestCreateNewOAuth2Instance (t *testing.T) {
 
   if nil == blackboardRest.NewOAuth2 ("localhost", mockRoundTripper) {
     t.Error ("New OAuth2 instance should not be a nil reference.")
-    t.FailNow()
   }
 }
 
@@ -31,7 +31,6 @@ func TestNewOAuth2InstanceRequiresHost (t *testing.T) {
 
   if nil != blackboardRest.NewOAuth2 ("", mockRoundTripper) {
     t.Error ("Missing host should result in nil reference.")
-    t.FailNow()
   }
 }
 
@@ -43,7 +42,6 @@ func TestNewOAuth2InstanceRequiresRoundTripper (t *testing.T) {
 
   if nil != blackboardRest.NewOAuth2 ("localhost", nil) {
     t.Error ("Missing round tripper instance should result in nil reference.")
-    t.FailNow()
   }
 }
 
@@ -67,7 +65,6 @@ func TestNewOAuth2ObtainAuthorizationCode (t *testing.T) {
 
   if !result {
     t.Error ("The authorization code response was not properly established.")
-    t.FailNow()
   }
 }
 
@@ -79,37 +76,87 @@ func TestNewOAuth2RequestTokenWithClientCredentials (t *testing.T) {
 
   redirectUri, _ := url.Parse ("localhost")
 
-  oAuth2 := blackboardRest.NewOAuth2 ("localhost", mockRequestTokenRoundTripper)
+  oAuth2 := blackboardRest.NewOAuth2 ("localhost", mockRoundTripper)
+  oAuth2.SetClientIdAndSecret ("clientId", "secret")
   token, err := oAuth2.RequestToken ("client_credentials", "authCode", redirectUri)
 
   if nil == token || nil != err {
     t.Error ("Obtaining an authorization token should complete successfully.")
-    t.FailNow()
+  }
+}
+
+/**
+ * The [TestNewOAuth2RequestNoClientIdAndSecret] function...
+ */
+func TestNewOAuth2RequestNoClientIdAndSecretProperError (t *testing.T) {
+  println ("Missing client ID and secret results in proper error response.")
+
+  redirectUri, _ := url.Parse ("localhost")
+
+  oAuth2 := blackboardRest.NewOAuth2 ("localhost", mockRoundTripper)
+  token, err := oAuth2.RequestToken ("client_credentials", "authCode", redirectUri)
+
+  if nil != token || nil == err {
+    t.Error ("Missing client ID and secret should result in proper error.")
+  }
+}
+
+/**
+ * The [TestNewOAuth2TokenRequestRequiresAppropriateGrantType] function...
+ */
+func TestNewOAuth2TokenRequestRequiresAppropriateGrantType (t *testing.T) {
+  println ("The grant type must be of an acceptable value for a token request.")
+
+  redirectUri, _ := url.Parse ("localhost")
+
+  oAuth2 := blackboardRest.NewOAuth2 ("localhost", mockRoundTripper)
+  oAuth2.SetClientIdAndSecret ("clientId", "secret")
+  token, err := oAuth2.RequestToken ("improper_grant", "authCode", redirectUri)
+
+  if nil != token || nil == err {
+    t.Error ("Improper grant type should result in proper error.")
+  }
+}
+
+/**
+ * The [TestNewOAuth2RequestTokenNoAuthorizationCodeProperError] function...
+ */
+func TestNewOAuth2RequestTokenNoAuthorizationCodeProperError (t *testing.T) {
+  println (
+    "Missing authorization code when requesting token results in proper error response.",
+  )
+
+  redirectUri, _ := url.Parse ("localhost")
+
+  oAuth2 := blackboardRest.NewOAuth2 ("localhost", mockRoundTripper)
+  oAuth2.SetClientIdAndSecret ("clientId", "secret")
+  token, err := oAuth2.RequestToken ("client_credentials", "", redirectUri)
+
+  if nil != token || nil == err {
+    t.Error ("Missing authorization code should result in proper error.")
   }
 }
 
 /**
  * Mocked types and instances to run the above tests with.
  */
-var mockRoundTripper = NewMockRoundTripper (NewMockEmptyWriter())
-var mockRequestTokenRoundTripper = NewMockRoundTripper (NewMockTokenInfoWriter())
+var mockRoundTripper = NewMockOAuth2RoundTripper()
 
 /**
- * The [_MockRoundTripper] type.
+ * The [_MockOAuth2RoundTripper] type.
  */
-type _MockRoundTripper struct {
-  writer io.Writer
-
+type _MockOAuth2RoundTripper struct {
   http.RoundTripper
 }
 
-func NewMockRoundTripper (mockWriter io.Writer) http.RoundTripper {
-  return &_MockRoundTripper {
-    writer: mockWriter,
-  }
+func NewMockOAuth2RoundTripper() http.RoundTripper {
+  return new (_MockOAuth2RoundTripper)
 }
 
-func (roundTripper *_MockRoundTripper) RoundTrip (
+/**
+ * The [RoundTrip] method mocks out the transactional HTTP requests.
+ */
+func (_ *_MockOAuth2RoundTripper) RoundTrip (
   request *http.Request,
 ) (*http.Response, error) {
   request.Response = &http.Response {
@@ -117,36 +164,35 @@ func (roundTripper *_MockRoundTripper) RoundTrip (
     Header: make (http.Header),
   }
 
-  if strings.Contains (request.URL.Path, "oauth2/authorizationcode") {
-    request.Response.Status = "200 OK"
-    request.Response.StatusCode = 200
+  switch true {
+    case strings.Contains (request.URL.Path, "oauth2/authorizationcode"):
+      request.Response.Status = "200 OK"
+      request.Response.StatusCode = 200
+    case strings.Contains (request.URL.Path, "oauth2/token"):
+      if user, pass, _ := request.BasicAuth(); "" == user || "" == pass {
+        request.Response.StatusCode = 401
+        request.Response.Body = ioutil.NopCloser (strings.NewReader (
+          `{"error":"invalid_client","error_description":"Invalid client ` +
+          `credentials, or no access granted to this Learn server."}`,
+        ))
+      } else {
+        request.Response.Body =
+          ioutil.NopCloser (bytes.NewReader (_mockTokenBytes()))
+      }
   }
-
-  _ = request.Response.Write (roundTripper.writer)
 
   return request.Response, nil
 }
 
 /**
- * The [_MockWriter] type.
+ * The [_mockTokenBytes] function creates a mock token, marshalled in JSON and
+ * encoded as a sequence of bytes.
  */
-type _MockWriter struct {
-  data string
-
-  io.Writer
-}
-
-func NewMockEmptyWriter() io.Writer {
-  return &_MockWriter {
-    data: "",
-  }
-}
-
-func NewMockTokenInfoWriter() io.Writer {
+func _mockTokenBytes() []byte {
   tokenInfo := map[string]interface{} {
     "access_token": "accessTokenValue",
     "token_type": "someTokenType",
-    "expires_in": 3600,
+    "expires_in": int32 (3600),
     "refresh_token": "",
     "scope": "read",
     "user_id": "someUserId",
@@ -154,13 +200,5 @@ func NewMockTokenInfoWriter() io.Writer {
 
   tokenBytes, _ := json.Marshal (tokenInfo)
 
-  return &_MockWriter {
-    data: string (tokenBytes),
-  }
-}
-
-func (writer *_MockWriter) Write (bytes []byte) (int, error) {
-  writer.data += string (bytes)
-
-  return len (bytes), nil
+  return tokenBytes
 }

@@ -16,8 +16,6 @@ func TestCreateNewOAuth2Error (t *testing.T) {
     t.Error (
       "Creating a new OAuth2 Error instance should not result in nil reference.",
     )
-
-    t.FailNow()
   }
 }
 
@@ -29,7 +27,6 @@ func TestNewOAuth2ErrorRequiresCode (t *testing.T) {
 
   if nil != errors.NewOAuth2Error ("", "description") {
     t.Error ("Missing code should result in nil reference.")
-    t.FailNow()
   }
 }
 
@@ -41,7 +38,6 @@ func TestNewOAuth2ErrorDescriptionCanBeEmpty (t *testing.T) {
 
   if nil == errors.NewOAuth2Error ("invalid_client", "") {
     t.Error ("New OAuth2 Error can have an empty description.")
-    t.FailNow()
   }
 }
 
@@ -53,7 +49,6 @@ func TestNewOAuth2ErrorDescriptionCanBeNonEmpty (t *testing.T) {
 
   if nil == errors.NewOAuth2Error ("invalid_client", "description") {
     t.Error ("New OAuth2 Error can have a non-empty description.")
-    t.FailNow()
   }
 }
 
@@ -65,7 +60,6 @@ func TestNewOAuth2ErrorCanHaveValidCode (t *testing.T) {
 
   if nil == errors.NewOAuth2Error ("invalid_client", "") {
     t.Error ("New OAuth2 Error with valid code should not be nil reference.")
-    t.FailNow()
   }
 }
 
@@ -77,7 +71,6 @@ func TestNewOAuth2ErrorMustHaveValidCode (t *testing.T) {
 
   if nil != errors.NewOAuth2Error ("code", "description") {
     t.Error ("New OAuth2 Error with valid code should not be nil reference.")
-    t.FailNow()
   }
 }
 
@@ -94,6 +87,5 @@ func TestNewOAuth2ErrorHasPertinentInformation (t *testing.T) {
 
   if !(oauth2Error.Code() == code && oauth2Error.Description() == description) {
     t.Error ("The OAuth2 Error should retain the information used to create it.")
-    t.FailNow()
   }
 }

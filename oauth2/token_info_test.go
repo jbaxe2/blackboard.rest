@@ -14,7 +14,6 @@ func TestCreateNewTokenInfo (t *testing.T) {
 
   if nil == oauth2.NewTokenInfo ("applicationId", "read") {
     t.Error ("Creating a new token info instance should not be nil.")
-    t.FailNow()
   }
 }
 
@@ -26,7 +25,6 @@ func TestNewTokenInfoRequiresApplicationId (t *testing.T) {
 
   if nil != oauth2.NewTokenInfo ("", "read") {
     t.Error ("Missing application ID should result in nil reference.")
-    t.FailNow()
   }
 }
 
@@ -38,7 +36,6 @@ func TestNewTokenInfoRequiresScope (t *testing.T) {
 
   if nil != oauth2.NewTokenInfo ("applicationId", "") {
     t.Error ("Missing scope should result in nil reference.")
-    t.FailNow()
   }
 }
 
@@ -55,6 +52,5 @@ func TestNewTokenInfoHasPertinentInformation (t *testing.T) {
 
   if !(tokenInfo.ApplicationId() == applicationId && tokenInfo.Scope() == scope) {
     t.Error ("New token info should retain the info used to create it.")
-    t.FailNow()
   }
 }

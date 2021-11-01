@@ -1,5 +1,9 @@
 **blackboard.rest**
 
+## 0.2.3
+- Developed and refined the OAuth2 service and token types, error types, base
+service type, and various tests.
+
 ## 0.2.2+2
 - Redefined endpoints from mutable maps to immutable constants.
 - More work on OAuth2 service.

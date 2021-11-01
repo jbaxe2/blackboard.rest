@@ -1,6 +1,8 @@
 package blackboard_rest
 
 import (
+  "encoding/json"
+  "io/ioutil"
   "net/http"
   "net/url"
   "strings"
@@ -15,6 +17,8 @@ import (
  * API's oauth service.
  */
 type OAuth2 interface {
+  SetClientIdAndSecret (string, string)
+
   AuthorizationCode (
     request *http.Request, redirectUri *url.URL, clientId string, scope string,
   ) *http.Response
@@ -93,12 +97,15 @@ func (oAuth2 *_OAuth2) AuthorizationCode (
 func (oAuth2 *_OAuth2) RequestToken (
   grantType string, code string, redirectUri *url.URL,
 ) (oauth2.Token, errors.OAuth2Error) {
+  if err := _verifyRequestTokenRequest (grantType, code); nil != err {
+    return nil, err
+  }
 
   client := http.Client {
     Transport: oAuth2.roundTripper,
   }
 
-  tokenUri := oAuth2._buildRequestTokenUri (grantType, code, redirectUri)
+  tokenUri := _buildRequestTokenUri (oAuth2.host, grantType, code, redirectUri)
 
   request, _ := http.NewRequest (http.MethodPost, tokenUri, nil)
   request.SetBasicAuth (oAuth2.clientId, oAuth2.secret)
@@ -106,19 +113,37 @@ func (oAuth2 *_OAuth2) RequestToken (
 
   response, _ := client.Do (request)
 
-  return oAuth2._parseTokenRequestResponse (response)
+  return _parseTokenRequestResponse (response)
 }
 
 /**
- * The [_buildRequestTokenUri] method builds the URI that will be used when
+ * The [_verifyRequestTokenRequest] function verifies the information used to
+ * create a token request is as it should be; otherwise an OAuth2 error will be
+ * returned.
+ */
+func _verifyRequestTokenRequest (grantType, code string) errors.OAuth2Error {
+  if "" == code {
+    return errors.NewOAuth2Error ("unauthorized_client", "Missing authorization code.")
+  }
+
+  if !("client_credentials" == grantType || "authorization_code" == grantType ||
+       "refresh_token" == grantType) {
+    return errors.NewOAuth2Error ("unauthorized_client", "Missing authorization code.")
+  }
+
+  return nil
+}
+
+/**
+ * The [_buildRequestTokenUri] function builds the URI that will be used when
  * requesting an OAuth2 authorization token.
  */
-func (oAuth2 *_OAuth2) _buildRequestTokenUri (
-  grantType string, code string, redirectUri *url.URL,
+func _buildRequestTokenUri (
+  host, grantType, code string, redirectUri *url.URL,
 ) string {
   endpoint := strings.Replace (api.Base, "{v}", "1", 1) + string (api.RequestToken)
 
-  tokenUri := "https://" + oAuth2.host + endpoint + "?grant_type=" + grantType +
+  tokenUri := "https://" + host + endpoint + "?grant_type=" + grantType +
     "&code=" + code
 
   if "" != redirectUri.String() {
@@ -129,11 +154,45 @@ func (oAuth2 *_OAuth2) _buildRequestTokenUri (
 }
 
 /**
- * The [_parseTokenRequestResponse] method parses the response provided by the
+ * The [_parseTokenRequestResponse] function parses the response provided by the
  * REST API call requesting an OAuth2 token.
  */
-func (oAuth2 *_OAuth2) _parseTokenRequestResponse (
+func _parseTokenRequestResponse (
   response *http.Response,
 ) (oauth2.Token, errors.OAuth2Error) {
-  return nil, nil
+  defer response.Body.Close()
+
+  var rawResponse map[string]interface{}
+  responseBytes, _ := ioutil.ReadAll (response.Body)
+
+  if err := json.Unmarshal (responseBytes, &rawResponse); nil != err {
+    return nil, errors.NewOAuth2Error ("invalid_response", err.Error())
+  }
+
+  if _, wasError := rawResponse["error"]; wasError {
+    return nil, errors.NewOAuth2Error (
+      rawResponse["error"].(string), rawResponse["error_description"].(string),
+    )
+  }
+
+  if _, haveAccessToken := rawResponse["access_token"]; !haveAccessToken {
+    return nil, errors.NewOAuth2Error ("missing_token", "Missing access token.")
+  }
+
+  userId := ""
+  scope := ""
+
+  if _, haveUserId := rawResponse["user_id"]; haveUserId {
+    userId = rawResponse["user_id"].(string)
+  }
+
+  if _, haveScope := rawResponse["scope"]; haveScope {
+    scope = rawResponse["scope"].(string)
+  }
+
+  return oauth2.NewToken (
+    rawResponse["access_token"].(string), rawResponse["token_type"].(string),
+    rawResponse["refresh_token"].(string), scope, userId,
+    int32 (rawResponse["expires_in"].(float64)),
+  ), nil
 }
