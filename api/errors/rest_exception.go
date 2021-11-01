@@ -7,7 +7,7 @@ import "net/url"
  * API errors.
  */
 type RestException interface {
-  Status() string
+  Status() int
 
   Code() string
 
@@ -29,7 +29,11 @@ type _RestException struct {
  * The [NewRestException] function creates a new REST Exception instance.
  */
 func NewRestException (
-  status, code, message, developerMessage string, extraInfo *url.URL,
+  status int, code, message, developerMessage string, extraInfo *url.URL,
 ) RestException {
+  if 400 > status || 499 < status {
+    return nil
+  }
+
   return new (_RestException)
 }
