@@ -17,7 +17,6 @@ func TestStringInStrings (t *testing.T) {
 
   if !utils.StringInStrings (search, stringsArr) {
     t.Error ("A string should be found to be in a slice of strings.")
-    t.FailNow()
   }
 }
 
@@ -31,7 +30,6 @@ func TestStringNotInStrings (t *testing.T) {
 
   if utils.StringInStrings ("string not in strings", stringsArr) {
     t.Error ("A string not in strings should not be found to be in as such.")
-    t.FailNow()
   }
 }
 
@@ -43,7 +41,6 @@ func TestStringCanSearchAgainstEmptyStrings (t *testing.T) {
 
   if utils.StringInStrings ("a string", make ([]string, 0)) {
     t.Error ("Empty slice of strings should not result in finding search string.")
-    t.FailNow()
   }
 }
 
@@ -55,6 +52,5 @@ func TestStringCanSearchAgainstNilSlice (t *testing.T) {
 
   if utils.StringInStrings ("some string", nil) {
     t.Error ("Nil slice of strings should not result in finding search string.")
-    t.FailNow()
   }
 }
