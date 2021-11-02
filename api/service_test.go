@@ -42,6 +42,17 @@ func TestNewServiceRequiresToken (t *testing.T) {
 }
 
 /**
+ * The [TestNewServiceCanHaveNilRoundTripper] function...
+ */
+func TestNewServiceCanHaveNilRoundTripper (t *testing.T) {
+  println ("Creating a new service instance can be done with nil round tripper.")
+
+  if nil == api.NewService ("localhost", mockToken, nil) {
+    t.Error ("Nil round tripper should not result in nil service reference.")
+  }
+}
+
+/**
  * The [TestNewServiceHasPertinentInformation] function...
  */
 func TestNewServiceHasPertinentInformation (t *testing.T) {
@@ -138,5 +149,5 @@ func NewMockServiceRoundTripper() http.RoundTripper {
 func (roundTripper *_MockServiceRoundTripper) RoundTrip (
   request *http.Request,
 ) (*http.Response, error) {
-  return nil, nil
+  return request.Response, nil
 }

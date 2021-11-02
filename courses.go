@@ -1,11 +1,13 @@
 package blackboard_rest
 
 import (
+  "github.com/jbaxe2/blackboard.rest/api"
   "github.com/jbaxe2/blackboard.rest/courses"
 )
 
 /**
- * The [Courses] interface...
+ * The [Courses] interface provides the base type for interacting with the REST
+ * API's courses endpoints.
  */
 type Courses interface {
   GetCourses() []courses.Course
@@ -29,4 +31,22 @@ type Courses interface {
   GetCrossListSet (courseId string) []courses.CourseChild
 
   GetTask (courseId string, taskId string) courses.CourseTask
+}
+
+/**
+ * The [_Courses] type implements the Courses interface.
+ */
+type _Courses struct {
+  service api.Service
+
+  Courses
+}
+
+/**
+ * The [NewCourses] function creates a new Courses instance.
+ */
+func NewCourses (service api.Service) Courses {
+  return &_Courses {
+    service: service,
+  }
 }

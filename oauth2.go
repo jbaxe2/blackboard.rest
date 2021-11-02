@@ -49,8 +49,12 @@ type _OAuth2 struct {
  * The [NewOAuth2] function creates a new OAuth2 service instance.
  */
 func NewOAuth2 (host string, roundTripper http.RoundTripper) OAuth2 {
-  if "" == host || nil == roundTripper {
+  if "" == host {
     return nil
+  }
+
+  if nil == roundTripper {
+    roundTripper = http.DefaultTransport
   }
 
   return &_OAuth2 {

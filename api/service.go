@@ -41,8 +41,12 @@ func NewService (
   host string, token oauth2.Token, roundTripper http.RoundTripper,
 ) Service {
   if "" == host || nil == token || "" == token.AccessToken() ||
-     1 > token.ExpiresIn() || nil == roundTripper {
+     1 > token.ExpiresIn() {
     return nil
+  }
+
+  if nil == roundTripper {
+    roundTripper = http.DefaultTransport
   }
 
   return &_Service {

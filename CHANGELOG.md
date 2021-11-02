@@ -1,5 +1,9 @@
 **blackboard.rest**
 
+## 0.2.3+1
+- More work on developing OAuth2, the general Service type, and errors.
+- Start of considering the Courses service.
+
 ## 0.2.3
 - Developed and refined the OAuth2 service and token types, error types, base
 service type, and various tests.

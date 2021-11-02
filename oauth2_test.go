@@ -37,11 +37,11 @@ func TestNewOAuth2InstanceRequiresHost (t *testing.T) {
 /**
  * The [TestNewOAuth2InstanceRequiresRoundTripper] function...
  */
-func TestNewOAuth2InstanceRequiresRoundTripper (t *testing.T) {
-  println ("New OAuth2 instance requires a RoundTripper instance.")
+func TestNewOAuth2InstanceCanHaveNilRoundTripper (t *testing.T) {
+  println ("New OAuth2 instance can have a nil round tripper instance.")
 
-  if nil != blackboardRest.NewOAuth2 ("localhost", nil) {
-    t.Error ("Missing round tripper instance should result in nil reference.")
+  if nil == blackboardRest.NewOAuth2 ("localhost", nil) {
+    t.Error ("Nil round tripper instance should not result in nil reference.")
   }
 }
 

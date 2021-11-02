@@ -1,6 +1,9 @@
 package errors
 
-import "net/url"
+import (
+  "net/url"
+  "strconv"
+)
 
 /**
  * The [RestException] interface provides the base type for Blackboard's REST
@@ -16,12 +19,24 @@ type RestException interface {
   DeveloperMessage() string
 
   ExtraInfo() *url.URL
+
+  error
 }
 
 /**
  * The [_RestException] type implements the REST Exception interface.
  */
 type _RestException struct {
+  status int
+
+  code string
+
+  message string
+
+  developerMessage string
+
+  extraInfo *url.URL
+
   RestException
 }
 
@@ -31,9 +46,39 @@ type _RestException struct {
 func NewRestException (
   status int, code, message, developerMessage string, extraInfo *url.URL,
 ) RestException {
-  if 400 > status || 499 < status {
+  if 400 > status || 499 < status || "" == message {
     return nil
   }
 
-  return new (_RestException)
+  return &_RestException {
+    status: status,
+    code: code,
+    message: message,
+    developerMessage: developerMessage,
+    extraInfo: extraInfo,
+  }
+}
+
+func (exception *_RestException) Status() int {
+  return exception.status
+}
+
+func (exception *_RestException) Code() string {
+  return exception.code
+}
+
+func (exception *_RestException) Message() string {
+  return exception.message
+}
+
+func (exception *_RestException) DeveloperMessage() string {
+  return exception.developerMessage
+}
+
+func (exception *_RestException) ExtraInfo() *url.URL {
+  return exception.extraInfo
+}
+
+func (exception *_RestException) Error() string {
+  return "(" + strconv.Itoa (exception.status) + ") " + exception.message
 }
