@@ -97,11 +97,39 @@ func TestNewServiceRequiresTokenHasGreaterThanZeroExpiresIn (t *testing.T) {
 }
 
 /**
+ * The [TestNewServiceRequest] function...
+ */
+func TestNewServiceRequest (t *testing.T) {
+  println ("Create a new service request.")
+
+  service := api.NewService ("localhost", mockToken, mockRoundTripper)
+
+  if _, err := service.Request ("/endpoint/string", "GET", nil, nil, 1); nil != err {
+    t.Error ("Performing a service request should not result in error.")
+  }
+}
+
+/**
+ * The [TestNewServiceRequestWithEmptyEndpointResultsInError] function...
+ */
+func TestNewServiceRequestWithEmptyEndpointResultsInError (t *testing.T) {
+  println ("New service request with empty endpoint results in error.")
+
+  service := api.NewService ("localhost", mockToken, mockRoundTripper)
+
+  if _, err := service.Request ("", "GET", nil, nil, 1); nil == err {
+    t.Error ("Missing endpoint should result in error.")
+  }
+}
+
+/**
  * Mocked types and instances to run the above tests with.
  */
 var mockToken = oauth2.NewToken (
   "access_token", "token_type", "refresh_token", "scope", "user_id", 3600,
 )
+
+var mockRoundTripper = NewMockServiceRoundTripper()
 
 /**
  * The [_MockImproperAccessCodeToken] type.
@@ -133,7 +161,16 @@ func (_ *_MockImproperExpiresInToken) ExpiresIn() int32 {
   return 0
 }
 
-var mockRoundTripper = NewMockServiceRoundTripper()
+/**
+ * The [_MockInvalidAccessCodeToken] type.
+ */
+type _MockInvalidAccessCodeToken struct {
+  oauth2.Token
+}
+
+func (_ *_MockInvalidAccessCodeToken) AccessToken() string {
+  return "invalid_access_code"
+}
 
 /**
  * The [_MockServiceRoundTripper] type.

@@ -59,6 +59,35 @@ func NewRestException (
   }
 }
 
+/**
+ * The [NewRestExceptionFromRaw] function creates a new REST Exception based on
+ * a raw map (most likely as a response decoded from a JSON structure).
+ */
+func NewRestExceptionFromRaw (rawException map[string]interface{}) RestException {
+  if nil == rawException {
+    return nil
+  }
+
+  statusStr, haveStatus := rawException["status"].(string)
+  code, _ := rawException["code"].(string)
+  message, _ := rawException["message"].(string)
+  developerMsg, _ := rawException["developerMessage"].(string)
+  extraInfo, haveExtraInfo := rawException["extraInfo"].(string)
+
+  var status int
+  var extraInfoUri *url.URL
+
+  if haveStatus {
+    status, _ = strconv.Atoi (statusStr)
+  }
+
+  if haveExtraInfo {
+    extraInfoUri, _ = url.Parse (extraInfo)
+  }
+
+  return NewRestException (status, code, message, developerMsg, extraInfoUri)
+}
+
 func (exception *_RestException) Status() int {
   return exception.status
 }

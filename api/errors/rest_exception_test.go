@@ -79,3 +79,77 @@ func TestNewRestExceptionProvidesAppropriateErrorMessage (t *testing.T) {
     t.Error ("The provided error message is not what was expected.")
   }
 }
+
+/**
+ * The [TestNewRestExceptionCanBeCreatedFromRawStructure] function...
+ */
+func TestNewRestExceptionCanBeCreatedFromRawStructure (t *testing.T) {
+  println ("New REST exception can be created from raw structure.")
+
+  var rawException = map[string]interface{} {
+    "status": "401",
+    "code": "401",
+    "message": "Unauthorized",
+    "developerMessage": "",
+    "extraInfo": "",
+  }
+
+  if nil == errors.NewRestExceptionFromRaw (rawException) {
+    t.Error ("New REST exception from raw structure should not be nil reference.")
+  }
+}
+
+/**
+ * The [TestNewRestExceptionFromNilRawStructureIsNil] function...
+ */
+func TestNewRestExceptionFromNilRawStructureIsNil (t *testing.T) {
+  println ("New REST exception from nil raw structure results in nil reference.")
+
+  if nil != errors.NewRestExceptionFromRaw (nil) {
+    t.Error ("Nil raw structure should result in nil reference for REST exception.")
+  }
+}
+
+/**
+ * The [TestNewRestExceptionCanOmitNonRequiredFields] function...
+ */
+func TestNewRestExceptionCanOmitNonRequiredFields (t *testing.T) {
+  println ("Omitted non-required fields should result in non-nil REST exception.")
+
+  var rawException = map[string]interface{} {
+    "status": "401",
+    "message": "Unauthorized",
+    "extraInfo": "",
+  }
+
+  if nil == errors.NewRestExceptionFromRaw (rawException) {
+    t.Error ("Incomplete raw structure should not result in nil reference.")
+  }
+}
+
+/**
+ * The [TestNewRestExceptionFromRawHasPertinentInformation] function...
+ */
+func TestNewRestExceptionFromRawHasPertinentInformation (t *testing.T) {
+  println ("New REST exception from raw structure retains info used to create it.")
+
+  var rawException = map[string]interface{} {
+    "status": "401",
+    "code": "401",
+    "message": "Unauthorized",
+    "developerMessage": "",
+    "extraInfo": "https://localhost/extra/info",
+  }
+
+  restException := errors.NewRestExceptionFromRaw (rawException)
+
+  if !(restException.Status() == 401 &&
+       restException.Code() == rawException["code"] &&
+       restException.Message() == rawException["message"] &&
+       restException.DeveloperMessage() == rawException["developerMessage"] &&
+       restException.ExtraInfo().String() == rawException["extraInfo"]) {
+    t.Error (
+      "New REST exception from raw structure should retain info used to create it.",
+    )
+  }
+}

@@ -1,5 +1,8 @@
 **blackboard.rest**
 
+## 0.2.3+2
+- More work on developing the general Service type and the REST exception.
+
 ## 0.2.3+1
 - More work on developing OAuth2, the general Service type, and errors.
 - Start of considering the Courses service.

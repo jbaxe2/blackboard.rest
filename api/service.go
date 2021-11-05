@@ -1,6 +1,7 @@
 package api
 
 import (
+  "errors"
   "net/http"
 
   "github.com/jbaxe2/blackboard.rest/oauth2"
@@ -62,4 +63,18 @@ func (service *_Service) Host() string {
 
 func (service *_Service) Token() oauth2.Token {
   return service.token
+}
+
+/**
+ * The [Request] method makes the request to the REST API.
+ */
+func (service *_Service) Request (
+  endpoint string, method string, data map[string]interface{},
+  options map[string]interface{}, useVersion int,
+) (interface{}, error) {
+  if "" == endpoint {
+    return nil, errors.New ("missing service endpoint")
+  }
+
+  return nil, nil
 }
