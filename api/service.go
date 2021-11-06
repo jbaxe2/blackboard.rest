@@ -5,6 +5,7 @@ import (
   "net/http"
 
   "github.com/jbaxe2/blackboard.rest/oauth2"
+  "github.com/jbaxe2/blackboard.rest/utils"
 )
 
 /**
@@ -72,9 +73,27 @@ func (service *_Service) Request (
   endpoint string, method string, data map[string]interface{},
   options map[string]interface{}, useVersion int,
 ) (interface{}, error) {
-  if "" == endpoint {
-    return nil, errors.New ("missing service endpoint")
+  if err := _verifyRequestConditions (endpoint, method); nil != err {
+    return nil, err
   }
 
   return nil, nil
+}
+
+/**
+ * The [_verifyRequestConditions] function verifies the information used to
+ * create a service request is appropriate.
+ */
+func _verifyRequestConditions (endpoint, method string) error {
+  if "" == endpoint {
+    return errors.New ("missing service endpoint")
+  }
+
+  methods := []string {"GET", "POST", "PUT", "PATCH", "DELETE"}
+
+  if !utils.StringInStrings (method, methods) {
+    return errors.New ("inappropriate HTTP method")
+  }
+
+  return nil
 }

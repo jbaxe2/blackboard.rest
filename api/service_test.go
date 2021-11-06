@@ -110,15 +110,43 @@ func TestNewServiceRequest (t *testing.T) {
 }
 
 /**
- * The [TestNewServiceRequestWithEmptyEndpointResultsInError] function...
+ * The [TestNewServiceRequestRequiresEndpoint] function...
  */
-func TestNewServiceRequestWithEmptyEndpointResultsInError (t *testing.T) {
-  println ("New service request with empty endpoint results in error.")
+func TestNewServiceRequestRequiresEndpoint (t *testing.T) {
+  println ("New service request requires endpoint.")
 
   service := api.NewService ("localhost", mockToken, mockRoundTripper)
 
   if _, err := service.Request ("", "GET", nil, nil, 1); nil == err {
     t.Error ("Missing endpoint should result in error.")
+  }
+}
+
+/**
+ * The [TestNewServiceRequestRequiresHttpMethod] function...
+ */
+func TestNewServiceRequestRequiresHttpMethod (t *testing.T) {
+  println ("New service request requires an HTTP method.")
+
+  service := api.NewService ("localhost", mockToken, mockRoundTripper)
+
+  if _, err := service.Request ("/endpoint/string", "", nil, nil, 1);
+      nil == err {
+    t.Error ("Inappropriate HTTP method should result in error.")
+  }
+}
+
+/**
+ * The [TestNewServiceRequiresRequiresAppropriateMethod] function...
+ */
+func TestNewServiceRequiresRequiresAppropriateMethod (t *testing.T) {
+  println ("New service request requires an appropriate HTTP method.")
+
+  service := api.NewService ("localhost", mockToken, mockRoundTripper)
+
+  if _, err := service.Request ("/endpoint/string", "METHOD", nil, nil, 1);
+      nil == err {
+    t.Error ("Inappropriate HTTP method should result in error.")
   }
 }
 
