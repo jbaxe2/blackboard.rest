@@ -75,7 +75,8 @@ func (oAuth2 *_OAuth2) SetClientIdAndSecret (clientId, secret string) {
 
 /**
  * The [AuthorizationCode] method is used to retrieve an authorization code that
- * can be used to generate an authorization token.
+ * can be used to generate an authorization token.  This method should be called
+ * when using the REST API's via 3-legged OAuth.
  */
 func (oAuth2 *_OAuth2) AuthorizationCode (
   request *http.Request, redirectUri *url.URL, clientId string, scope string,
@@ -126,7 +127,7 @@ func (oAuth2 *_OAuth2) RequestToken (
  * returned.
  */
 func _verifyRequestTokenRequest (grantType, code string) errors.OAuth2Error {
-  if "" == code {
+  if "authorization_code" == grantType && "" == code {
     return errors.NewOAuth2Error ("unauthorized_client", "Missing authorization code.")
   }
 
@@ -147,10 +148,13 @@ func _buildRequestTokenUri (
 ) string {
   endpoint := strings.Replace (api.Base, "{v}", "1", 1) + string (api.RequestToken)
 
-  tokenUri := "https://" + host + endpoint + "?grant_type=" + grantType +
-    "&code=" + code
+  tokenUri := "https://" + host + endpoint + "?grant_type=" + grantType
 
-  if "" != redirectUri.String() {
+  if "authorization_code" == grantType {
+    tokenUri += "&code=" + code
+  }
+
+  if nil != redirectUri {
     tokenUri += "&redirect_uri=" + redirectUri.String()
   }
 
@@ -185,6 +189,7 @@ func _parseTokenRequestResponse (
 
   userId := ""
   scope := ""
+  refreshToken := ""
 
   if _, haveUserId := rawResponse["user_id"]; haveUserId {
     userId = rawResponse["user_id"].(string)
@@ -194,9 +199,12 @@ func _parseTokenRequestResponse (
     scope = rawResponse["scope"].(string)
   }
 
+  if _, haveRefresh := rawResponse["refresh_token"]; haveRefresh {
+    refreshToken = rawResponse["refresh_token"].(string)
+  }
+
   return oauth2.NewToken (
     rawResponse["access_token"].(string), rawResponse["token_type"].(string),
-    rawResponse["refresh_token"].(string), scope, userId,
-    int32 (rawResponse["expires_in"].(float64)),
+    refreshToken, scope, userId, int32 (rawResponse["expires_in"].(float64)),
   ), nil
 }

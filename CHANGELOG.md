@@ -1,5 +1,9 @@
 **blackboard.rest**
 
+## 0.2.3+3
+- Tweaked some code for OAuth2 service and token to better work with server
+responses.
+
 ## 0.2.3+2
 - More work on developing the general Service type and the REST exception.
 

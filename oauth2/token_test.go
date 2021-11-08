@@ -72,11 +72,11 @@ func TestNewOAuth2TokenRefreshTokenNotEmptyIfOfflineScope (t *testing.T) {
 /**
  * The [TestNewOAuth2TokenRequiresUserId] function...
  */
-func TestNewOAuth2TokenRequiresUserId (t *testing.T) {
-  println ("Creating OAuth2 token requires a user ID.")
+func TestNewOAuth2TokenMayHaveEmptyUserId (t *testing.T) {
+  println ("Creating OAuth2 token may have an empty user ID.")
 
-  if nil != oauth2.NewToken ("access_token", "token_type", "", "", "", 3600) {
-    t.Error ("Missing user ID should result in nil reference.")
+  if nil == oauth2.NewToken ("access_token", "token_type", "", "", "", 3600) {
+    t.Error ("Missing user ID should not result in nil reference.")
   }
 }
 

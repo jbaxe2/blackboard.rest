@@ -37,7 +37,7 @@ func NewToken (
   accessToken, tokenType, refreshToken, scope, userId string, expiresIn int32,
 ) Token {
   if !_verifyTokenConditions (
-    accessToken, tokenType, refreshToken, scope, userId, expiresIn,
+    accessToken, tokenType, refreshToken, scope, expiresIn,
   ) {
     return nil
   }
@@ -81,9 +81,9 @@ func (token *_Token) ExpiresIn() int32 {
  * an OAuth2 token are as they should be.
  */
 func _verifyTokenConditions (
-  accessToken, tokenType, refreshToken, scope, userId string, expiresIn int32,
+  accessToken, tokenType, refreshToken, scope string, expiresIn int32,
 ) bool {
-  if "" == accessToken || "" == tokenType || "" == userId || 1 > expiresIn ||
+  if "" == accessToken || "" == tokenType || 1 > expiresIn ||
      (strings.Contains (scope, "offline") && "" == refreshToken) {
     return false
   }

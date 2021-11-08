@@ -130,7 +130,7 @@ func TestNewOAuth2RequestTokenNoAuthorizationCodeProperError (t *testing.T) {
 
   oAuth2 := blackboardRest.NewOAuth2 ("localhost", mockRoundTripper)
   oAuth2.SetClientIdAndSecret ("clientId", "secret")
-  token, err := oAuth2.RequestToken ("client_credentials", "", redirectUri)
+  token, err := oAuth2.RequestToken ("authorization_code", "", redirectUri)
 
   if nil != token || nil == err {
     t.Error ("Missing authorization code should result in proper error.")
