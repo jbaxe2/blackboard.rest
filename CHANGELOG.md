@@ -1,5 +1,8 @@
 **blackboard.rest**
 
+## 0.2.3+4
+- Work on service and related code.
+
 ## 0.2.3+3
 - Tweaked some code for OAuth2 service and token to better work with server
 responses.

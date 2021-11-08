@@ -1,7 +1,9 @@
 package api_test
 
 import (
+  "io/ioutil"
   "net/http"
+  "strings"
   "testing"
 
   "github.com/jbaxe2/blackboard.rest/api"
@@ -151,6 +153,22 @@ func TestNewServiceRequiresRequiresAppropriateMethod (t *testing.T) {
 }
 
 /**
+ * The [TestNewServiceRequestsRequireValidAccessCode] function...
+ */
+func TestNewServiceRequestsRequireValidAccessCode (t *testing.T) {
+  println ("A valid access code from an authorized token is required for requests.")
+
+  service :=
+    api.NewService ("localhost", new (_MockInvalidAccessCodeToken), mockRoundTripper)
+
+  _, err := service.Request ("/access/invalid/token", "GET", nil, nil, 1)
+
+  if nil == err {
+    t.Error ("An invalid access code should result in a returned error.")
+  }
+}
+
+/**
  * Mocked types and instances to run the above tests with.
  */
 var mockToken = oauth2.NewToken (
@@ -200,6 +218,10 @@ func (_ *_MockInvalidAccessCodeToken) AccessToken() string {
   return "invalid_access_code"
 }
 
+func (_ *_MockInvalidAccessCodeToken) ExpiresIn() int32 {
+  return 360
+}
+
 /**
  * The [_MockServiceRoundTripper] type.
  */
@@ -214,5 +236,19 @@ func NewMockServiceRoundTripper() http.RoundTripper {
 func (roundTripper *_MockServiceRoundTripper) RoundTrip (
   request *http.Request,
 ) (*http.Response, error) {
+  request.Response = &http.Response {
+    Request: request,
+    Header: make (http.Header),
+  }
+
+  if strings.Contains (request.URL.Path, "invalid/token") {
+    request.Response.Body = ioutil.NopCloser (strings.NewReader (
+      `{"status":"400","message":"invalid_client"}`,
+    ))
+  } else {
+    request.Response.Body =
+      ioutil.NopCloser (strings.NewReader (`{"result":"ok"}`))
+  }
+
   return request.Response, nil
 }

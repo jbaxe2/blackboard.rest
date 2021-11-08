@@ -1,9 +1,14 @@
 package api
 
 import (
+  "encoding/json"
   "errors"
+  "io/ioutil"
   "net/http"
+  "strconv"
+  "strings"
 
+  restErrors "github.com/jbaxe2/blackboard.rest/api/errors"
   "github.com/jbaxe2/blackboard.rest/oauth2"
   "github.com/jbaxe2/blackboard.rest/utils"
 )
@@ -19,8 +24,8 @@ type Service interface {
 
   Request (
     endpoint string, method string, data map[string]interface{},
-    options map[string]interface{}, useVersion int,
-  ) (interface{}, error)
+    options map[string]string, useVersion int,
+  ) (map[string]interface{}, error)
 }
 
 /**
@@ -71,13 +76,22 @@ func (service *_Service) Token() oauth2.Token {
  */
 func (service *_Service) Request (
   endpoint string, method string, data map[string]interface{},
-  options map[string]interface{}, useVersion int,
-) (interface{}, error) {
+  options map[string]string, useVersion int,
+) (map[string]interface{}, error) {
   if err := _verifyRequestConditions (endpoint, method); nil != err {
     return nil, err
   }
 
-  return nil, nil
+  requestUri := _buildRequestUri (service.host, endpoint, useVersion, options)
+
+  request, _ := http.NewRequest (method, requestUri, nil)
+  request.Header.Set ("Authorization", "Bearer " + service.token.AccessToken())
+
+  client := http.Client {Transport: service.roundTripper}
+
+  response, _ := client.Do (request)
+
+  return _parseResponse (response)
 }
 
 /**
@@ -96,4 +110,49 @@ func _verifyRequestConditions (endpoint, method string) error {
   }
 
   return nil
+}
+
+/**
+ * The [_buildRequestUri] function builds the URI that will be used for making
+ * some REST API request.
+ */
+func _buildRequestUri (
+  host, endpoint string, useVersion int, options map[string]string,
+) string {
+  endpoint = strings.Replace (endpoint, "{v}", strconv.Itoa (useVersion), 1)
+  uri := "https://" + host + endpoint
+
+  if 0 < len (options) {
+    uri += "?"
+
+    for k, v := range options {
+      uri += k + "=" + v + "&"
+    }
+
+    uri = uri[0:len (uri) - 2]
+  }
+
+  return uri
+}
+
+/**
+ * The [_parseResponse] function parses the response from a REST API request,
+ * converting the response to either a raw map with string-based keys or an error
+ * of some sort.
+ */
+func _parseResponse (response *http.Response) (map[string]interface{}, error) {
+  defer response.Body.Close()
+
+  var rawResponse map[string]interface{}
+  responseBytes, _ := ioutil.ReadAll (response.Body)
+
+  if err := json.Unmarshal (responseBytes, &rawResponse); nil != err {
+    return nil, errors.New ("response from the REST server is not unreadable")
+  }
+
+  if _, wasError := rawResponse["status"]; wasError {
+    return nil, restErrors.NewRestExceptionFromRaw (rawResponse)
+  }
+
+  return rawResponse, nil
 }
