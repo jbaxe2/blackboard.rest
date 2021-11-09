@@ -13,3 +13,21 @@ func StringInStrings (search string, stringsArr []string) bool {
 
   return false
 }
+
+/**
+ * The [NormalizeRawResponse] function takes an interface slice and normalizes it
+ * to a slice of maps with string-based keys.
+ */
+func NormalizeRawResponse (rawResponse []interface{}) []map[string]interface{} {
+  mappedResponse := make ([]map[string]interface{}, 0)
+
+  for _, rawColumn := range rawResponse {
+    normalizedColumn, isNormalized := rawColumn.(map[string]interface{})
+
+    if isNormalized {
+      mappedResponse = append (mappedResponse, normalizedColumn)
+    }
+  }
+
+  return mappedResponse
+}

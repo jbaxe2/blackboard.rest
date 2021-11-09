@@ -1,8 +1,12 @@
 **blackboard.rest**
 
+## 0.2.3+6
+- Work on courses and users service.
+- Fleshed out some boilerplate code for other services.
+
 ## 0.2.3+5
 - Resolved some issues with the service type.
-- Work on Courses service.
+- Work on courses service.
 
 ## 0.2.3+4
 - Work on service and related code.

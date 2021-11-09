@@ -1,11 +1,13 @@
 package blackboard_rest
 
 import (
+  "github.com/jbaxe2/blackboard.rest/api"
   "github.com/jbaxe2/blackboard.rest/course_grades"
 )
 
 /**
- * The [CourseGrades] interface...
+ * The [CourseGrades] interface provides the base interface for interacting with
+ * the REST API's course grades service.
  */
 type CourseGrades interface {
   GetGradeColumns (courseId string) ([]course_grades.GradeColumn, error)
@@ -49,4 +51,26 @@ type CourseGrades interface {
   ) error
 
   GetUserGrades (courseId string, userId string) ([]course_grades.Grade, error)
+}
+
+/**
+ * The [_CourseGrades] type implements the Course Grades interface.
+ */
+type _CourseGrades struct {
+  service api.Service
+
+  CourseGrades
+}
+
+/**
+ * The [NewCourseGrades] function creates a new course grades instance.
+ */
+func NewCourseGrades (service api.Service) CourseGrades {
+  if nil == service {
+    return nil
+  }
+
+  return &_CourseGrades {
+    service: service,
+  }
 }

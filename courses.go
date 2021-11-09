@@ -14,6 +14,8 @@ import (
 type Courses interface {
   GetCourses() []courses.Course
 
+  GetCoursesByTerm (termId string) []courses.Course
+
   CreateCourse (course courses.Course)
 
   GetCourse (courseId string) (courses.Course, error)

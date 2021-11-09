@@ -54,3 +54,31 @@ func TestStringCanSearchAgainstNilSlice (t *testing.T) {
     t.Error ("Nil slice of strings should not result in finding search string.")
   }
 }
+
+/**
+ * The [TestNormalizeRawResponse] function...
+ */
+func TestNormalizeRawResponse (t *testing.T) {
+  println ("A slice of interfaces normalizes to a slice of maps with string-based keys.")
+
+  checkedValue := "some value"
+
+  rawResponse := []interface{} {
+    map[string]interface{} {
+      "key1a": checkedValue,
+      "key2a": 300,
+    },
+    map[string]interface{} {
+      "key1b": "some other value",
+      "key2b": true,
+    },
+  }
+
+  normalizedResponse := utils.NormalizeRawResponse (rawResponse)
+  normalizedValue, _ := normalizedResponse[0]["key1a"]
+
+  if !(len (normalizedResponse) == len (rawResponse) &&
+       normalizedValue == checkedValue) {
+    t.Error ("Raw response should normalize into proper type.")
+  }
+}
