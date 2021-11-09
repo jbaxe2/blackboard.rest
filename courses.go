@@ -1,6 +1,8 @@
 package blackboard_rest
 
 import (
+  "strings"
+
   "github.com/jbaxe2/blackboard.rest/api"
   "github.com/jbaxe2/blackboard.rest/courses"
 )
@@ -46,7 +48,27 @@ type _Courses struct {
  * The [NewCourses] function creates a new Courses instance.
  */
 func NewCourses (service api.Service) Courses {
+  if nil == service {
+    return nil
+  }
+
   return &_Courses {
     service: service,
   }
+}
+
+/**
+ * The [GetCourse] method retrieves information about a course.
+ */
+func (course *_Courses) GetCourse (courseId string) (courses.Course, error) {
+  courseEndpoint :=
+    strings.Replace (string (api.Course), "{courseId}", courseId, 1)
+
+  rawCourse, err := course.service.Request (courseEndpoint, "GET", nil, nil, 3)
+
+  if nil != err {
+    return courses.Course{}, err
+  }
+
+  return courses.NewCourse (rawCourse), nil
 }

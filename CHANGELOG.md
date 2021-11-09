@@ -1,5 +1,9 @@
 **blackboard.rest**
 
+## 0.2.3+5
+- Resolved some issues with the service type.
+- Work on Courses service.
+
 ## 0.2.3+4
 - Work on service and related code.
 

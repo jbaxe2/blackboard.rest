@@ -72,7 +72,9 @@ func (service *_Service) Token() oauth2.Token {
 }
 
 /**
- * The [Request] method makes the request to the REST API.
+ * The [Request] method makes the request to the REST API, returning the raw
+ * response or an error.  If the REST API returned an error response, this
+ * information is returned as an error as a REST exception.
  */
 func (service *_Service) Request (
   endpoint string, method string, data map[string]interface{},
@@ -86,6 +88,12 @@ func (service *_Service) Request (
 
   request, _ := http.NewRequest (method, requestUri, nil)
   request.Header.Set ("Authorization", "Bearer " + service.token.AccessToken())
+
+  if !("GET" == method || "DELETE" == method || nil == data) {
+    body, _ := json.Marshal (data)
+
+    request.Body = ioutil.NopCloser (strings.NewReader (string (body)))
+  }
 
   client := http.Client {Transport: service.roundTripper}
 
@@ -119,7 +127,7 @@ func _verifyRequestConditions (endpoint, method string) error {
 func _buildRequestUri (
   host, endpoint string, useVersion int, options map[string]string,
 ) string {
-  endpoint = strings.Replace (endpoint, "{v}", strconv.Itoa (useVersion), 1)
+  endpoint = strings.Replace (Base + endpoint, "{v}", strconv.Itoa (useVersion), 1)
   uri := "https://" + host + endpoint
 
   if 0 < len (options) {
@@ -138,7 +146,8 @@ func _buildRequestUri (
 /**
  * The [_parseResponse] function parses the response from a REST API request,
  * converting the response to either a raw map with string-based keys or an error
- * of some sort.
+ * of some sort.  If the error came from the REST API, its semantic interpretation
+ * will be returned as a REST exception.
  */
 func _parseResponse (response *http.Response) (map[string]interface{}, error) {
   defer response.Body.Close()
@@ -147,7 +156,7 @@ func _parseResponse (response *http.Response) (map[string]interface{}, error) {
   responseBytes, _ := ioutil.ReadAll (response.Body)
 
   if err := json.Unmarshal (responseBytes, &rawResponse); nil != err {
-    return nil, errors.New ("response from the REST server is not unreadable")
+    return nil, errors.New ("response from the REST server is unreadable")
   }
 
   if _, wasError := rawResponse["status"]; wasError {

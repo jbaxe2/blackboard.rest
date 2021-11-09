@@ -10,7 +10,7 @@ import (
 func NewCourse (rawCourse map[string]interface{}) Course {
   created, _ := time.Parse (time.RFC3339, rawCourse["created"].(string))
 
-  return Course{
+  return Course {
     Id: rawCourse["id"].(string),
     Uuid: rawCourse["uuid"].(string),
     ExternalId: rawCourse["externalId"].(string),
