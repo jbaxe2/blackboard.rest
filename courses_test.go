@@ -8,7 +8,6 @@ import (
 
   blackboardRest "github.com/jbaxe2/blackboard.rest"
   "github.com/jbaxe2/blackboard.rest/api"
-  "github.com/jbaxe2/blackboard.rest/oauth2"
 )
 
 /**
@@ -53,10 +52,6 @@ func TestNewCoursesGetCourse (t *testing.T) {
  */
 var mockCoursesService =
   api.NewService ("localhost", mockToken, mockCoursesRoundTripper)
-
-var mockToken = oauth2.NewToken (
-  "access_token", "token_type", "refresh_token", "scope", "user_id", 3600,
-)
 
 var mockCoursesRoundTripper = new (_MockCoursesRoundTripper)
 

@@ -10,6 +10,7 @@ import (
   "testing"
 
   blackboardRest "github.com/jbaxe2/blackboard.rest"
+  "github.com/jbaxe2/blackboard.rest/oauth2"
 )
 
 /**
@@ -141,6 +142,10 @@ func TestNewOAuth2RequestTokenNoAuthorizationCodeProperError (t *testing.T) {
  * Mocked types and instances to run the above tests with.
  */
 var mockRoundTripper = NewMockOAuth2RoundTripper()
+
+var mockToken = oauth2.NewToken (
+  "access_token", "token_type", "refresh_token", "scope", "user_id", 3600,
+)
 
 /**
  * The [_MockOAuth2RoundTripper] type.

@@ -84,6 +84,10 @@ func (oAuth2 *_OAuth2) AuthorizationCode (
   endpoint :=
     strings.Replace (api.Base, "{v}", "1", 1) + string (api.AuthorizationCode)
 
+  if "" == scope {
+    scope = "read"
+  }
+
   authorizedUri := "https://" + oAuth2.host + endpoint + "?redirect_uri=" +
     redirectUri.String() + "&client_id=" + clientId + "&response_type=code&scope=" +
     scope
