@@ -15,7 +15,9 @@ import (
 
 /**
  * The [Service] interface is the base interface for all Blackboard Learn REST
- * API service types.
+ * API service types.  Implementors must provide the flexibility of calling any
+ * of the Learn REST service endpoints, including establishing request options
+ * as appropriate for each request.
  */
 type Service interface {
   Host() string
@@ -25,6 +27,8 @@ type Service interface {
   SetRequestOption (key, value string)
 
   AddRequestOptions (options map[string]string)
+
+  ClearRequestOptions()
 
   Request (
     endpoint string, method string, data map[string]interface{}, useVersion int,
@@ -47,7 +51,9 @@ type _Service struct {
 }
 
 /**
- * The [NewService] function creates a new Service instance.
+ * The [NewService] function creates a new Service instance.  An appropriate host
+ * and token are required to create a new service instance.  If the round tripper
+ * is nil, the default transport will be used.
  */
 func NewService (
   host string, token oauth2.Token, roundTripper http.RoundTripper,
@@ -83,9 +89,17 @@ func (service *_Service) Token() oauth2.Token {
  * cleared after the next service request.
  */
 func (service *_Service) SetRequestOption (key, value string) {
-  service.options[key] = value
+  if "" != key {
+    service.options[key] = value
+  }
 }
 
+/**
+ * The [AddRequestOptions] method adds the map of string-based key and value
+ * pairs to the request options.  For any keys that already have values in the
+ * options, those values are overridden with the values provided.  The request
+ * options are cleared after the next service request.
+ */
 func (service *_Service) AddRequestOptions (options map[string]string) {
   for key, value := range options {
     service.SetRequestOption (key, value)
@@ -93,9 +107,17 @@ func (service *_Service) AddRequestOptions (options map[string]string) {
 }
 
 /**
+ * The [ClearRequestOptions] method clears the service request options.
+ */
+func (service *_Service) ClearRequestOptions() {
+  service.options = make (map[string]string)
+}
+
+/**
  * The [Request] method makes the request to the REST API, returning the raw
  * response or an error.  If the REST API returned an error response, this
- * information is returned as an error as a REST exception.
+ * information is returned as an error as a REST exception; other errors will
+ * typically use the base error type.
  */
 func (service *_Service) Request (
   endpoint string, method string, data map[string]interface{}, useVersion int,
@@ -119,7 +141,7 @@ func (service *_Service) Request (
   client := http.Client {Transport: service.roundTripper}
   response, _ := client.Do (request)
 
-  service.options = make (map[string]string)
+  service.ClearRequestOptions()
 
   return _parseResponse (response)
 }

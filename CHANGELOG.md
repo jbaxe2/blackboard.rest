@@ -1,5 +1,9 @@
 **blackboard.rest**
 
+## 0.2.3+8
+- Added clearing service request options.
+- Tightened behaviors when dealing with service request options.
+
 ## 0.2.3+7
 - Added setting and adding options for service requests.
 

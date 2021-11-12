@@ -188,10 +188,28 @@ func TestNewServiceSetOptionKeyAndValue (t *testing.T) {
  * The [TestNewServiceOptionsClearedAfterRequest] function...
  */
 func TestNewServiceOptionsClearedAfterRequest (t *testing.T) {
-  println ("New service options are cleared after a request.")
+  println ("Service request options are cleared after a request.")
 
   service := api.NewService ("localhost", mockToken, mockRoundTripper)
   service.SetRequestOption ("key", "value")
+
+  _, _ = service.Request ("/set/request/option", "GET", nil, 1)
+  response, _ := service.Request ("/set/request/option", "GET", nil, 1)
+
+  if "" != response["result"].(string) {
+    t.Error ("The request option value was not cleared appropriately.")
+  }
+}
+
+/**
+ * The [TestNewServiceClearingOptionsClearsOptions] function...
+ */
+func TestNewServiceClearingOptionsClearsOptions (t *testing.T) {
+  println ("Clearing service request options clears the request options.")
+
+  service := api.NewService ("localhost", mockToken, mockRoundTripper)
+  service.SetRequestOption ("key", "value")
+  service.ClearRequestOptions()
 
   _, _ = service.Request ("/set/request/option", "GET", nil, 1)
   response, _ := service.Request ("/set/request/option", "GET", nil, 1)
@@ -221,6 +239,39 @@ func TestNewServiceAddRequestOptions (t *testing.T) {
 
   if !("value1" == value1 && "value2" == value2) {
     t.Error ("The request options were not added and used appropriately.")
+  }
+}
+
+/**
+ * The [TestNewServiceOptionNotSetIfKeyIsEmpty] function...
+ */
+func TestNewServiceOptionNotSetIfKeyIsEmpty (t *testing.T) {
+  println ("Service request option is not set if key is empty.")
+
+  service := api.NewService ("localhost", mockToken, mockRoundTripper)
+  service.SetRequestOption ("", "value")
+
+  response, _ := service.Request ("/set/empty/option", "GET", nil, 1)
+
+  if "ok" != response["result"].(string) {
+    t.Error ("The request option value was not set or used appropriately.")
+  }
+}
+
+/**
+ * The [TestNewServiceSetOptionKeyAndValue] function...
+ */
+func TestNewServiceSetOptionKeyAndReplacedValue (t *testing.T) {
+  println ("Replaced value for service option is appropriately set and used.")
+
+  service := api.NewService ("localhost", mockToken, mockRoundTripper)
+  service.SetRequestOption ("key", "value")
+  service.SetRequestOption ("key", "newValue")
+
+  response, _ := service.Request ("/set/request/option", "GET", nil, 1)
+
+  if "newValue" != response["result"].(string) {
+    t.Error ("The request option new value was not set or used appropriately.")
   }
 }
 
@@ -297,28 +348,31 @@ func (roundTripper *_MockServiceRoundTripper) RoundTrip (
     Header: make (http.Header),
   }
 
+  responseBody := ""
+
   switch true {
     case strings.Contains (request.URL.Path, "invalid/token"):
-      request.Response.Body = ioutil.NopCloser (strings.NewReader (
-        `{"status":"400","message":"invalid_client"}`,
-      ))
+      responseBody = `{"status":"400","message":"invalid_client"}`
     case strings.Contains (request.URL.Path, "set/request/option"):
       result := request.URL.Query().Get ("key")
 
-      request.Response.Body = ioutil.NopCloser (strings.NewReader (
-        `{"result":"` + result + `"}`,
-      ))
+      responseBody = `{"result":"` + result + `"}`
+    case strings.Contains (request.URL.Path, "set/empty/option"):
+      if "" != request.URL.RawQuery {
+        responseBody = `{"result":"empty_key"}`
+      } else {
+        responseBody = `{"result":"ok"}`
+      }
     case strings.Contains (request.URL.Path, "add/request/options"):
       value1 := request.URL.Query().Get ("key1")
       value2 := request.URL.Query().Get ("key2")
 
-      request.Response.Body = ioutil.NopCloser (strings.NewReader (
-        `{"key1":"` + value1 + `", "key2":"` + value2 + `"}`,
-      ))
+      responseBody = `{"key1":"` + value1 + `", "key2":"` + value2 + `"}`
     default:
-      request.Response.Body =
-        ioutil.NopCloser (strings.NewReader (`{"result":"ok"}`))
+      responseBody = `{"result":"ok"}`
   }
+
+  request.Response.Body = ioutil.NopCloser (strings.NewReader (responseBody))
 
   return request.Response, nil
 }
