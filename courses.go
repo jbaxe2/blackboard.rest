@@ -66,7 +66,7 @@ func (course *_Courses) GetCourse (courseId string) (courses.Course, error) {
   courseEndpoint :=
     strings.Replace (string (api.Course), "{courseId}", courseId, 1)
 
-  rawCourse, err := course.service.Request (courseEndpoint, "GET", nil, nil, 3)
+  rawCourse, err := course.service.Request (courseEndpoint, "GET", nil, 3)
 
   if nil != err {
     return courses.Course{}, err

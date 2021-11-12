@@ -106,7 +106,7 @@ func TestNewServiceRequest (t *testing.T) {
 
   service := api.NewService ("localhost", mockToken, mockRoundTripper)
 
-  if _, err := service.Request ("/endpoint/string", "GET", nil, nil, 1); nil != err {
+  if _, err := service.Request ("/endpoint/string", "GET", nil, 1); nil != err {
     t.Error ("Performing a service request should not result in error.")
   }
 }
@@ -119,7 +119,7 @@ func TestNewServiceRequestRequiresEndpoint (t *testing.T) {
 
   service := api.NewService ("localhost", mockToken, mockRoundTripper)
 
-  if _, err := service.Request ("", "GET", nil, nil, 1); nil == err {
+  if _, err := service.Request ("", "GET", nil, 1); nil == err {
     t.Error ("Missing endpoint should result in error.")
   }
 }
@@ -132,7 +132,7 @@ func TestNewServiceRequestRequiresHttpMethod (t *testing.T) {
 
   service := api.NewService ("localhost", mockToken, mockRoundTripper)
 
-  if _, err := service.Request ("/endpoint/string", "", nil, nil, 1);
+  if _, err := service.Request ("/endpoint/string", "", nil, 1);
       nil == err {
     t.Error ("Inappropriate HTTP method should result in error.")
   }
@@ -146,7 +146,7 @@ func TestNewServiceRequiresRequiresAppropriateMethod (t *testing.T) {
 
   service := api.NewService ("localhost", mockToken, mockRoundTripper)
 
-  if _, err := service.Request ("/endpoint/string", "METHOD", nil, nil, 1);
+  if _, err := service.Request ("/endpoint/string", "METHOD", nil, 1);
       nil == err {
     t.Error ("Inappropriate HTTP method should result in error.")
   }
@@ -161,10 +161,66 @@ func TestNewServiceRequestsRequireValidAccessCode (t *testing.T) {
   service :=
     api.NewService ("localhost", new (_MockInvalidAccessCodeToken), mockRoundTripper)
 
-  _, err := service.Request ("/access/invalid/token", "GET", nil, nil, 1)
+  _, err := service.Request ("/access/invalid/token", "GET", nil, 1)
 
   if nil == err {
     t.Error ("An invalid access code should result in a returned error.")
+  }
+}
+
+/**
+ * The [TestNewServiceSetOptionKeyAndValue] function...
+ */
+func TestNewServiceSetOptionKeyAndValue (t *testing.T) {
+  println ("New service appropriately set and use request option key and value.")
+
+  service := api.NewService ("localhost", mockToken, mockRoundTripper)
+  service.SetRequestOption ("key", "value")
+
+  response, _ := service.Request ("/set/request/option", "GET", nil, 1)
+
+  if "value" != response["result"].(string) {
+    t.Error ("The request option value was not set or used appropriately.")
+  }
+}
+
+/**
+ * The [TestNewServiceOptionsClearedAfterRequest] function...
+ */
+func TestNewServiceOptionsClearedAfterRequest (t *testing.T) {
+  println ("New service options are cleared after a request.")
+
+  service := api.NewService ("localhost", mockToken, mockRoundTripper)
+  service.SetRequestOption ("key", "value")
+
+  _, _ = service.Request ("/set/request/option", "GET", nil, 1)
+  response, _ := service.Request ("/set/request/option", "GET", nil, 1)
+
+  if "" != response["result"].(string) {
+    t.Error ("The request option value was not cleared appropriately.")
+  }
+}
+
+/**
+ * The [TestNewServiceAddRequestOptions] function...
+ */
+func TestNewServiceAddRequestOptions (t *testing.T) {
+  println ("New service can have multiple request options added and used.")
+
+  options := map[string]string {
+    "key1": "value1",
+    "key2": "value2",
+  }
+
+  service := api.NewService ("localhost", mockToken, mockRoundTripper)
+  service.AddRequestOptions (options)
+
+  response, _ := service.Request ("/add/request/options", "GET", nil, 1)
+  value1 := response["key1"].(string)
+  value2 := response["key2"].(string)
+
+  if !("value1" == value1 && "value2" == value2) {
+    t.Error ("The request options were not added and used appropriately.")
   }
 }
 
@@ -241,13 +297,27 @@ func (roundTripper *_MockServiceRoundTripper) RoundTrip (
     Header: make (http.Header),
   }
 
-  if strings.Contains (request.URL.Path, "invalid/token") {
-    request.Response.Body = ioutil.NopCloser (strings.NewReader (
-      `{"status":"400","message":"invalid_client"}`,
-    ))
-  } else {
-    request.Response.Body =
-      ioutil.NopCloser (strings.NewReader (`{"result":"ok"}`))
+  switch true {
+    case strings.Contains (request.URL.Path, "invalid/token"):
+      request.Response.Body = ioutil.NopCloser (strings.NewReader (
+        `{"status":"400","message":"invalid_client"}`,
+      ))
+    case strings.Contains (request.URL.Path, "set/request/option"):
+      result := request.URL.Query().Get ("key")
+
+      request.Response.Body = ioutil.NopCloser (strings.NewReader (
+        `{"result":"` + result + `"}`,
+      ))
+    case strings.Contains (request.URL.Path, "add/request/options"):
+      value1 := request.URL.Query().Get ("key1")
+      value2 := request.URL.Query().Get ("key2")
+
+      request.Response.Body = ioutil.NopCloser (strings.NewReader (
+        `{"key1":"` + value1 + `", "key2":"` + value2 + `"}`,
+      ))
+    default:
+      request.Response.Body =
+        ioutil.NopCloser (strings.NewReader (`{"result":"ok"}`))
   }
 
   return request.Response, nil

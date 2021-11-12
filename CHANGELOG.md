@@ -1,5 +1,8 @@
 **blackboard.rest**
 
+## 0.2.3+7
+- Added setting and adding options for service requests.
+
 ## 0.2.3+6
 - Work on courses and users service.
 - Fleshed out some boilerplate code for other services.

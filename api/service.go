@@ -22,9 +22,12 @@ type Service interface {
 
   Token() oauth2.Token
 
+  SetRequestOption (key, value string)
+
+  AddRequestOptions (options map[string]string)
+
   Request (
-    endpoint string, method string, data map[string]interface{},
-    options map[string]string, useVersion int,
+    endpoint string, method string, data map[string]interface{}, useVersion int,
   ) (map[string]interface{}, error)
 }
 
@@ -35,6 +38,8 @@ type _Service struct {
   host string
 
   token oauth2.Token
+
+  options map[string]string
 
   roundTripper http.RoundTripper
 
@@ -59,6 +64,7 @@ func NewService (
   return &_Service {
     host: host,
     token: token,
+    options: make (map[string]string),
     roundTripper: roundTripper,
   }
 }
@@ -72,19 +78,34 @@ func (service *_Service) Token() oauth2.Token {
 }
 
 /**
+ * The [SetRequestOption] method sets a key and value pair for some option that
+ * may be used with a particular service request.  This key and value will be
+ * cleared after the next service request.
+ */
+func (service *_Service) SetRequestOption (key, value string) {
+  service.options[key] = value
+}
+
+func (service *_Service) AddRequestOptions (options map[string]string) {
+  for key, value := range options {
+    service.SetRequestOption (key, value)
+  }
+}
+
+/**
  * The [Request] method makes the request to the REST API, returning the raw
  * response or an error.  If the REST API returned an error response, this
  * information is returned as an error as a REST exception.
  */
 func (service *_Service) Request (
-  endpoint string, method string, data map[string]interface{},
-  options map[string]string, useVersion int,
+  endpoint string, method string, data map[string]interface{}, useVersion int,
 ) (map[string]interface{}, error) {
   if err := _verifyRequestConditions (endpoint, method); nil != err {
     return nil, err
   }
 
-  requestUri := _buildRequestUri (service.host, endpoint, useVersion, options)
+  requestUri :=
+    _buildRequestUri (service.host, endpoint, useVersion, service.options)
 
   request, _ := http.NewRequest (method, requestUri, nil)
   request.Header.Set ("Authorization", "Bearer " + service.token.AccessToken())
@@ -96,8 +117,9 @@ func (service *_Service) Request (
   }
 
   client := http.Client {Transport: service.roundTripper}
-
   response, _ := client.Do (request)
+
+  service.options = make (map[string]string)
 
   return _parseResponse (response)
 }
@@ -136,8 +158,6 @@ func _buildRequestUri (
     for k, v := range options {
       uri += k + "=" + v + "&"
     }
-
-    uri = uri[0:len (uri) - 2]
   }
 
   return uri
