@@ -26,7 +26,7 @@ func TestNewCourseGradesRequiresService (t *testing.T) {
   println ("Creating a new course grades instance requires service reference.")
 
   if nil != blackboardRest.NewCourseGrades (nil) {
-    t.Error ("Missing course grades instance should result in nil reference.")
+    t.Error ("Missing service instance should result in nil reference.")
   }
 }
 

@@ -1,5 +1,8 @@
 **blackboard.rest**
 
+## 0.2.3+10
+- Added more boilerplate code for services.
+
 ## 0.2.3+9
 - Updated README to include a lot more information about the library.
 - Established default scope on obtaining authorization code.

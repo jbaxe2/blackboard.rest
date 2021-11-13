@@ -1,11 +1,13 @@
 package blackboard_rest
 
 import (
+  "github.com/jbaxe2/blackboard.rest/api"
   "github.com/jbaxe2/blackboard.rest/course_groups"
 )
 
 /**
- * The [CourseGroups] interface...
+ * The [CourseGroups] interface provides the base interface for interacting with
+ * the REST API's course groups service.
  */
 type CourseGroups interface {
   GetGroups (courseId string) ([]course_groups.Group, error)
@@ -27,4 +29,26 @@ type CourseGroups interface {
   ) error
 
   GetGroup (courseId string, groupSetId string) (course_groups.Group, error)
+}
+
+/**
+ * The [_CourseGroups] type implements the Course Groups interface.
+ */
+type _CourseGroups struct {
+  service api.Service
+
+  CourseGroups
+}
+
+/**
+ * The [NewCourseGroups] function creates a new course groups instance.
+ */
+func NewCourseGroups (service api.Service) CourseGroups {
+  if nil == service {
+    return nil
+  }
+
+  return &_CourseGroups {
+    service: service,
+  }
 }
