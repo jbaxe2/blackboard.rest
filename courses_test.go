@@ -33,6 +33,34 @@ func TestNewCoursesRequiresService (t *testing.T) {
 }
 
 /**
+ * The [TestNewCoursesGetCourses] function...
+ */
+func TestNewCoursesGetCourses (t *testing.T) {
+  println ("Retrieve multiple courses from the REST API.")
+
+  courses := blackboardRest.NewCourses (mockCoursesService)
+  newCourses, err := courses.GetCourses()
+
+  if !(nil == err && 4 == len (newCourses)) {
+    t.Error ("Retrieving courses should return the appropriate responses.")
+  }
+}
+
+/**
+ * The [TestNewCoursesGetCoursesByTerm] function...
+ */
+func TestNewCoursesGetCoursesByTerm (t *testing.T) {
+  println ("Retrieve multiple courses from the REST API belonging to a same term.")
+
+  courses := blackboardRest.NewCourses (mockCoursesService)
+  termedCourses, err := courses.GetCoursesByTerm ("2021fall")
+
+  if !(nil == err && 3 == len (termedCourses) && "2021fall" == termedCourses[0].TermId) {
+    t.Error ("Retrieving termed courses should return the appropriate responses.")
+  }
+}
+
+/**
  * The [TestNewCoursesGetCourse] function...
  */
 func TestNewCoursesGetCourse (t *testing.T) {
@@ -67,22 +95,46 @@ func (roundTripper *_MockCoursesRoundTripper) RoundTrip (
     Header: make (http.Header),
   }
 
-  if "GET" == request.Method && strings.Contains (request.URL.Path, "/courses/") {
-    request.Response.StatusCode = 200
+  request.Response.StatusCode = 200
+  responseBody := ""
 
-    request.Response.Body = ioutil.NopCloser (strings.NewReader (
-      `{"id":"_121_1","courseId":"wsu_jaxenroth_sandbox_1","externalId":` +
-      `"wsu_jaxenroth_sandbox_1","uuid":"asdf","name":"Joseph Axenroth Sandbox ` +
-      `#1","dataSourceId":"plato.sis.courses","termId":"sandboxes_term",` +
-      `"organization":false,"created":"2021-11-09T17:04:21.246Z"}`,
-    ))
-  } else {
-    request.Response.StatusCode = 404
-
-    request.Response.Body = ioutil.NopCloser (strings.NewReader (
-      `{"status":404,"message":"Improper request"}`,
-    ))
+  switch true {
+    case "GET" == request.Method && request.URL.Query().Has ("termId"):
+      responseBody = rawCourses
+    case "GET" == request.Method && strings.Contains (request.URL.Path, "/courses/"):
+      responseBody = sandboxCourse
+    case "GET" == request.Method && strings.Contains (request.URL.Path, "/courses"):
+      responseBody = allCourses
+    default:
+      request.Response.StatusCode = 404
+      responseBody = improperRequest
   }
+
+  request.Response.Body = ioutil.NopCloser (strings.NewReader (responseBody))
 
   return request.Response, nil
 }
+
+const improperRequest = `{"status":404,"message":"Improper request"}`
+
+const allCourses =
+  `{"results":[` + course1 + `,` + course2 + `,` + course3 + `,` + sandboxCourse + `]}`
+
+const rawCourses = `{"results":[` + course1 + `,` + course2 + `,` + course3 + `]}`
+
+const course1 = `{"id":"_1_1","courseId":"wsu_course_1","externalId":"wsu_course_1",` +
+  `"uuid":"asdf1","name":"Course #1","dataSourceId":"plato.sis.courses","termId":"2021fall",` +
+  `"organization":false,"created":"2021-11-09T17:04:21.246Z"}`
+
+const course2 = `{"id":"_2_1","courseId":"wsu_course_2","externalId":"wsu_course_2",` +
+  `"uuid":"asdf2","name":"Course #2","dataSourceId":"plato.sis.courses","termId":"2021fall",` +
+  `"organization":false,"created":"2021-11-09T17:04:21.246Z"}`
+
+const course3 = `{"id":"_3_1","courseId":"wsu_course_3","externalId":"wsu_course_3",` +
+  `"uuid":"asdf3","name":"Course #3","dataSourceId":"plato.sis.courses","termId":"2021fall",` +
+  `"organization":false,"created":"2021-11-09T17:04:21.246Z"}`
+
+const sandboxCourse = `{"id":"_121_1","courseId":"wsu_jaxenroth_sandbox_1",` +
+  `"externalId":"wsu_jaxenroth_sandbox_1","uuid":"asdf","name":"Joseph Axenroth ` +
+  `Sandbox #1","dataSourceId":"plato.sis.courses","termId":"sandboxes_term",` +
+  `"organization":false,"created":"2021-11-09T17:04:21.246Z"}`

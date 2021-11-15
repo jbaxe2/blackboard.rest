@@ -180,6 +180,8 @@ func _buildRequestUri (
     for k, v := range options {
       uri += k + "=" + v + "&"
     }
+
+    uri = uri[0:len (uri) - 1]
   }
 
   return uri

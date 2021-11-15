@@ -5,6 +5,7 @@ import (
 
   "github.com/jbaxe2/blackboard.rest/api"
   "github.com/jbaxe2/blackboard.rest/courses"
+  "github.com/jbaxe2/blackboard.rest/utils"
 )
 
 /**
@@ -12,29 +13,29 @@ import (
  * API's courses endpoints.
  */
 type Courses interface {
-  GetCourses() []courses.Course
+  GetCourses() ([]courses.Course, error)
 
-  GetCoursesByTerm (termId string) []courses.Course
+  GetCoursesByTerm (termId string) ([]courses.Course, error)
 
-  CreateCourse (course courses.Course)
+  CreateCourse (course courses.Course) error
 
   GetCourse (courseId string) (courses.Course, error)
 
-  UpdateCourse (courseId string, course courses.Course)
+  UpdateCourse (courseId string, course courses.Course) error
 
-  GetChildren (courseId string) []courses.CourseChild
+  GetChildren (courseId string) ([]courses.CourseChild, error)
 
-  GetChild (courseId string, childCourseId string) courses.CourseChild
+  GetChild (courseId string, childCourseId string) (courses.CourseChild, error)
 
   AddChildCourse (
     courseId string, childCourseId string, ignoreEnrollmentErrors bool,
-  )
+  ) error
 
-  CopyCourse (courseId string, newCourseId string)
+  CopyCourse (courseId string, newCourseId string) error
 
-  GetCrossListSet (courseId string) []courses.CourseChild
+  GetCrossListSet (courseId string) ([]courses.CourseChild, error)
 
-  GetTask (courseId string, taskId string) courses.CourseTask
+  GetTask (courseId string, taskId string) (courses.CourseTask, error)
 }
 
 /**
@@ -47,7 +48,7 @@ type _Courses struct {
 }
 
 /**
- * The [NewCourses] function creates a new Courses instance.
+ * The [NewCourses] function creates a new courses instance.
  */
 func NewCourses (service api.Service) Courses {
   if nil == service {
@@ -60,13 +61,50 @@ func NewCourses (service api.Service) Courses {
 }
 
 /**
- * The [GetCourse] method retrieves information about a course.
+ * The [GetCourses] method retrieves a slice of courses.  Request options should
+ * be used to slim down the groups of courses, such as by availability, name,
+ * modified, etc.  Paging is currently not provided by this library directly, and
+ * should also be performed via the request options.
+ */
+func (course *_Courses) GetCourses() ([]courses.Course, error) {
+  rawCourses, err := course.service.Request (string (api.Courses), "GET", nil, 3)
+
+  if nil != err {
+    return nil, err
+  }
+
+  return courses.NewCourses (
+    utils.NormalizeRawResponse (rawCourses["results"].([]interface{})),
+  ), nil
+}
+
+/**
+ * The [GetCourses] method retrieves a slice of courses for a particular term,
+ * as provided by the term ID.  Note this is a convenience method for retrieving
+ * group of courses based on a common criteria (some term), and does not reflect
+ * a direct standalone endpoint in the courses REST API.
+ */
+func (course *_Courses) GetCoursesByTerm (termId string) ([]courses.Course, error) {
+  course.service.SetRequestOption ("termId", termId)
+
+  rawCourses, err := course.service.Request (string (api.Courses), "GET", nil, 3)
+
+  if nil != err {
+    return nil, err
+  }
+
+  return courses.NewCourses (
+    utils.NormalizeRawResponse (rawCourses["results"].([]interface{})),
+  ), nil
+}
+
+/**
+ * The [GetCourse] method retrieves information about a single course based on
+ * the provided course ID.
  */
 func (course *_Courses) GetCourse (courseId string) (courses.Course, error) {
-  courseEndpoint :=
-    strings.Replace (string (api.Course), "{courseId}", courseId, 1)
-
-  rawCourse, err := course.service.Request (courseEndpoint, "GET", nil, 3)
+  endpoint := strings.Replace (string (api.Course), "{courseId}", courseId, 1)
+  rawCourse, err := course.service.Request (endpoint, "GET", nil, 3)
 
   if nil != err {
     return courses.Course{}, err

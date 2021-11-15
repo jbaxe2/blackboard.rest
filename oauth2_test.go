@@ -141,7 +141,7 @@ func TestNewOAuth2RequestTokenNoAuthorizationCodeProperError (t *testing.T) {
 /**
  * Mocked types and instances to run the above tests with.
  */
-var mockRoundTripper = NewMockOAuth2RoundTripper()
+var mockRoundTripper = new (_MockOAuth2RoundTripper)
 
 var mockToken = oauth2.NewToken (
   "access_token", "token_type", "refresh_token", "scope", "user_id", 3600,
@@ -152,10 +152,6 @@ var mockToken = oauth2.NewToken (
  */
 type _MockOAuth2RoundTripper struct {
   http.RoundTripper
-}
-
-func NewMockOAuth2RoundTripper() http.RoundTripper {
-  return new (_MockOAuth2RoundTripper)
 }
 
 /**
@@ -171,7 +167,6 @@ func (_ *_MockOAuth2RoundTripper) RoundTrip (
 
   switch true {
     case strings.Contains (request.URL.Path, "oauth2/authorizationcode"):
-      request.Response.Status = "200 OK"
       request.Response.StatusCode = 200
     case strings.Contains (request.URL.Path, "oauth2/token"):
       if user, pass, _ := request.BasicAuth(); "" == user || "" == pass {

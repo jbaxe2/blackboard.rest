@@ -1,5 +1,9 @@
 **blackboard.rest**
 
+## 0.2.4
+- Work on courses service and factory.
+- Minor other updates to improve clarity and structure.
+
 ## 0.2.3+10
 - Added more boilerplate code for services.
 
