@@ -1,6 +1,8 @@
 package blackboard_rest
 
 import (
+  "strings"
+
   "github.com/jbaxe2/blackboard.rest/api"
   "github.com/jbaxe2/blackboard.rest/users"
 )
@@ -39,4 +41,19 @@ func NewUsers (service api.Service) Users {
   return &_Users {
     service: service,
   }
+}
+
+/**
+ * The [GetUser] method retrieves information about a single user based on the
+ * provided user identifier.
+ */
+func (user *_Users) GetUser (userId string) (users.User, error) {
+  endpoint := strings.Replace (string (api.User), "{userId}", userId, 1)
+  rawUser, err := user.service.Request (endpoint, "GET", nil, 1)
+
+  if nil != err {
+    return users.User{}, err
+  }
+
+  return users.NewUser (rawUser), nil
 }

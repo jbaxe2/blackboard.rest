@@ -5,7 +5,7 @@ import (
 )
 
 /**
- * The [NewAttemptFiles] function...
+ * The [NewAttemptFiles] function creates a slice of attempt file instances.
  */
 func NewAttemptFiles (rawAttemptFiles []map[string]interface{}) []AttemptFile {
   attemptFiles := make ([]AttemptFile, len (rawAttemptFiles))
@@ -18,7 +18,7 @@ func NewAttemptFiles (rawAttemptFiles []map[string]interface{}) []AttemptFile {
 }
 
 /**
- * The [NewAttemptFile] function...
+ * The [NewAttemptFile] function creates an instance of the attempt file.
  */
 func NewAttemptFile (rawAttemptFile map[string]interface{}) AttemptFile {
   name, _ := rawAttemptFile["name"].(string)

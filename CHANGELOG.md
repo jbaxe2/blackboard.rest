@@ -1,5 +1,10 @@
 **blackboard.rest**
 
+## 0.2.5
+- Removed the REST error type, keeping only the OAuth2 error and REST exception.
+- Added test files to factories from 0.1.x versions.
+- Work on users and terms services and factories.
+
 ## 0.2.4
 - Work on courses service and factory.
 - Minor other updates to improve clarity and structure.

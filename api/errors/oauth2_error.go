@@ -6,7 +6,11 @@ import "github.com/jbaxe2/blackboard.rest/utils"
  * The [OAuth2Error] interface provides the base type for OAuth2 error types.
  */
 type OAuth2Error interface {
-  RestError
+  Code() string
+
+  Description() string
+
+  error
 }
 
 /**

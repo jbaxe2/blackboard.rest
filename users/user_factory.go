@@ -5,7 +5,22 @@ import (
 )
 
 /**
- * The [NewUser] function...
+ * The [NewUsers] function creates a slice of User instances from a slice of raw
+ * maps that typically were returned from a response from a REST API users call.
+ */
+func NewUsers (rawUsers []map[string]interface{}) []User {
+  newUsers := make ([]User, len (rawUsers))
+
+  for i, rawUser := range rawUsers {
+    newUsers[i] = NewUser (rawUser)
+  }
+
+  return newUsers
+}
+
+/**
+ * The [NewUser] function creates a new User instance from a raw map typically
+ * returned from a response from a REST API users call.
  */
 func NewUser (rawUser map[string]interface{}) User {
   var created, lastLogin time.Time
@@ -44,10 +59,11 @@ func NewUser (rawUser map[string]interface{}) User {
 }
 
 /**
- * The [_parseInstitutionRoles] function...
+ * The [_parseInstitutionRoles] function determines if there are any valid
+ * institution roles and builds a slice of their identifiers.
  */
 func _parseInstitutionRoles (rawInstitutionRoles ...interface{}) []string {
-  var institutionRoles = make ([]string, len (rawInstitutionRoles))
+  var institutionRoles = make ([]string, 0)
 
   for _, rawRole := range rawInstitutionRoles {
     if institutionRole, haveInstRole := rawRole.(string); haveInstRole {
@@ -59,10 +75,11 @@ func _parseInstitutionRoles (rawInstitutionRoles ...interface{}) []string {
 }
 
 /**
- * The [_parseSystemRoles] function...
+ * The [_parseSystemRoles] function determines if there are any valid system
+ * roles and builds a slice of their corresponding instances.
  */
 func _parseSystemRoles (rawSystemRoles ...interface{}) []SystemRole {
-  var systemRoles = make ([]SystemRole, len (rawSystemRoles))
+  var systemRoles = make ([]SystemRole, 0)
 
   for _, rawRole := range rawSystemRoles {
     if systemRole, haveSystemRole := rawRole.(string); haveSystemRole {
@@ -74,14 +91,14 @@ func _parseSystemRoles (rawSystemRoles ...interface{}) []SystemRole {
 }
 
 /**
- * The [_parseUserAvailability] function...
+ * The [_parseUserAvailability] function returns a typed user availability.
  */
 func _parseUserAvailability (rawUserAvailability string) UserAvailability {
   return UserAvailability (rawUserAvailability)
 }
 
 /**
- * The [_parseName] function...
+ * The [_parseName] function parses the components of a user's name.
  */
 func _parseName (rawName map[string]interface{}) Name {
   name := Name {

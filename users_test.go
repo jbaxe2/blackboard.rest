@@ -1,7 +1,9 @@
 package blackboard_rest_test
 
 import (
+  "io/ioutil"
   "net/http"
+  "strings"
   "testing"
 
   blackboardRest "github.com/jbaxe2/blackboard.rest"
@@ -31,6 +33,21 @@ func TestNewUsersRequiresService (t *testing.T) {
 }
 
 /**
+ * The [TestNewUsersGetUser] function...
+ */
+func TestNewUsersGetUser (t *testing.T) {
+  println ("Retrieve a user from the REST API, based on the user's external ID.")
+
+  users := blackboardRest.NewUsers (mockUsersService)
+  externalId := "externalUserId"
+  user, err := users.GetUser ("externalId:" + externalId)
+
+  if !(nil == err && user.ExternalId == externalId) {
+    t.Error ("Retrieving a user should return the appropriate response.")
+  }
+}
+
+/**
  * Mocked types and instances to run the above tests with.
  */
 var mockUsersService = api.NewService ("localhost", mockToken, mockUsersRoundTripper)
@@ -40,3 +57,34 @@ var mockUsersRoundTripper = new (_MockUsersRoundTripper)
 type _MockUsersRoundTripper struct {
   http.RoundTripper
 }
+
+func (roundTripper *_MockUsersRoundTripper) RoundTrip (
+  request *http.Request,
+) (*http.Response, error) {
+  request.Response = &http.Response {
+    Request: request,
+    Header: make (http.Header),
+  }
+
+  request.Response.StatusCode = 200
+  responseBody := ""
+
+  switch true {
+    case "GET" == request.Method && strings.Contains (request.URL.Path, "/users/"):
+      responseBody = rawUser
+    default:
+      responseBody = improperRequest
+  }
+
+  request.Response.Body = ioutil.NopCloser (strings.NewReader (responseBody))
+
+  return request.Response, nil
+}
+
+const rawUser = `{"id":"userId","uuid":"universally_unique_id","externalId":` +
+  `"externalUserId","dataSourceId":"data.source.id","userName":"username",` +
+  `"studentId":"studentUserId","created":"2021-11-16T18:58:19.500Z",` +
+  `"modified":"2021-11-16T18:58:19.500Z","lastLogin":"2021-11-16T18:58:19.500Z",` +
+  `"institutionRoleIds":["Student"],"name":{"given":"first","family": "last",` +
+  `"middle":"","other":"","suffix":"","title":""},"contact":{"email":` +
+  `"user@school.edu"},"systemRoleIds":["NONE"],"availability":{"available":"Yes"}}`

@@ -1,7 +1,9 @@
 package blackboard_rest_test
 
 import (
+  "io/ioutil"
   "net/http"
+  "strings"
   "testing"
 
   blackboardRest "github.com/jbaxe2/blackboard.rest"
@@ -31,6 +33,20 @@ func TestNewTermsRequiresService (t *testing.T) {
 }
 
 /**
+ * The [TestNewTermsGetTerms] function...
+ */
+func TestNewTermsGetTerms (t *testing.T) {
+  println ("Retrieve multiple terms from the REST API.")
+
+  terms := blackboardRest.NewTerms (mockTermsService)
+  newTerms, err := terms.GetTerms()
+
+  if !(nil == err && 2 == len (newTerms)) {
+    t.Error ("Retrieving terms should result in the appropriate responses.")
+  }
+}
+
+/**
  * Mocked types and instances to run the above tests with.
  */
 var mockTermsService =
@@ -41,3 +57,41 @@ var mockTermsRoundTripper = new (_MockTermsRoundTripper)
 type _MockTermsRoundTripper struct {
   http.RoundTripper
 }
+
+func (roundTripper *_MockTermsRoundTripper) RoundTrip (
+  request *http.Request,
+) (*http.Response, error) {
+  request.Response = &http.Response {
+    Request: request,
+    Header: make (http.Header),
+  }
+
+  request.Response.StatusCode = 200
+  responseBody := ""
+
+  switch true {
+  case "GET" == request.Method && strings.Contains (request.URL.Path, "/terms/"):
+    responseBody = rawTerm
+  case "GET" == request.Method && strings.Contains (request.URL.Path, "/terms"):
+    responseBody = rawTerms
+  default:
+    request.Response.StatusCode = 404
+    responseBody = improperRequest
+  }
+
+  request.Response.Body = ioutil.NopCloser (strings.NewReader (responseBody))
+
+  return request.Response, nil
+}
+
+var rawTerms = `{"results":[` + rawTerm + `,` + rawTerm2 + `]}`
+
+const rawTerm = `{"id":"termId","externalId":"externalTermId","dataSourceId":` +
+  `"term.data.source.id","name":"Term Name","description":"","availability":{` +
+  `"available": "Yes","duration":{"type": "Continuous","start":` +
+  `"2021-11-16T20:38:45.738Z","end":"2021-11-16T20:38:45.738Z","daysOfUse":0}}}`
+
+const rawTerm2 = `{"id":"termId2","externalId":"externalTermId2","dataSourceId":` +
+  `"term.data.source.id","name":"Term Name 2","description":"","availability":{` +
+  `"available": "Yes","duration":{"type": "Continuous","start":` +
+  `"2021-11-16T20:38:45.738Z","end":"2021-11-16T20:38:45.738Z","daysOfUse":0}}}`

@@ -40,3 +40,7 @@ func NewTerms (service api.Service) Terms {
     service: service,
   }
 }
+
+func (term *_Terms) GetTerms() ([]terms.Term, error) {
+  return nil, nil
+}
