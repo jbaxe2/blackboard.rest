@@ -1,5 +1,8 @@
 **blackboard.rest**
 
+## 0.2.5+2
+- Updated README.
+
 ## 0.2.5+1
 - Work on terms service and factory.
 - Minor formatting.

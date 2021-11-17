@@ -116,4 +116,4 @@ One of the best places to find more information on usage of the library,
 including setting optional request parameters and more thorough interactions
 with services, is the various tests.
 
-Issues may be opened if found.
+Issues and enhancement requests should be opened.
