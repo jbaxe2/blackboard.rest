@@ -3,6 +3,7 @@ package blackboard_rest
 import (
   "github.com/jbaxe2/blackboard.rest/api"
   "github.com/jbaxe2/blackboard.rest/terms"
+  "github.com/jbaxe2/blackboard.rest/utils"
 )
 
 /**
@@ -29,7 +30,7 @@ type _Terms struct {
 }
 
 /**
- * The [NewTerms] function creates a new terms insance.
+ * The [NewTerms] function creates a new terms instance.
  */
 func NewTerms (service api.Service) Terms {
   if nil == service {
@@ -41,6 +42,17 @@ func NewTerms (service api.Service) Terms {
   }
 }
 
+/**
+ * The [GetTerms] method retrieves a slice of terms from the REST API.
+ */
 func (term *_Terms) GetTerms() ([]terms.Term, error) {
-  return nil, nil
+  rawTerms, err := term.service.Request (string (api.Terms), "GET", nil, 1)
+
+  if nil != err {
+    return nil, err
+  }
+
+  return terms.NewTerms (
+    utils.NormalizeRawResponse (rawTerms["results"].([]interface{})),
+  ), nil
 }

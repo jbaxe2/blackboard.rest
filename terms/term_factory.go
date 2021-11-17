@@ -64,7 +64,11 @@ func _parseDuration (rawDuration interface{}) TermDuration {
   }
 
   if nil != mappedDuration["daysOfUse"] {
-    termDuration.DaysOfUse = mappedDuration["daysOfUse"].(int)
+    if daysOfUse, isInt := mappedDuration["daysOfUse"].(int); isInt {
+      termDuration.DaysOfUse = daysOfUse
+    } else {
+      termDuration.DaysOfUse = int (mappedDuration["daysOfUse"].(float64))
+    }
   }
 
   return termDuration

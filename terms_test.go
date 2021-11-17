@@ -70,13 +70,13 @@ func (roundTripper *_MockTermsRoundTripper) RoundTrip (
   responseBody := ""
 
   switch true {
-  case "GET" == request.Method && strings.Contains (request.URL.Path, "/terms/"):
-    responseBody = rawTerm
-  case "GET" == request.Method && strings.Contains (request.URL.Path, "/terms"):
-    responseBody = rawTerms
-  default:
-    request.Response.StatusCode = 404
-    responseBody = improperRequest
+    case "GET" == request.Method && strings.Contains (request.URL.Path, "/terms/"):
+      responseBody = rawTerm
+    case "GET" == request.Method && strings.Contains (request.URL.Path, "/terms"):
+      responseBody = rawTerms
+    default:
+      request.Response.StatusCode = 404
+      responseBody = improperRequest
   }
 
   request.Response.Body = ioutil.NopCloser (strings.NewReader (responseBody))
@@ -84,7 +84,7 @@ func (roundTripper *_MockTermsRoundTripper) RoundTrip (
   return request.Response, nil
 }
 
-var rawTerms = `{"results":[` + rawTerm + `,` + rawTerm2 + `]}`
+const rawTerms = `{"results":[` + rawTerm + `,` + rawTerm2 + `]}`
 
 const rawTerm = `{"id":"termId","externalId":"externalTermId","dataSourceId":` +
   `"term.data.source.id","name":"Term Name","description":"","availability":{` +
