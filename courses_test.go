@@ -79,9 +79,7 @@ func TestNewCoursesGetCourse (t *testing.T) {
  * Mocked types and instances to run the above tests with.
  */
 var mockCoursesService =
-  api.NewService ("localhost", mockToken, mockCoursesRoundTripper)
-
-var mockCoursesRoundTripper = new (_MockCoursesRoundTripper)
+  api.NewService ("localhost", mockToken, new (_MockCoursesRoundTripper))
 
 type _MockCoursesRoundTripper struct {
   http.RoundTripper

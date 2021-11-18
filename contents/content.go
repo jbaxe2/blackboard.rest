@@ -1,6 +1,9 @@
 package contents
 
-import "time"
+import (
+  "net/url"
+  "time"
+)
 
 /**
  * The [Content] type...
@@ -8,22 +11,25 @@ import "time"
 type Content struct {
   Id, ParentId, Title, Body, Description string
 
-  Created time.Time
+  Created, Modified time.Time
 
   Position int
 
-  HasChildren, HasGradebookColumn, HasAssociatedGroups bool
+  HasChildren, HasGradebookColumn, HasAssociatedGroups, LaunchInNewWindow,
+    Reviewable bool
 
-  Availability ContentAvailability
+  Availability Availability
 
   ContentHandler ContentHandler
+
+  Links []Link
 }
 
 /**
- * The [ContentAvailability] type...
+ * The [Availability] type...
  */
-type ContentAvailability struct {
-  Available ContentAvailable
+type Availability struct {
+  Available Available
 
   AllowGuests bool
 
@@ -45,12 +51,21 @@ type AdaptiveRelease struct {
 }
 
 /**
- * The [ContentAvailable] type...
+ * The [Link] type...
  */
-type ContentAvailable string
+type Link struct {
+  Href *url.URL
+
+  Rel, Title, Type string
+}
+
+/**
+ * The [Available] type...
+ */
+type Available string
 
 const (
-  Yes              ContentAvailable = "Yes"
-  No               ContentAvailable = "No"
-  PartiallyVisible ContentAvailable = "PartiallyVisible"
+  Yes              Available = "Yes"
+  No               Available = "No"
+  PartiallyVisible Available = "PartiallyVisible"
 )

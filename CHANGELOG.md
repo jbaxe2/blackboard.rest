@@ -1,5 +1,9 @@
 **blackboard.rest**
 
+## 0.2.6
+- Work on content factory and service.
+- Formatting of README.
+
 ## 0.2.5+2
 - Updated README.
 

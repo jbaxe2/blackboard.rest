@@ -5,7 +5,8 @@ import (
 )
 
 /**
- * The [NewTerms] function...
+ * The [NewTerms] function creates new term instances from a slice of raw term
+ * information, typically provided as part of a response to the terms service.
  */
 func NewTerms (rawTerms []map[string]interface{}) []Term {
   theTerms := make ([]Term, len (rawTerms))
@@ -18,7 +19,8 @@ func NewTerms (rawTerms []map[string]interface{}) []Term {
 }
 
 /**
- * The [NewTerm] function...
+ * The [NewTerm] function creates a new term instance from raw term information,
+ * typically provided as part of a response to the REST API terms service.
  */
 func NewTerm (rawTerm map[string]interface{}) Term {
   return Term {
@@ -30,7 +32,8 @@ func NewTerm (rawTerm map[string]interface{}) Term {
 }
 
 /**
- * The [_parseTermAvailability] function...
+ * The [_parseTermAvailability] function parses the term availability as per the
+ * REST API's documentation specifying appropriate values.
  */
 func _parseTermAvailability (rawAvailability interface{}) TermAvailability {
   mappedAvailability := rawAvailability.(map[string]interface{})
@@ -42,7 +45,8 @@ func _parseTermAvailability (rawAvailability interface{}) TermAvailability {
 }
 
 /**
- * The [_parseDuration] function...
+ * The [_parseDuration] function parses the duration of the term as per the REST
+ * API's documentation specifying appropriate values.
  */
 func _parseDuration (rawDuration interface{}) TermDuration {
   var start, end time.Time

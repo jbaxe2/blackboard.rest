@@ -1,7 +1,6 @@
 package blackboard_rest_test
 
 import (
-  "bytes"
   "encoding/json"
   "io/ioutil"
   "net/http"
@@ -169,16 +168,18 @@ func (_ *_MockOAuth2RoundTripper) RoundTrip (
     case strings.Contains (request.URL.Path, "oauth2/authorizationcode"):
       request.Response.StatusCode = 200
     case strings.Contains (request.URL.Path, "oauth2/token"):
+      responseBody := ""
+
       if user, pass, _ := request.BasicAuth(); "" == user || "" == pass {
         request.Response.StatusCode = 401
-        request.Response.Body = ioutil.NopCloser (strings.NewReader (
-          `{"error":"invalid_client","error_description":"Invalid client ` +
-          `credentials, or no access granted to this Learn server."}`,
-        ))
+
+        responseBody = `{"error":"invalid_client","error_description":"Invalid ` +
+          `client credentials, or no access granted to this Learn server."}`
       } else {
-        request.Response.Body =
-          ioutil.NopCloser (bytes.NewReader (_mockTokenBytes()))
+        responseBody = string (_mockTokenBytes())
       }
+
+      request.Response.Body = ioutil.NopCloser (strings.NewReader (responseBody))
   }
 
   return request.Response, nil

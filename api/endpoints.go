@@ -13,6 +13,18 @@ const (
 )
 
 /**
+ * The [ContentEndpoint] type provides defining typed content endpoint constants.
+ */
+type ContentEndpoint string
+
+const (
+  Contents          ContentEndpoint = "courses/{courseId}/contents"
+  CreateAssignment  ContentEndpoint = "courses/{courseId}/contents/createAssignment"
+  Content           ContentEndpoint = "courses/{courseId}/contents/{contentId}"
+  ContentChildren   ContentEndpoint = "courses/{courseId}/contents/{contentId}/children"
+)
+
+/**
  * The [CourseGradeAttemptsEndpoint] type provides defining typed course grade
  * attempts endpoint constants.
  */

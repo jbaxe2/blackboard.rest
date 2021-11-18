@@ -22,7 +22,7 @@ be meaningfully useful.  Workflow when dealing with this library is as follows:
 
 1. Request a new OAuth2 instance to authenticate/authorize the app/user.
 
-oAuth2 := oauth2.NewOAuth2 ("host", roundTripper)
+`oAuth2 := oauth2.NewOAuth2 ("host", roundTripper)`
 
 The host is the URL for the Blackboard Learn host that the app has previously
 been approved for use with.  The roundTripper variable is an instance of
@@ -31,7 +31,7 @@ provide easier testing of the library.
 
 &nbsp;&nbsp;2a. Request an authorization code (for 3-legged OAuth).
 
-response := oAuth2.AuthorizationCode (request, redirectUri, "clientId", "read")
+`response := oAuth2.AuthorizationCode (request, redirectUri, "clientId", "read")`
 
 The request is a pointer to an http.Request instance.  This request should be a
 GET request to the oauth2/authorizationcode endpoint.  The redirectUri should
@@ -45,17 +45,17 @@ formatted redirect for user authorization (that also includes the code).
 
 &nbsp;&nbsp;2b. Set the client ID and secret (for standalone tools).
 
-oAuth2.SetClientIdAndSecret ("clientID", "secret")
+`oAuth2.SetClientIdAndSecret ("clientID", "secret")`
 
 Both the client ID and secret will be found in the developer portal.
 
 3. Request an OAuth2 token.
 
-token, err := oAuth2.RequestToken ("authorization_code", code, redirectUri)
+`token, err := oAuth2.RequestToken ("authorization_code", code, redirectUri)`
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OR
 
-token, err := oAuth2.RequestToken ("client_credentials", "", redirectUri)
+`token, err := oAuth2.RequestToken ("client_credentials", "", redirectUri)`
 
 Depending on the use case, either authorization code (if step 2a was used above)
 or client credentials (if step 2b was used above) will be provided.  In either
@@ -71,7 +71,7 @@ outlines the reason for the error.
 
 4. Create a new Service instance.
 
-service := api.NewService ("host", token, roundTripper)
+`service := api.NewService ("host", token, roundTripper)`
 
 Creating a service instance requires the host name of the Blackboard Learn
 server.  This should be the same as provided in step 1.  The token is what was
@@ -81,14 +81,14 @@ default http.DefaultTransport round tripper will be used.
 
 5. Create a particular REST service instance.
 
-courseService := blackboardRest.NewCourses (service)
+`courseService := blackboardRest.NewCourses (service)`
 
 To create the course service instance, pass in the service instance created in
 step 4.
 
 6. Use the REST service via the instance.
 
-someCourse, err := courseService.GetCourse ("externalId:some_external_course_id")
+`someCourse, err := courseService.GetCourse ("externalId:some_external_course_id")`
 
 In this example, we are retrieving a course from the courses service.  Endpoints
 for various REST API calls will have a title descriptor, such as 'Get Course',
@@ -103,7 +103,8 @@ outlines the details of the error.
 The following provides the workflow described above, appropriate error checking
 not included.
 
-oAuth2 := oauth2.NewOAuth2 ("host", nil)
+```
+oAuth2 := oauth2.NewOAuth2 ("host", nil)`
 oAuth2.SetClientIdAndSecret ("clientID", "secret")
 
 token, _ := oAuth2.RequestToken ("client_credentials", "", nil)
@@ -111,6 +112,7 @@ service := api.NewService ("host", token, nil)
 courseService := blackboardRest.NewCourses (service)
 
 someCourse, err := courseService.GetCourse ("externalId:some_external_course_id")
+```
 
 One of the best places to find more information on usage of the library,
 including setting optional request parameters and more thorough interactions
