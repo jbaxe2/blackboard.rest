@@ -23,25 +23,44 @@ func NewContents (rawContents []map[string]interface{}) []Content {
  * content information, presumably returned from a REST API call.
  */
 func NewContent (rawContent map[string]interface{}) Content {
+  parentId, _ := rawContent["parentId"].(string)
+  body, _ := rawContent["body"].(string)
+
   created, _ := time.Parse (time.RFC3339, rawContent["created"].(string))
   modified, _ := time.Parse (time.RFC3339, rawContent["modified"].(string))
 
+  hasChildren, _ := rawContent["hasChildren"].(bool)
+  hasGradebookColumns, _ := rawContent["hasGradebookColumns"].(bool)
+  hasAssociatedGroups, _ := rawContent["hasAssociatedGroups"].(bool)
+
   return Content {
     Id: rawContent["id"].(string),
-    ParentId: rawContent["parentId"].(string),
+    ParentId: parentId,
     Title: rawContent["title"].(string),
-    Body: rawContent["body"].(string),
+    Body: body,
     Created: created,
     Modified: modified,
-    Position: rawContent["position"].(int),
-    HasChildren: rawContent["hasChildren"].(bool),
-    HasGradebookColumn: rawContent["hasGradebookColumns"].(bool),
-    HasAssociatedGroups: rawContent["hasAssociatedGroups"].(bool),
+    Position: _parsePosition (rawContent["position"]),
+    HasChildren: hasChildren,
+    HasGradebookColumn: hasGradebookColumns,
+    HasAssociatedGroups: hasAssociatedGroups,
     LaunchInNewWindow: rawContent["launchInNewWindow"].(bool),
     Reviewable: rawContent["reviewable"].(bool),
     Availability:
       _parseAvailability (rawContent["availability"].(map[string]interface{})),
   }
+}
+
+func _parsePosition (rawPosition interface{}) int {
+  var position = 0
+
+  if intPosition, isInt := rawPosition.(int); isInt {
+    position = intPosition
+  } else {
+    position = int (rawPosition.(float64))
+  }
+
+  return position
 }
 
 /**
@@ -52,7 +71,7 @@ func _parseAvailability (rawAvailability map[string]interface{}) Availability {
     Available: Available (rawAvailability["available"].(string)),
     AllowGuests: rawAvailability["allowGuests"].(bool),
     AdaptiveRelease: _parseAdaptiveRelease (
-      rawAvailability["adaptiveRelease"].(map[string]string),
+      rawAvailability["adaptiveRelease"].(map[string]interface{}),
     ),
   }
 }
@@ -62,10 +81,17 @@ func _parseAvailability (rawAvailability map[string]interface{}) Availability {
  * rules, if any, for this content.
  */
 func _parseAdaptiveRelease (
-  rawAdaptiveRelease map[string]string,
+  rawAdaptiveRelease map[string]interface{},
 ) AdaptiveRelease {
-  start, _ := time.Parse (time.RFC3339, rawAdaptiveRelease["start"])
-  end, _ := time.Parse (time.RFC3339, rawAdaptiveRelease["end"])
+  var start, end time.Time
+
+  if rawStart, haveStart := rawAdaptiveRelease["start"].(string); haveStart {
+    start, _ = time.Parse (time.RFC3339, rawStart)
+  }
+
+  if rawEnd, haveEnd := rawAdaptiveRelease["end"].(string); haveEnd {
+    end, _ = time.Parse (time.RFC3339, rawEnd)
+  }
 
   return AdaptiveRelease {
     Start: start,

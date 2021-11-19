@@ -67,7 +67,7 @@ func TestNewCoursesGetCourse (t *testing.T) {
   println ("Retrieve a course from the REST API.")
 
   courses := blackboardRest.NewCourses (mockCoursesService)
-  externalId := "wsu_jaxenroth_sandbox_1"
+  externalId := "jaxenroth_sandbox_1"
   course, err := courses.GetCourse ("externalId:" + externalId)
 
   if !(nil == err && course.ExternalId == externalId) {
@@ -120,19 +120,19 @@ const allCourses =
 
 const rawCourses = `{"results":[` + course1 + `,` + course2 + `,` + course3 + `]}`
 
-const course1 = `{"id":"_1_1","courseId":"wsu_course_1","externalId":"wsu_course_1",` +
-  `"uuid":"asdf1","name":"Course #1","dataSourceId":"plato.sis.courses","termId":"2021fall",` +
-  `"organization":false,"created":"2021-11-09T17:04:21.246Z"}`
+const course1 = `{"id":"_1_1","courseId":"course_id_1","externalId":"course_id_1",` +
+  `"uuid":"asdf1","name":"Course #1","dataSourceId":"data.source.courses.id","termId":` +
+  `"2021fall","organization":false,"created":"2021-11-09T17:04:21.246Z"}`
 
-const course2 = `{"id":"_2_1","courseId":"wsu_course_2","externalId":"wsu_course_2",` +
-  `"uuid":"asdf2","name":"Course #2","dataSourceId":"plato.sis.courses","termId":"2021fall",` +
-  `"organization":false,"created":"2021-11-09T17:04:21.246Z"}`
+const course2 = `{"id":"_2_1","courseId":"course_id_2","externalId":"course_id_2",` +
+  `"uuid":"asdf2","name":"Course #2","dataSourceId":"data.source.courses.id","termId":` +
+  `"2021fall","organization":false,"created":"2021-11-09T17:04:21.246Z"}`
 
-const course3 = `{"id":"_3_1","courseId":"wsu_course_3","externalId":"wsu_course_3",` +
-  `"uuid":"asdf3","name":"Course #3","dataSourceId":"plato.sis.courses","termId":"2021fall",` +
-  `"organization":false,"created":"2021-11-09T17:04:21.246Z"}`
+const course3 = `{"id":"_3_1","courseId":"course_id_3","externalId":"course_id_3",` +
+  `"uuid":"asdf3","name":"Course #3","dataSourceId":"data.source.courses.id","termId":` +
+  `"2021fall","organization":false,"created":"2021-11-09T17:04:21.246Z"}`
 
-const sandboxCourse = `{"id":"_121_1","courseId":"wsu_jaxenroth_sandbox_1",` +
-  `"externalId":"wsu_jaxenroth_sandbox_1","uuid":"asdf","name":"Joseph Axenroth ` +
-  `Sandbox #1","dataSourceId":"plato.sis.courses","termId":"sandboxes_term",` +
+const sandboxCourse = `{"id":"_121_1","courseId":"jaxenroth_sandbox_1",` +
+  `"externalId":"jaxenroth_sandbox_1","uuid":"asdf","name":"Joseph Axenroth ` +
+  `Sandbox #1","dataSourceId":"data.source.sandbox.id","termId":"sandboxes_term",` +
   `"organization":false,"created":"2021-11-09T17:04:21.246Z"}`

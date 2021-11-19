@@ -54,15 +54,15 @@ var rawContent = map[string]interface{} {
   "availability": map[string]interface{} {
     "available": "Yes",
     "allowGuests": false,
-    "adaptiveRelease": map[string]string {
+    "adaptiveRelease": map[string]interface{} {
       "start": "2021-11-18T16:53:40.693Z",
       "end": "2021-11-18T16:53:40.693Z",
     },
   },
-  "contentHandler": map[string]string {
+  "contentHandler": map[string]interface{} {
     "id": "resource/x-bb-document",
   },
-  "links": map[string]string {
+  "links": map[string]interface{} {
     "url": "localhost",
     "rel": "alternate",
     "title": "some:iri:reference:title",
@@ -86,15 +86,15 @@ var rawContent2 = map[string]interface{} {
   "availability": map[string]interface{} {
     "available": "Yes",
     "allowGuests": false,
-    "adaptiveRelease": map[string]string {
+    "adaptiveRelease": map[string]interface{} {
       "start": "2021-11-18T16:53:40.693Z",
       "end": "2021-11-18T16:53:40.693Z",
     },
   },
-  "contentHandler": map[string]string {
+  "contentHandler": map[string]interface{} {
     "id": "resource/x-bb-document",
   },
-  "links": map[string]string {
+  "links": map[string]interface{} {
     "url": "localhost",
     "rel": "alternate",
     "title": "some:iri:reference:title",

@@ -1,5 +1,10 @@
 **blackboard.rest**
 
+## 0.2.6+1
+- Additional work on content code, including better handling of responses from
+REST API calls.
+- Various minor improvements.
+
 ## 0.2.6
 - Work on content factory and service.
 - Formatting of README.

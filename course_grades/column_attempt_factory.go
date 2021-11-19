@@ -57,7 +57,7 @@ func _parseDisplayGrade (rawDisplayGrade interface{}) DisplayGrade {
   }
 
   displayGrade.ScaleType =
-    ScaleType(semiRawDisplayGrade["scaleType"].(string))
+    ScaleType (semiRawDisplayGrade["scaleType"].(string))
   displayGrade.Score = semiRawDisplayGrade["score"].(float64)
 
   if nil == semiRawDisplayGrade["text"] {
