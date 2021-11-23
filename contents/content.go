@@ -37,13 +37,6 @@ type Availability struct {
 }
 
 /**
- * The [ContentHandler] type...
- */
-type ContentHandler struct {
-  Id string
-}
-
-/**
  * The [AdaptiveRelease] type...
  */
 type AdaptiveRelease struct {

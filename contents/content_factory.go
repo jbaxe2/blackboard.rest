@@ -46,6 +46,8 @@ func NewContent (rawContent map[string]interface{}) Content {
     HasAssociatedGroups: hasAssociatedGroups,
     LaunchInNewWindow: rawContent["launchInNewWindow"].(bool),
     Reviewable: rawContent["reviewable"].(bool),
+    ContentHandler:
+      NewContentHandler (rawContent["contentHandler"].(map[string]interface{})),
     Availability:
       _parseAvailability (rawContent["availability"].(map[string]interface{})),
   }

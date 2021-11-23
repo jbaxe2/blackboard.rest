@@ -1,7 +1,6 @@
 package blackboard_rest_test
 
 import (
-  "io/ioutil"
   "net/http"
   "strings"
   "testing"
@@ -93,29 +92,17 @@ type _MockContentRoundTripper struct {
 func (roundTripper *_MockContentRoundTripper) RoundTrip (
   request *http.Request,
 ) (*http.Response, error) {
-  request.Response = &http.Response {
-    Request: request,
-    Header: make (http.Header),
+  conditions := []bool {
+    "GET" == request.Method && strings.Contains (request.URL.Path, "/children"),
+    "GET" == request.Method && strings.Contains (request.URL.Path, "/contents/"),
+    "GET" == request.Method && strings.Contains (request.URL.Path, "/contents"),
   }
 
-  request.Response.StatusCode = 200
-  responseBody := ""
+  responseBodies := []string {childrenContents, content1, rawContents}
 
-  switch true {
-    case "GET" == request.Method && strings.Contains (request.URL.Path, "/children"):
-      responseBody = childrenContents
-    case "GET" == request.Method && strings.Contains (request.URL.Path, "/contents/"):
-      responseBody = content1
-    case "GET" == request.Method && strings.Contains (request.URL.Path, "/contents"):
-      responseBody = rawContents
-    default:
-      request.Response.StatusCode = 404
-      responseBody = improperRequest
-  }
+  builder := NewResponseBuilder (conditions, responseBodies)
 
-  request.Response.Body = ioutil.NopCloser (strings.NewReader (responseBody))
-
-  return request.Response, nil
+  return builder.Build (request), nil
 }
 
 const rawContents = `{"results":[` + content1 + `,` + content2 + `]}`

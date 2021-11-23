@@ -1,7 +1,6 @@
 package blackboard_rest_test
 
 import (
-  "io/ioutil"
   "net/http"
   "strings"
   "testing"
@@ -61,27 +60,16 @@ type _MockTermsRoundTripper struct {
 func (roundTripper *_MockTermsRoundTripper) RoundTrip (
   request *http.Request,
 ) (*http.Response, error) {
-  request.Response = &http.Response {
-    Request: request,
-    Header: make (http.Header),
+  conditions := []bool {
+    "GET" == request.Method && strings.Contains (request.URL.Path, "/terms/"),
+    "GET" == request.Method && strings.Contains (request.URL.Path, "/terms"),
   }
 
-  request.Response.StatusCode = 200
-  responseBody := ""
+  responseBodies := []string {rawTerm, rawTerms}
 
-  switch true {
-    case "GET" == request.Method && strings.Contains (request.URL.Path, "/terms/"):
-      responseBody = rawTerm
-    case "GET" == request.Method && strings.Contains (request.URL.Path, "/terms"):
-      responseBody = rawTerms
-    default:
-      request.Response.StatusCode = 404
-      responseBody = improperRequest
-  }
+  builder := NewResponseBuilder (conditions, responseBodies)
 
-  request.Response.Body = ioutil.NopCloser (strings.NewReader (responseBody))
-
-  return request.Response, nil
+  return builder.Build (request), nil
 }
 
 const rawTerms = `{"results":[` + rawTerm + `,` + rawTerm2 + `]}`

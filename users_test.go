@@ -1,7 +1,6 @@
 package blackboard_rest_test
 
 import (
-  "io/ioutil"
   "net/http"
   "strings"
   "testing"
@@ -61,24 +60,15 @@ type _MockUsersRoundTripper struct {
 func (roundTripper *_MockUsersRoundTripper) RoundTrip (
   request *http.Request,
 ) (*http.Response, error) {
-  request.Response = &http.Response {
-    Request: request,
-    Header: make (http.Header),
+  conditions := []bool {
+    "GET" == request.Method && strings.Contains (request.URL.Path, "/users/"),
   }
 
-  request.Response.StatusCode = 200
-  responseBody := ""
+  responseBodies := []string {rawUser}
 
-  switch true {
-    case "GET" == request.Method && strings.Contains (request.URL.Path, "/users/"):
-      responseBody = rawUser
-    default:
-      responseBody = improperRequest
-  }
+  builder := NewResponseBuilder (conditions, responseBodies)
 
-  request.Response.Body = ioutil.NopCloser (strings.NewReader (responseBody))
-
-  return request.Response, nil
+  return builder.Build (request), nil
 }
 
 const rawUser = `{"id":"userId","uuid":"universally_unique_id","externalId":` +

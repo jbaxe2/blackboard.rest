@@ -1,7 +1,6 @@
 package blackboard_rest_test
 
 import (
-  "io/ioutil"
   "net/http"
   "strings"
   "testing"
@@ -88,32 +87,18 @@ type _MockCoursesRoundTripper struct {
 func (roundTripper *_MockCoursesRoundTripper) RoundTrip (
   request *http.Request,
 ) (*http.Response, error) {
-  request.Response = &http.Response {
-    Request: request,
-    Header: make (http.Header),
+  conditions := []bool {
+    "GET" == request.Method && request.URL.Query().Has ("termId"),
+    "GET" == request.Method && strings.Contains (request.URL.Path, "/courses/"),
+    "GET" == request.Method && strings.Contains (request.URL.Path, "/courses"),
   }
 
-  request.Response.StatusCode = 200
-  responseBody := ""
+  responseBodies := []string {rawCourses, sandboxCourse, allCourses}
 
-  switch true {
-    case "GET" == request.Method && request.URL.Query().Has ("termId"):
-      responseBody = rawCourses
-    case "GET" == request.Method && strings.Contains (request.URL.Path, "/courses/"):
-      responseBody = sandboxCourse
-    case "GET" == request.Method && strings.Contains (request.URL.Path, "/courses"):
-      responseBody = allCourses
-    default:
-      request.Response.StatusCode = 404
-      responseBody = improperRequest
-  }
+  builder := NewResponseBuilder (conditions, responseBodies)
 
-  request.Response.Body = ioutil.NopCloser (strings.NewReader (responseBody))
-
-  return request.Response, nil
+  return builder.Build (request), nil
 }
-
-const improperRequest = `{"status":404,"message":"Improper request"}`
 
 const allCourses =
   `{"results":[` + course1 + `,` + course2 + `,` + course3 + `,` + sandboxCourse + `]}`

@@ -1,5 +1,9 @@
 **blackboard.rest**
 
+## 0.2.7
+- Streamlined round tripper tests.
+- More work on content, including content handlers.
+
 ## 0.2.6+1
 - Additional work on content code, including better handling of responses from
 REST API calls.
