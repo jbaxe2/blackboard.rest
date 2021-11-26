@@ -82,3 +82,44 @@ func TestNormalizeRawResponse (t *testing.T) {
     t.Error ("Raw response should normalize into proper type.")
   }
 }
+
+/**
+ * The [TestNormalizeNumericEntryPossibleIntToFloat64] function...
+ */
+func TestNormalizeNumericEntryPossibleIntToFloat64 (t *testing.T) {
+  println ("Normalize raw numeric entry from possible int to float64.")
+
+  const floatNumber float64 = 100
+  var rawNumber interface{} = 100
+
+  if floatNumber != utils.NormalizeNumeric (rawNumber) {
+    t.Error ("Raw numeric entry should normalize to a float64 properly.")
+  }
+}
+
+/**
+ * The [TestNormalizeNumericFloat32ToFloat64] function...
+ */
+func TestNormalizeNumericFloat32ToFloat64 (t *testing.T) {
+  println ("Normalizing raw numeric entry from possible float32 to float64.")
+
+  const floatNumber float64 = 100
+  const rawNumber float32 = 100
+
+  if floatNumber != utils.NormalizeNumeric (rawNumber) {
+    t.Error ("Raw numeric as float32 should normalize to float64 properly.")
+  }
+}
+
+/**
+ * The [TestNormalizeNumericNonNumbersNormalizeToZeroFloat64] function...
+ */
+func TestNormalizeNumericNonNumbersNormalizeToZeroFloat64 (t *testing.T) {
+  println ("Normalizing a non-numeric value results in a float64-based 0.")
+
+  const zero float64 = 0
+
+  if zero != utils.NormalizeNumeric ("NaN") {
+    t.Error ("A non-numeric value should result in a float64-based 0.")
+  }
+}

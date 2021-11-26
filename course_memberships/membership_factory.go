@@ -7,7 +7,8 @@ import (
 )
 
 /**
- * The [NewMemberships] function...
+ * The [NewMemberships] function creates a slice of Membership instances based on
+ * a slice of raw string-based maps containing the memberships' information.
  */
 func NewMemberships (rawMemberships []map[string]interface{}) []Membership {
   memberships := make ([]Membership, len (rawMemberships))
@@ -20,7 +21,8 @@ func NewMemberships (rawMemberships []map[string]interface{}) []Membership {
 }
 
 /**
- * The [NewMembership] function...
+ * The [NewMembership] function creates a Membership instance based on a raw
+ * string-based map containing the membership's information.
  */
 func NewMembership (rawMembership map[string]interface{}) Membership {
   created, _ := time.Parse (time.RFC3339, rawMembership["created"].(string))
@@ -38,7 +40,8 @@ func NewMembership (rawMembership map[string]interface{}) Membership {
 }
 
 /**
- * The [_parseUser] function...
+ * The [_parseUser] function checks to see if there is user information contained
+ * in the raw data, and if so creates the correlating User instance.
  */
 func _parseUser (user interface{}) users.User {
   var newUser users.User
@@ -51,18 +54,19 @@ func _parseUser (user interface{}) users.User {
 }
 
 /**
- * The [_parseAvailability] function...
+ * The [_parseAvailability] function returns the Membership Availability for the
+ * membership.
  */
 func _parseAvailability (
   availability map[string]interface{},
 ) MembershipAvailability {
-  return MembershipAvailability(
+  return MembershipAvailability (
     availability["available"].(string),
   )
 }
 
 /**
- * The [_parseCourseRole] function...
+ * The [_parseCourseRole] function returns the Membership Role for the membership.
  */
 func _parseCourseRole (roleId string) MembershipRole {
   return MembershipRole (roleId)

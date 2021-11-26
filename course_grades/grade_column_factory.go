@@ -1,5 +1,7 @@
 package course_grades
 
+import "github.com/jbaxe2/blackboard.rest/utils"
+
 /**
  * The [NewGradeColumns] function...
  */
@@ -35,7 +37,7 @@ func NewGradeColumn (
  */
 func _parseScore (rawScore map[string]interface{}) Scoring {
   return Scoring {
-    Possible: rawScore["possible"].(float64),
+    Possible: utils.NormalizeNumeric (rawScore["possible"]),
   }
 }
 

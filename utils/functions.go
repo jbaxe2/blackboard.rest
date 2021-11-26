@@ -31,3 +31,20 @@ func NormalizeRawResponse (rawResponse []interface{}) []map[string]interface{} {
 
   return mappedResponse
 }
+
+/**
+ * The [NormalizeNumeric] function attempts to turn a raw value, presumably from
+ * the response of a REST-based call, to the corresponding float64 value.  This
+ * function defaults to a 0 value.
+ */
+func NormalizeNumeric (rawNumeric interface{}) float64 {
+  if numeric, isInt := rawNumeric.(int); isInt {
+    return float64 (numeric)
+  } else if numeric, isFloat32 := rawNumeric.(float32); isFloat32 {
+    return float64 (numeric)
+  }
+
+  numeric, _ := rawNumeric.(float64)
+
+  return numeric
+}

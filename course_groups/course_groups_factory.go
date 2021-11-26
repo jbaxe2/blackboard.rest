@@ -21,36 +21,16 @@ func NewCourseGroups (rawCourseGroups []map[string]interface{}) []Group {
  * The [NewCourseGroup] function...
  */
 func NewCourseGroup (rawCourseGroup map[string]interface{}) Group {
+  groupSetId, _ := rawCourseGroup["groupSetId"].(string)
+  description, _ := rawCourseGroup["description"].(string)
   groupUuid, _ := uuid.Parse (rawCourseGroup["uuid"].(string))
 
   return Group {
     Id: rawCourseGroup["id"].(string),
     ExternalId: rawCourseGroup["externalId"].(string),
-    GroupSetId: _parseGroupSetId (rawCourseGroup["groupSetId"]),
+    GroupSetId: groupSetId,
     Name: rawCourseGroup["name"].(string),
-    Description: _parseDescription (rawCourseGroup["description"]),
+    Description: description,
     Uuid: groupUuid,
   }
-}
-
-/**
- * The [_parseDescription] function...
- */
-func _parseDescription (rawDescription interface{}) string {
-  if nil == rawDescription {
-    return ""
-  }
-
-  return rawDescription.(string)
-}
-
-/**
- * The [_parseGroupSetId] function...
- */
-func _parseGroupSetId (rawGroupSetId interface{}) string {
-  if nil == rawGroupSetId {
-    return ""
-  }
-
-  return rawGroupSetId.(string)
 }

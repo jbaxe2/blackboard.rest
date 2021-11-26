@@ -2,10 +2,13 @@ package course_grades
 
 import (
   "time"
+
+  "github.com/jbaxe2/blackboard.rest/utils"
 )
 
 /**
- * The [NewColumnAttempts] function...
+ * The [NewColumnAttempts] function creates a slice of Column Attempt instances
+ * from a slice of raw maps.
  */
 func NewColumnAttempts (rawColumnAttempts []map[string]interface{}) []Attempt {
   attempts := make ([]Attempt, len (rawColumnAttempts))
@@ -18,7 +21,8 @@ func NewColumnAttempts (rawColumnAttempts []map[string]interface{}) []Attempt {
 }
 
 /**
- * The [NewColumnAttempt] function...
+ * The [NewColumnAttempt] function creates a new Column Attempt instance from a
+ * raw map.
  */
 func NewColumnAttempt (rawColumnAttempt map[string]interface{}) Attempt {
   created, _ := time.Parse (time.RFC3339, rawColumnAttempt["created"].(string))
@@ -38,7 +42,7 @@ func NewColumnAttempt (rawColumnAttempt map[string]interface{}) Attempt {
     Status: AttemptStatus(rawColumnAttempt["status"].(string)),
     DisplayGrade:
       _parseDisplayGrade (rawColumnAttempt["displayGrade"]),
-    Score: rawColumnAttempt["score"].(float64),
+    Score: utils.NormalizeNumeric (rawColumnAttempt["score"]),
     Exempt: rawColumnAttempt["exempt"].(bool),
     Created: created,
     Text: rawColumnAttempt["text"].(string),
@@ -46,7 +50,7 @@ func NewColumnAttempt (rawColumnAttempt map[string]interface{}) Attempt {
 }
 
 /**
- * The [_parseDisplayGrade] function...
+ * The [_parseDisplayGrade] function parses the display grade for a column attempt.
  */
 func _parseDisplayGrade (rawDisplayGrade interface{}) DisplayGrade {
   displayGrade := new (DisplayGrade)
@@ -58,7 +62,7 @@ func _parseDisplayGrade (rawDisplayGrade interface{}) DisplayGrade {
 
   displayGrade.ScaleType =
     ScaleType (semiRawDisplayGrade["scaleType"].(string))
-  displayGrade.Score = semiRawDisplayGrade["score"].(float64)
+  displayGrade.Score = utils.NormalizeNumeric (semiRawDisplayGrade["score"])
 
   if nil == semiRawDisplayGrade["text"] {
     semiRawDisplayGrade["text"] = ""

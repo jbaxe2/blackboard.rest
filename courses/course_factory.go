@@ -5,7 +5,8 @@ import (
 )
 
 /**
- * The [NewCourses] function creates new Course instances from slice of raw maps.
+ * The [NewCourses] function creates a slice of new Course instances from slice
+ * of raw maps.
  */
 func NewCourses (rawCourses []map[string]interface{}) []Course {
   newCourses := make ([]Course, len (rawCourses))

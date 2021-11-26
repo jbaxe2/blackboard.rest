@@ -1,5 +1,8 @@
 **blackboard.rest**
 
+## 0.2.8
+- Work on various factories.
+
 ## 0.2.7
 - Streamlined round tripper tests.
 - More work on content, including content handlers.
