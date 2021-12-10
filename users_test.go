@@ -49,9 +49,8 @@ func TestNewUsersGetUser (t *testing.T) {
 /**
  * Mocked types and instances to run the above tests with.
  */
-var mockUsersService = api.NewService ("localhost", mockToken, mockUsersRoundTripper)
-
-var mockUsersRoundTripper = new (_MockUsersRoundTripper)
+var mockUsersService =
+  api.NewService ("localhost", mockToken, new (_MockUsersRoundTripper))
 
 type _MockUsersRoundTripper struct {
   http.RoundTripper

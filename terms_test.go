@@ -49,9 +49,7 @@ func TestNewTermsGetTerms (t *testing.T) {
  * Mocked types and instances to run the above tests with.
  */
 var mockTermsService =
-  api.NewService ("localhost", mockToken, mockTermsRoundTripper)
-
-var mockTermsRoundTripper = new (_MockTermsRoundTripper)
+  api.NewService ("localhost", mockToken, new (_MockTermsRoundTripper))
 
 type _MockTermsRoundTripper struct {
   http.RoundTripper

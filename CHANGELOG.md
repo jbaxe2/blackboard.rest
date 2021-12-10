@@ -1,5 +1,9 @@
 **blackboard.rest**
 
+## 0.2.9
+- Tweaked code to better work against the REST API when the code conflicts with
+the behavior of a service as explained in the documentation.
+
 ## 0.2.8
 - Work on various factories.
 

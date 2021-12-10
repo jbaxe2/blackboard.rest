@@ -2,6 +2,7 @@ package contents
 
 import (
   "net/url"
+  "strconv"
 )
 
 /**
@@ -10,7 +11,7 @@ import (
  * handle.
  */
 type ContentHandler interface {
-  Id() string
+  AsMap() map[string]interface{}
 }
 
 type DefaultHandler struct {
@@ -18,8 +19,6 @@ type DefaultHandler struct {
 }
 
 type Document struct {
-  Title string
-
   ContentHandler
 }
 
@@ -53,10 +52,50 @@ type LtiLink struct {
   ContentHandler
 }
 
-func (handler *DefaultHandler) Id() string { return "resource/x-bb-unknown" }
-func (document *Document) Id() string { return "resource/x-bb-document" }
-func (externalLink *ExternalLink) Id() string { return "resource/x-bb-externallink" }
-func (folder *Folder) Id() string { return "resource/x-bb-folder" }
-func (courseLink *CourseLink) Id() string { return "resource/x-bb-courselink" }
-func (toolLink *ToolLink) Id() string { return "resource/x-bb-toollink" }
-func (ltiLink *LtiLink) Id() string { return "resource/x-bb-blti-link" }
+func (handler *DefaultHandler) AsMap() map[string]interface{} {
+  return map[string]interface{} {
+    "id": "resource/x-bb-unknown",
+  }
+}
+
+func (document *Document) AsMap() map[string]interface{} {
+  return map[string]interface{} {
+    "id": "resource/x-bb-document",
+  }
+}
+
+func (externalLink *ExternalLink) AsMap() map[string]interface{} {
+  return map[string]interface{} {
+    "id": "resource/x-bb-externallink",
+    "url": externalLink.Uri.String(),
+  }
+}
+
+func (folder *Folder) AsMap() map[string]interface{} {
+  return map[string]interface{} {
+    "id": "resource/x-bb-folder",
+    "isBbPage": strconv.FormatBool (folder.IsBbPage),
+  }
+}
+
+func (courseLink *CourseLink) AsMap() map[string]interface{} {
+  return map[string]interface{} {
+    "id": "resource/x-bb-courselink",
+    "targetId": courseLink.TargetId,
+    "targetType": courseLink.TargetType,
+  }
+}
+
+func (toolLink *ToolLink) AsMap() map[string]interface{} {
+  return map[string]interface{} {
+    "id": "resource/x-bb-toollink",
+  }
+}
+
+func (ltiLink *LtiLink) AsMap() map[string]interface{} {
+  return map[string]interface{} {
+    "id": "resource/x-bb-blti-link",
+    "url": ltiLink.Uri,
+    "customParameters": ltiLink.CustomParameters,
+  }
+}

@@ -31,7 +31,9 @@ type Content interface {
 
   GetContentChildren (courseId, contentId string) ([]contents.Content, error)
 
-  CreateChild (courseId, contentId string, content contents.Content) error
+  CreateChild (
+    courseId, contentId string, content contents.Content,
+  ) (contents.Content, error)
 }
 
 /**
@@ -111,4 +113,25 @@ func (content *_Content) GetContentChildren (
   return contents.NewContents (
     utils.NormalizeRawResponse (rawChildren["results"].([]interface{})),
   ), nil
+}
+
+/**
+ * The [CreateChild] method creates a new child content item to a parent content
+ * item.  The identifier of the parent item is passed in through the content ID
+ * parameter.
+ */
+func (content *_Content) CreateChild (
+  courseId, contentId string, childContent contents.Content,
+) (contents.Content, error) {
+  endpoint := strings.Replace (string (api.ContentChildren), "{courseId}", courseId, 1)
+  endpoint = strings.Replace (endpoint, "{contentId}", contentId, 1)
+
+  newContent, err :=
+    content.service.Request (endpoint, "POST", childContent.AsNewContentMap(), 1)
+
+  if nil != err {
+    return contents.Content{}, err
+  }
+
+  return contents.NewContent (newContent), nil
 }

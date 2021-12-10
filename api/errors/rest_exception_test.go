@@ -87,7 +87,7 @@ func TestNewRestExceptionCanBeCreatedFromRawStructure (t *testing.T) {
   println ("New REST exception can be created from raw structure.")
 
   var rawException = map[string]interface{} {
-    "status": "401",
+    "status": 401,
     "code": "401",
     "message": "Unauthorized",
     "developerMessage": "",
@@ -117,7 +117,7 @@ func TestNewRestExceptionCanOmitNonRequiredFields (t *testing.T) {
   println ("Omitted non-required fields should result in non-nil REST exception.")
 
   var rawException = map[string]interface{} {
-    "status": "401",
+    "status": 401,
     "message": "Unauthorized",
     "extraInfo": "",
   }
@@ -134,7 +134,7 @@ func TestNewRestExceptionFromRawHasPertinentInformation (t *testing.T) {
   println ("New REST exception from raw structure retains info used to create it.")
 
   var rawException = map[string]interface{} {
-    "status": "401",
+    "status": 401,
     "code": "401",
     "message": "Unauthorized",
     "developerMessage": "",

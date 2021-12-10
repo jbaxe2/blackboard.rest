@@ -2,6 +2,8 @@ package contents
 
 import (
   "time"
+
+  "github.com/jbaxe2/blackboard.rest/utils"
 )
 
 /**
@@ -23,20 +25,30 @@ func NewContents (rawContents []map[string]interface{}) []Content {
  * content information, presumably returned from a REST API call.
  */
 func NewContent (rawContent map[string]interface{}) Content {
+  if nil == rawContent {
+    return Content{}
+  }
+
+  id, _ := rawContent["id"].(string)
   parentId, _ := rawContent["parentId"].(string)
   body, _ := rawContent["body"].(string)
+  title, _ := rawContent["title"].(string)
+  rawCreated, _ := rawContent["created"].(string)
+  rawModified, _ := rawContent["modified"].(string)
+  launchInNewWindow, _ := rawContent["launchInNewWindow"].(bool)
+  reviewable, _ := rawContent["reviewable"].(bool)
 
-  created, _ := time.Parse (time.RFC3339, rawContent["created"].(string))
-  modified, _ := time.Parse (time.RFC3339, rawContent["modified"].(string))
+  created, _ := time.Parse (time.RFC3339, rawCreated)
+  modified, _ := time.Parse (time.RFC3339, rawModified)
 
   hasChildren, _ := rawContent["hasChildren"].(bool)
   hasGradebookColumns, _ := rawContent["hasGradebookColumns"].(bool)
   hasAssociatedGroups, _ := rawContent["hasAssociatedGroups"].(bool)
 
   return Content {
-    Id: rawContent["id"].(string),
+    Id: id,
     ParentId: parentId,
-    Title: rawContent["title"].(string),
+    Title: title,
     Body: body,
     Created: created,
     Modified: modified,
@@ -44,8 +56,8 @@ func NewContent (rawContent map[string]interface{}) Content {
     HasChildren: hasChildren,
     HasGradebookColumn: hasGradebookColumns,
     HasAssociatedGroups: hasAssociatedGroups,
-    LaunchInNewWindow: rawContent["launchInNewWindow"].(bool),
-    Reviewable: rawContent["reviewable"].(bool),
+    LaunchInNewWindow: launchInNewWindow,
+    Reviewable: reviewable,
     ContentHandler:
       NewContentHandler (rawContent["contentHandler"].(map[string]interface{})),
     Availability:
@@ -54,15 +66,7 @@ func NewContent (rawContent map[string]interface{}) Content {
 }
 
 func _parsePosition (rawPosition interface{}) int {
-  var position = 0
-
-  if intPosition, isInt := rawPosition.(int); isInt {
-    position = intPosition
-  } else {
-    position = int (rawPosition.(float64))
-  }
-
-  return position
+  return int (utils.NormalizeNumeric (rawPosition))
 }
 
 /**

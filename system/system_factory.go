@@ -1,5 +1,11 @@
 package system
 
+import (
+  "net/url"
+
+  "github.com/jbaxe2/blackboard.rest/utils"
+)
+
 /**
  * The [NewVersionInfo] function...
  */
@@ -13,11 +19,13 @@ func NewVersionInfo (rawVersionInfo map[string]interface{}) VersionInfo {
  * The [_parseVersion] function...
  */
 func _parseVersion (rawVersion map[string]interface{}) Version {
-  return Version{
-    Major: rawVersion["major"].(float64),
-    Minor: rawVersion["minor"].(float64),
-    Patch: rawVersion["patch"].(float64),
-    Build: rawVersion["build"].(string),
+  build, _ := rawVersion["build"].(string)
+
+  return Version {
+    Major: utils.NormalizeNumeric (rawVersion["major"]),
+    Minor: utils.NormalizeNumeric (rawVersion["minor"]),
+    Patch: utils.NormalizeNumeric (rawVersion["patch"]),
+    Build: build,
   }
 }
 
@@ -25,8 +33,11 @@ func _parseVersion (rawVersion map[string]interface{}) Version {
  * The [NewPrivacyPolicy] function...
  */
 func NewPrivacyPolicy (rawPrivacyPolicy map[string]interface{}) PrivacyPolicy {
+  blackboard, _ := url.Parse (rawPrivacyPolicy["blackboard"].(string))
+  institution, _ := url.Parse (rawPrivacyPolicy["institution"].(string))
+
   return PrivacyPolicy {
-    Blackboard: rawPrivacyPolicy["blackboard"].(string),
-    Institution: rawPrivacyPolicy["institution"].(string),
+    Blackboard: blackboard,
+    Institution: institution,
   }
 }

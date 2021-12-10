@@ -1,12 +1,14 @@
 package blackboard_rest_test
 
 import (
+  "encoding/json"
   "net/http"
   "strings"
   "testing"
 
   blackboardRest "github.com/jbaxe2/blackboard.rest"
   "github.com/jbaxe2/blackboard.rest/api"
+  "github.com/jbaxe2/blackboard.rest/contents"
 )
 
 /**
@@ -80,6 +82,26 @@ func TestNewContentGetChildren (t *testing.T) {
 }
 
 /**
+ * The [TestNewContentCreateChild] function...
+ */
+func TestNewContentCreateChild (t *testing.T) {
+  println ("Create a child content item onto a particular content parent.")
+
+  var rawContent map[string]interface{}
+  _ = json.Unmarshal ([]byte (content1), &rawContent)
+
+  content := blackboardRest.NewContent (mockContentService)
+  parentId := rawContent["parentId"].(string)
+
+  newContent, err :=
+    content.CreateChild ("courseId", parentId, contents.NewContent (rawContent))
+
+  if !(nil == err && newContent.ParentId == parentId) {
+    t.Error ("Creating a child content item should have expected values.")
+  }
+}
+
+/**
  * Mocked types and instances to run the above tests with.
  */
 var mockContentService =
@@ -93,12 +115,13 @@ func (roundTripper *_MockContentRoundTripper) RoundTrip (
   request *http.Request,
 ) (*http.Response, error) {
   conditions := []bool {
+    "POST" == request.Method && strings.Contains (request.URL.Path, "/children"),
     "GET" == request.Method && strings.Contains (request.URL.Path, "/children"),
     "GET" == request.Method && strings.Contains (request.URL.Path, "/contents/"),
     "GET" == request.Method && strings.Contains (request.URL.Path, "/contents"),
   }
 
-  responseBodies := []string {childrenContents, content1, rawContents}
+  responseBodies := []string {content1, childrenContents, content1, rawContents}
 
   builder := NewResponseBuilder (conditions, responseBodies)
 

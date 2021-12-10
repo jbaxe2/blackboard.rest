@@ -136,6 +136,7 @@ func (service *_Service) Request (
     body, _ := json.Marshal (data)
 
     request.Body = ioutil.NopCloser (strings.NewReader (string (body)))
+    request.Header.Set ("Content-Type", "application/json")
   }
 
   client := http.Client {Transport: service.roundTripper}
@@ -203,7 +204,9 @@ func _parseResponse (response *http.Response) (map[string]interface{}, error) {
     return nil, errors.New ("response from the REST server is unreadable")
   }
 
-  if _, wasError := rawResponse["status"]; wasError {
+  _, wasError := rawResponse["message"]
+
+  if 399 < response.StatusCode || wasError {
     return nil, restErrors.NewRestExceptionFromRaw (rawResponse)
   }
 

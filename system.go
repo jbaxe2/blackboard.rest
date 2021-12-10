@@ -36,3 +36,17 @@ func NewSystem (service api.Service) System {
     service: service,
   }
 }
+
+/**
+ * The [GetVersion] method retrieves the version information about the Learn
+ * installation for which the REST API is interacting with.
+ */
+func (systems *_System) GetVersion() (system.VersionInfo, error) {
+  rawVersion, err := systems.service.Request (string (api.Version), "GET", nil, 1)
+
+  if nil != err {
+    return system.VersionInfo{}, err
+  }
+
+  return system.NewVersionInfo (rawVersion), nil
+}

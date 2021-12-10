@@ -3,6 +3,8 @@ package errors
 import (
   "net/url"
   "strconv"
+
+  "github.com/jbaxe2/blackboard.rest/utils"
 )
 
 /**
@@ -68,18 +70,13 @@ func NewRestExceptionFromRaw (rawException map[string]interface{}) RestException
     return nil
   }
 
-  statusStr, haveStatus := rawException["status"].(string)
+  status := int (utils.NormalizeNumeric (rawException["status"]))
   code, _ := rawException["code"].(string)
   message, _ := rawException["message"].(string)
   developerMsg, _ := rawException["developerMessage"].(string)
   extraInfo, haveExtraInfo := rawException["extraInfo"].(string)
 
-  var status int
   var extraInfoUri *url.URL
-
-  if haveStatus {
-    status, _ = strconv.Atoi (statusStr)
-  }
 
   if haveExtraInfo {
     extraInfoUri, _ = url.Parse (extraInfo)

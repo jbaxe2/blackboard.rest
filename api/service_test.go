@@ -352,7 +352,7 @@ func (roundTripper *_MockServiceRoundTripper) RoundTrip (
 
   switch true {
     case strings.Contains (request.URL.Path, "invalid/token"):
-      responseBody = `{"status":"400","message":"invalid_client"}`
+      responseBody = `{"status":400,"message":"invalid_client"}`
     case strings.Contains (request.URL.Path, "set/request/option"):
       result := request.URL.Query().Get ("key")
 
