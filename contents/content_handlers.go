@@ -95,7 +95,7 @@ func (toolLink *ToolLink) AsMap() map[string]interface{} {
 func (ltiLink *LtiLink) AsMap() map[string]interface{} {
   return map[string]interface{} {
     "id": "resource/x-bb-blti-link",
-    "url": ltiLink.Uri,
+    "url": ltiLink.Uri.String(),
     "customParameters": ltiLink.CustomParameters,
   }
 }
