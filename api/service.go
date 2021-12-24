@@ -159,7 +159,7 @@ func _verifyRequestConditions (endpoint, method string) error {
   methods := []string {"GET", "POST", "PUT", "PATCH", "DELETE"}
 
   if !utils.StringInStrings (method, methods) {
-    return errors.New ("inappropriate HTTP method")
+    return errors.New ("unsupported HTTP method")
   }
 
   return nil
@@ -199,6 +199,10 @@ func _parseResponse (response *http.Response) (map[string]interface{}, error) {
 
   var rawResponse map[string]interface{}
   responseBytes, _ := ioutil.ReadAll (response.Body)
+
+  if 0 == len (responseBytes) {
+    return nil, nil
+  }
 
   if err := json.Unmarshal (responseBytes, &rawResponse); nil != err {
     return nil, errors.New ("response from the REST server is unreadable")

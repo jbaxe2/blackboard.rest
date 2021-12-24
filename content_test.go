@@ -102,6 +102,20 @@ func TestNewContentCreateChild (t *testing.T) {
 }
 
 /**
+ * The [TestNewContentCanBeDeleted] function...
+ */
+func TestNewContentCanBeDeleted (t *testing.T) {
+  println ("Delete a content item based on the course and content's identifiers.")
+
+  content := blackboardRest.NewContent (mockContentService)
+
+  if err := content.DeleteContent ("courseId", "contentId"); nil != err {
+    t.Error ("Deleting specific content should not result in error.")
+    t.Error (err.Error())
+  }
+}
+
+/**
  * Mocked types and instances to run the above tests with.
  */
 var mockContentService =
@@ -115,13 +129,14 @@ func (roundTripper *_MockContentRoundTripper) RoundTrip (
   request *http.Request,
 ) (*http.Response, error) {
   conditions := []bool {
+    "DELETE" == request.Method,
     "POST" == request.Method && strings.Contains (request.URL.Path, "/children"),
     "GET" == request.Method && strings.Contains (request.URL.Path, "/children"),
     "GET" == request.Method && strings.Contains (request.URL.Path, "/contents/"),
     "GET" == request.Method && strings.Contains (request.URL.Path, "/contents"),
   }
 
-  responseBodies := []string {content1, childrenContents, content1, rawContents}
+  responseBodies := []string {"", content1, childrenContents, content1, rawContents}
 
   builder := NewResponseBuilder (conditions, responseBodies)
 

@@ -95,6 +95,19 @@ func (content *_Content) GetContent (
 }
 
 /**
+ * The [DeleteContent] method deletes a content item from a course, as specified
+ * by the course and content identifiers.
+ */
+func (content *_Content) DeleteContent (courseId, contentId string) error {
+  endpoint := strings.Replace (string (api.Content), "{courseId}", courseId, 1)
+  endpoint = strings.Replace (endpoint, "{contentId}", contentId, 1)
+
+  _, err := content.service.Request (endpoint, "DELETE", nil, 1)
+
+  return err
+}
+
+/**
  * The [GetContentChildren] method retrieves the children content items for some
  * particular content item, as specified by the course and content identifiers.
  */

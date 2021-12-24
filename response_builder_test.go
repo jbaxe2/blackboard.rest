@@ -78,7 +78,7 @@ func (builder *_ResponseBuilder) _buildResponseBody (response *http.Response) {
     }
   }
 
-  if "" == responseBody {
+  if "" == responseBody && "GET" == response.Request.Method {
     responseBody = improperRequest
     response.StatusCode = 400
   }
