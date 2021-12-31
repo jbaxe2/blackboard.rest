@@ -9,7 +9,9 @@ import "net/url"
 func NewContentHandler (rawContentHandler map[string]interface{}) ContentHandler {
   var contentHandler ContentHandler
 
-  switch rawContentHandler["id"].(string) {
+  handlerId, _ := rawContentHandler["id"].(string)
+
+  switch handlerId {
     case "resource/x-bb-folder":
       contentHandler = new (Folder)
     case "resource/x-bb-document":

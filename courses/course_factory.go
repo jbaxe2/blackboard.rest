@@ -23,6 +23,8 @@ func NewCourses (rawCourses []map[string]interface{}) []Course {
  */
 func NewCourse (rawCourse map[string]interface{}) Course {
   created, _ := time.Parse (time.RFC3339, rawCourse["created"].(string))
+  parentId, _ := rawCourse["parentId"].(string)
+  termId, _ := rawCourse["termId"].(string)
 
   return Course {
     Id: rawCourse["id"].(string),
@@ -31,7 +33,8 @@ func NewCourse (rawCourse map[string]interface{}) Course {
     DataSourceId: rawCourse["dataSourceId"].(string),
     CourseId: rawCourse["courseId"].(string),
     Name: rawCourse["name"].(string),
-    TermId: rawCourse["termId"].(string),
+    TermId: termId,
+    ParentId: parentId,
     Organization: rawCourse["organization"].(bool),
     Created: created,
   }

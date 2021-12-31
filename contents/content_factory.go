@@ -45,6 +45,8 @@ func NewContent (rawContent map[string]interface{}) Content {
   hasGradebookColumns, _ := rawContent["hasGradebookColumns"].(bool)
   hasAssociatedGroups, _ := rawContent["hasAssociatedGroups"].(bool)
 
+  contentHandler, _ := rawContent["contentHandler"].(map[string]interface{})
+
   return Content {
     Id: id,
     ParentId: parentId,
@@ -58,8 +60,7 @@ func NewContent (rawContent map[string]interface{}) Content {
     HasAssociatedGroups: hasAssociatedGroups,
     LaunchInNewWindow: launchInNewWindow,
     Reviewable: reviewable,
-    ContentHandler:
-      NewContentHandler (rawContent["contentHandler"].(map[string]interface{})),
+    ContentHandler: NewContentHandler (contentHandler),
     Availability:
       _parseAvailability (rawContent["availability"].(map[string]interface{})),
   }

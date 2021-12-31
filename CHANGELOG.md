@@ -1,5 +1,8 @@
 **blackboard.rest**
 
+## 0.2.9+3
+- Some fixes to more reliably handle API call responses.
+
 ## 0.2.9+2
 - Added ability to delete content from a course.
 
