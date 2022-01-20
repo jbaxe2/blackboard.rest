@@ -20,3 +20,28 @@ type Membership struct {
 
   CourseRoleId MembershipRole
 }
+
+/**
+ * The [MembershipAvailability] type...
+ */
+type MembershipAvailability string
+
+const (
+  Yes      MembershipAvailability = "Yes"
+  No       MembershipAvailability = "No"
+  Disabled MembershipAvailability = "Disabled"
+)
+
+/**
+ * The [MembershipRole] type...
+ */
+type MembershipRole string
+
+const (
+  Instructor        MembershipRole = "Instructor"
+  TeachingAssistant MembershipRole = "TeachingAssistant"
+  CourseBuilder     MembershipRole = "CourseBuilder"
+  Grader            MembershipRole = "Grader"
+  Student           MembershipRole = "Student"
+  Guest             MembershipRole = "Guest"
+)

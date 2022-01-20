@@ -1,17 +1,14 @@
 package blackboard_rest
 
 import (
-  "net/url"
-  "strings"
-
-  "github.com/jbaxe2/blackboard.rest/_scaffolding/config"
-  "github.com/jbaxe2/blackboard.rest/_scaffolding/factory"
-  "github.com/jbaxe2/blackboard.rest/oauth2"
+  "github.com/jbaxe2/blackboard.rest/api"
   "github.com/jbaxe2/blackboard.rest/terms"
+  "github.com/jbaxe2/blackboard.rest/utils"
 )
 
 /**
- * The [Terms] interface...
+ * The [Terms] interface provides the base interface for interacting with the
+ * REST API's terms service.
  */
 type Terms interface {
   GetTerms() ([]terms.Term, error)
@@ -24,77 +21,38 @@ type Terms interface {
 }
 
 /**
- * The [_BbRestTerms] type...
+ * The [_Terms] type implements the Terms interface.
  */
-type _BbRestTerms struct {
-  _BlackboardRest
+type _Terms struct {
+  service api.Service
 
   Terms
 }
 
 /**
- * The [GetTermsInstance] function...
+ * The [NewTerms] function creates a new terms instance.
  */
-func GetTermsInstance (host string, accessToken oauth2.AccessToken) Terms {
-  hostUri, _ := url.Parse (host)
+func NewTerms (service api.Service) Terms {
+  if nil == service {
+    return nil
+  }
 
-  termsService := new (_BbRestTerms)
-
-  termsService.host = *hostUri
-  termsService.accessToken = accessToken
-
-  termsService.service.SetHost (host)
-  termsService.service.SetAccessToken (accessToken)
-
-  return termsService
+  return &_Terms {
+    service: service,
+  }
 }
 
 /**
- * The [GetTerms] method...
+ * The [GetTerms] method retrieves a slice of terms from the REST API.
  */
-func (restTerms *_BbRestTerms) GetTerms() ([]terms.Term, error) {
-  endpoint := config.TermsEndpoints["terms"]
-
-  result, err := restTerms.service.Connector.SendBbRequest (
-    endpoint, "GET", make (map[string]interface{}), 1,
-  )
+func (term *_Terms) GetTerms() ([]terms.Term, error) {
+  rawTerms, err := term.service.Request (string (api.Terms), "GET", nil, 1)
 
   if nil != err {
-    return []terms.Term{}, err
+    return nil, err
   }
 
-  rawTerms := result.(map[string]interface{})["results"]
-
-  theTerms := factory.NewTerms (_normalizeRawTerms (rawTerms.([]interface{})))
-
-  return theTerms, err
-}
-
-/**
- * The [GetTerm] method...
- */
-func (restTerms *_BbRestTerms) GetTerm (termId string) (terms.Term, error) {
-  endpoint := config.TermsEndpoints["term"]
-  endpoint = strings.Replace (endpoint, "{termId}", termId, -1)
-
-  result, err := restTerms.service.Connector.SendBbRequest (
-    endpoint, "GET", make (map[string]interface{}), 1,
-  )
-
-  term := factory.NewTerm (result.(map[string]interface{}))
-
-  return term, err
-}
-
-/**
- * The [_normalizeRawTerms] function...
- */
-func _normalizeRawTerms (rawTerms []interface{}) []map[string]interface{} {
-  mappedRawTerms := make ([]map[string]interface{}, len (rawTerms))
-
-  for i, rawTerm := range rawTerms {
-    mappedRawTerms[i] = rawTerm.(map[string]interface{})
-  }
-
-  return mappedRawTerms
+  return terms.NewTerms (
+    utils.NormalizeRawResponse (rawTerms["results"].([]interface{})),
+  ), nil
 }

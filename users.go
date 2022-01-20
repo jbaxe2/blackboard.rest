@@ -1,17 +1,15 @@
 package blackboard_rest
 
 import (
-  "net/url"
   "strings"
 
-  "github.com/jbaxe2/blackboard.rest/_scaffolding/config"
-  "github.com/jbaxe2/blackboard.rest/_scaffolding/factory"
-  "github.com/jbaxe2/blackboard.rest/oauth2"
+  "github.com/jbaxe2/blackboard.rest/api"
   "github.com/jbaxe2/blackboard.rest/users"
 )
 
 /**
- * The [Users] interface...
+ * The [Users] interface provides the base interface for interacting with the
+ * REST API's users endpoints.
  */
 type Users interface {
   GetUsers() ([]users.User, error)
@@ -24,57 +22,38 @@ type Users interface {
 }
 
 /**
- * The [_BbRestUsers] type...
+ * The [_Users] type implements the Users interface.
  */
-type _BbRestUsers struct {
-  _BlackboardRest
+type _Users struct {
+  service api.Service
 
   Users
 }
 
-func (restUsers *_BbRestUsers) Host() url.URL {
-  return restUsers.host
-}
-
-func (restUsers *_BbRestUsers) AccessToken() oauth2.AccessToken {
-  return restUsers.accessToken
-}
-
 /**
- * The [GetUsersInstance] function...
+ * The [NewUsers] function creates a new Users instance.
  */
-func GetUsersInstance (host string, accessToken oauth2.AccessToken) Users {
-  hostUri, _ := url.Parse (host)
-
-  usersService := new (_BbRestUsers)
-
-  usersService.host = *hostUri
-  usersService.accessToken = accessToken
-
-  usersService.service.SetHost (host)
-  usersService.service.SetAccessToken (accessToken)
-
-  return usersService
-}
-
-/**
- * The [GetUser] method...
- */
-func (restUsers *_BbRestUsers) GetUser (userId string) (users.User, error) {
-  var user users.User
-
-  endpoint := config.UsersEndpoints["user"]
-  endpoint = strings.Replace (endpoint, "{userId}", userId, -1)
-
-  result, err := restUsers.service.Connector.SendBbRequest (
-    endpoint, "GET", make (map[string]interface{}), 1,
-  )
-
-  if nil != err {
-    return user, err
+func NewUsers (service api.Service) Users {
+  if nil == service {
+    return nil
   }
 
-  user = factory.NewUser (result.(map[string]interface{}))
+  return &_Users {
+    service: service,
+  }
+}
 
-  return user, err
+/**
+ * The [GetUser] method retrieves information about a single user based on the
+ * provided user identifier.
+ */
+func (user *_Users) GetUser (userId string) (users.User, error) {
+  endpoint := strings.Replace (string (api.User), "{userId}", userId, 1)
+  rawUser, err := user.service.Request (endpoint, "GET", nil, 1)
+
+  if nil != err {
+    return users.User{}, err
+  }
+
+  return users.NewUser (rawUser), nil
 }

@@ -1,17 +1,13 @@
 package blackboard_rest
 
 import (
-  "net/url"
-  "strings"
-
-  "github.com/jbaxe2/blackboard.rest/_scaffolding/config"
-  "github.com/jbaxe2/blackboard.rest/_scaffolding/factory"
+  "github.com/jbaxe2/blackboard.rest/api"
   "github.com/jbaxe2/blackboard.rest/course_memberships"
-  "github.com/jbaxe2/blackboard.rest/oauth2"
 )
 
 /**
- * The [CourseMemberships] interface...
+ * The [CourseMemberships] interface provides the base interface for interacting
+ * with the REST API's course memberships service.
  */
 type CourseMemberships interface {
   GetMembershipsForCourse (
@@ -34,116 +30,23 @@ type CourseMemberships interface {
 }
 
 /**
- * The [_BbRestCourseMemberships] type...
+ * The [_CourseMemberships] type implements the Course Memberships interface.
  */
-type _BbRestCourseMemberships struct {
-  _BlackboardRest
+type _CourseMemberships struct {
+  service api.Service
 
   CourseMemberships
 }
 
 /**
- * The [GetCourseMembershipsInstance] function...
+ * The [NewCourseMemberships] function creates a new course memberships instance.
  */
-func GetCourseMembershipsInstance (
-  host string, accessToken oauth2.AccessToken,
-) CourseMemberships {
-  hostUri, _ := url.Parse (host)
-
-  membershipsService := new (_BbRestCourseMemberships)
-
-  membershipsService.host = *hostUri
-  membershipsService.accessToken = accessToken
-
-  membershipsService.service.SetHost (host)
-  membershipsService.service.SetAccessToken (accessToken)
-
-  return membershipsService
-}
-
-/**
- * The [GetMembershipsForCourse] method...
- */
-func (restMemberships *_BbRestCourseMemberships) GetMembershipsForCourse (
-  courseId string,
-) ([]course_memberships.Membership, error) {
-  endpoint := config.CourseMembershipsEndpoints["course_memberships"]
-  endpoint = strings.Replace (endpoint, "{courseId}", courseId, -1)
-
-  return restMemberships._getMemberships (endpoint, make (map[string]interface{}))
-}
-
-/**
- * The [GetMembershipsForUser] method...
- */
-func (restMemberships *_BbRestCourseMemberships) GetMembershipsForUser (
-  userId string,
-) ([]course_memberships.Membership, error) {
-  endpoint := config.CourseMembershipsEndpoints["user_memberships"]
-  endpoint = strings.Replace (endpoint, "{userId}", userId, -1)
-
-  return restMemberships._getMemberships (endpoint, make (map[string]interface{}))
-}
-
-/**
- * The [GetMembership] method...
- */
-func (restMemberships *_BbRestCourseMemberships) GetMembership (
-  courseId string, userId string,
-) (course_memberships.Membership, error) {
-  var courseMembership course_memberships.Membership
-
-  endpoint := config.CourseMembershipsEndpoints["membership"]
-  endpoint = strings.Replace (endpoint, "{courseId}", courseId, -1)
-  endpoint = strings.Replace (endpoint, "{userId}", userId, -1)
-
-  result, err := restMemberships.service.Connector.SendBbRequest (
-    endpoint, "GET", make (map[string]interface{}), 1,
-  )
-
-  if nil != err {
-    return courseMembership, err
+func NewCourseMemberships (service api.Service) CourseMemberships {
+  if nil == service {
+    return nil
   }
 
-  courseMembership = factory.NewMembership (result.(map[string]interface{}))
-
-  return courseMembership, err
-}
-
-/**
- * The [_getMemberships] method...
- */
-func (restMemberships *_BbRestCourseMemberships) _getMemberships (
-  endpoint string, data map[string]interface{},
-) ([]course_memberships.Membership, error) {
-  result, err := restMemberships.service.Connector.SendBbRequest (
-    endpoint, "GET", data, 1,
-  )
-
-  if nil != err {
-    return []course_memberships.Membership{}, err
+  return &_CourseMemberships {
+    service: service,
   }
-
-  rawMemberships := result.(map[string]interface{})["results"]
-
-  courseMemberships := factory.NewMemberships (
-    _normalizeRawMemberships(rawMemberships.([]interface{})),
-  )
-
-  return courseMemberships, err
-}
-
-/**
- * The [_normalizeRawMemberships] function...
- */
-func _normalizeRawMemberships (
-  rawMemberships []interface{},
-) []map[string]interface{} {
-  mappedRawMemberships := make ([]map[string]interface{}, len (rawMemberships))
-
-  for i, rawMembership := range rawMemberships {
-    mappedRawMemberships[i] = rawMembership.(map[string]interface{})
-  }
-
-  return mappedRawMemberships
 }

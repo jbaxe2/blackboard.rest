@@ -1,6 +1,6 @@
 package contents
 
-import "github.com/jbaxe2/blackboard.rest/course_grades"
+import courseGrades "github.com/jbaxe2/blackboard.rest/course_grades"
 
 /**
  * The [Assignment] type...
@@ -12,11 +12,11 @@ type Assignment struct {
 
   FileUploadIds []string
 
-  Availability ContentAvailability
+  Availability Availability
 
-  Grading course_grades.Grading
+  Grading courseGrades.Grading
 
-  Score course_grades.Scoring
+  Score courseGrades.Scoring
 }
 
 /**

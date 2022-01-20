@@ -1,18 +1,13 @@
 package blackboard_rest
 
 import (
-  "net/url"
-  "strings"
-
-  "github.com/jbaxe2/blackboard.rest/_scaffolding"
-  "github.com/jbaxe2/blackboard.rest/_scaffolding/config"
-  "github.com/jbaxe2/blackboard.rest/_scaffolding/factory"
+  "github.com/jbaxe2/blackboard.rest/api"
   "github.com/jbaxe2/blackboard.rest/course_group_users"
-  "github.com/jbaxe2/blackboard.rest/oauth2"
 )
 
 /**
- * The [CourseGroupUsers] interface...
+ * The [CourseGroupUsers] interface provides the base interface for interacting
+ * with the REST API's course group users endpoints.
  */
 type CourseGroupUsers interface {
   GetGroupMemberships (
@@ -25,56 +20,15 @@ type CourseGroupUsers interface {
 }
 
 /**
- * The [_BbRestCourseGroupUsers] type...
+ * The [_CourseGroupUsers] type implements the Course Group Users interface.
  */
-type _BbRestCourseGroupUsers struct {
-  _BlackboardRest
-
+type _CourseGroupUsers struct {
   CourseGroupUsers
 }
 
 /**
- * The [GetCourseGroupUsersInstance] function...
+ * The [NewCourseGroupUsers] function creates a new course group users instance.
  */
-func GetCourseGroupUsersInstance (
-  host string, accessToken oauth2.AccessToken,
-) CourseGroupUsers {
-  hostUri, _ := url.Parse (host)
-
-  groupUsersService := new (_BbRestCourseGroupUsers)
-
-  groupUsersService.host = *hostUri
-  groupUsersService.accessToken = accessToken
-
-  groupUsersService.service.SetHost (host)
-  groupUsersService.service.SetAccessToken (accessToken)
-
-  return groupUsersService
-}
-
-/**
- * The [GetGroupMemberships] method...
- */
-func (restGroupUsers *_BbRestCourseGroupUsers) GetGroupMemberships (
-  courseId string, groupId string,
-) ([]course_group_users.GroupMembership, error) {
-  endpoint := config.CourseGroupUsersEndpoints["group_memberships"]
-  endpoint = strings.Replace (endpoint, "{courseId}", courseId, -1)
-  endpoint = strings.Replace (endpoint, "{groupId}", groupId, -1)
-
-  result, err := restGroupUsers.service.Connector.SendBbRequest (
-    endpoint, "GET", make (map[string]interface{}), 2,
-  )
-
-  if nil != err {
-    return []course_group_users.GroupMembership{}, err
-  }
-
-  rawGroupUsers := result.(map[string]interface{})["results"]
-
-  groupUsers := factory.NewCourseGroupUsers (
-    _scaffolding.NormalizeRawResponse (rawGroupUsers.([]interface{})),
-  )
-
-  return groupUsers, err
+func NewCourseGroupUsers (service api.Service) CourseGroupUsers {
+  return new (_CourseGroupUsers)
 }

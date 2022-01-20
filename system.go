@@ -1,16 +1,13 @@
 package blackboard_rest
 
 import (
-  "net/url"
-
-  "github.com/jbaxe2/blackboard.rest/_scaffolding/config"
-  "github.com/jbaxe2/blackboard.rest/_scaffolding/factory"
-  "github.com/jbaxe2/blackboard.rest/oauth2"
+  "github.com/jbaxe2/blackboard.rest/api"
   "github.com/jbaxe2/blackboard.rest/system"
 )
 
 /**
- * The [System] interface...
+ * The [System] interface provides the base interface for interacting with the
+ * REST API's system service.
  */
 type System interface {
   GetPolicies() (system.PrivacyPolicy, error)
@@ -19,48 +16,37 @@ type System interface {
 }
 
 /**
- * The [_BbRestSystem] type...
+ * The [_System] type implements the System interface.
  */
-type _BbRestSystem struct {
-  _BlackboardRest
+type _System struct {
+  service api.Service
 
   System
 }
 
 /**
- * The [GetSystemInstance] function...
+ * The [NewSystem] function creates a new system instance.
  */
-func GetSystemInstance (
-  host string, accessToken oauth2.AccessToken,
-) System {
-  hostUri, _ := url.Parse (host)
+func NewSystem (service api.Service) System {
+  if nil == service {
+    return nil
+  }
 
-  systemService := new (_BbRestSystem)
-
-  systemService.host = *hostUri
-  systemService.accessToken = accessToken
-
-  systemService.service.SetHost (host)
-  systemService.service.SetAccessToken (accessToken)
-
-  return systemService
+  return &_System {
+    service: service,
+  }
 }
 
 /**
- * The [GetVersion] method...
+ * The [GetVersion] method retrieves the version information about the Learn
+ * installation for which the REST API is interacting with.
  */
-func (restSystem *_BbRestSystem) GetVersion() (system.VersionInfo, error) {
-  var version system.VersionInfo
-
-  result, err := restSystem.service.Connector.SendBbRequest (
-    config.SystemEndpoints["version"], "GET", make (map[string]interface{}), 1,
-  )
+func (systems *_System) GetVersion() (system.VersionInfo, error) {
+  rawVersion, err := systems.service.Request (string (api.Version), "GET", nil, 1)
 
   if nil != err {
-    return version, err
+    return system.VersionInfo{}, err
   }
 
-  version = factory.NewVersionInfo (result.(map[string]interface{}))
-
-  return version, err
+  return system.NewVersionInfo (rawVersion), nil
 }

@@ -1,8 +1,10 @@
 package system
 
+import "net/url"
+
 /**
  * The [PrivacyPolicy] type...
  */
 type PrivacyPolicy struct {
-  Blackboard, Institution string
+  Blackboard, Institution *url.URL
 }

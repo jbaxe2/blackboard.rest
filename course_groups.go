@@ -1,18 +1,13 @@
 package blackboard_rest
 
 import (
-  "net/url"
-  "strings"
-
-  "github.com/jbaxe2/blackboard.rest/_scaffolding"
-  "github.com/jbaxe2/blackboard.rest/_scaffolding/config"
-  "github.com/jbaxe2/blackboard.rest/_scaffolding/factory"
+  "github.com/jbaxe2/blackboard.rest/api"
   "github.com/jbaxe2/blackboard.rest/course_groups"
-  "github.com/jbaxe2/blackboard.rest/oauth2"
 )
 
 /**
- * The [CourseGroups] interface...
+ * The [CourseGroups] interface provides the base interface for interacting with
+ * the REST API's course groups service.
  */
 type CourseGroups interface {
   GetGroups (courseId string) ([]course_groups.Group, error)
@@ -37,81 +32,23 @@ type CourseGroups interface {
 }
 
 /**
- * The [_BbRestCourseGroups] type...
+ * The [_CourseGroups] type implements the Course Groups interface.
  */
-type _BbRestCourseGroups struct {
-  _BlackboardRest
+type _CourseGroups struct {
+  service api.Service
 
   CourseGroups
 }
 
 /**
- * The [GetCourseGroupsInstance] function...
+ * The [NewCourseGroups] function creates a new course groups instance.
  */
-func GetCourseGroupsInstance (
-  host string, accessToken oauth2.AccessToken,
-) CourseGroups {
-  hostUri, _ := url.Parse (host)
-
-  courseGroupsService := new (_BbRestCourseGroups)
-
-  courseGroupsService.host = *hostUri
-  courseGroupsService.accessToken = accessToken
-
-  courseGroupsService.service.SetHost (host)
-  courseGroupsService.service.SetAccessToken (accessToken)
-
-  return courseGroupsService
-}
-
-/**
- * The [GetGroups] method...
- */
-func (restCourseGroups *_BbRestCourseGroups) GetGroups (
-  courseId string,
-) ([]course_groups.Group, error) {
-  endpoint := config.CourseGroupsEndpoints["groups"]
-  endpoint = strings.Replace (endpoint, "{courseId}", courseId, -1)
-
-  result, err := restCourseGroups.service.Connector.SendBbRequest (
-    endpoint, "GET", make (map[string]interface{}), 2,
-  )
-
-  if nil != err {
-    return []course_groups.Group{}, err
+func NewCourseGroups (service api.Service) CourseGroups {
+  if nil == service {
+    return nil
   }
 
-  rawCourseGroups := result.(map[string]interface{})["results"]
-
-  courseGroups := factory.NewCourseGroups (
-    _scaffolding.NormalizeRawResponse (rawCourseGroups.([]interface{})),
-  )
-
-  return courseGroups, err
-}
-
-/**
- * The [GetGroupSets] method...
- */
-func (restCourseGroups *_BbRestCourseGroups) GetGroupSets (
-  courseId string,
-) ([]course_groups.Group, error) {
-  endpoint := config.CourseGroupsEndpoints["group_sets"]
-  endpoint = strings.Replace (endpoint, "{courseId}", courseId, -1)
-
-  result, err := restCourseGroups.service.Connector.SendBbRequest (
-    endpoint, "GET", make (map[string]interface{}), 2,
-  )
-
-  if nil != err {
-    return []course_groups.Group{}, err
+  return &_CourseGroups {
+    service: service,
   }
-
-  rawCourseGroupSets := result.(map[string]interface{})["results"]
-
-  courseGroupSets := factory.NewCourseGroups (
-    _scaffolding.NormalizeRawResponse (rawCourseGroupSets.([]interface{})),
-  )
-
-  return courseGroupSets, err
 }
