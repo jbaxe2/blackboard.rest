@@ -63,10 +63,10 @@ func (memberships *_CourseMemberships) GetMembershipsForCourse (
 ) ([]course_memberships.Membership, error) {
   memberships.service.SetRequestOption ("expand", "user")
 
-  course :=
+  endpoint :=
     strings.Replace (string (api.CourseMemberships), "{courseId}", courseId, 1)
 
-  rawMemberships, err := memberships.service.Request (course, "GET", nil, 1)
+  rawMemberships, err := memberships.service.Request (endpoint, "GET", nil, 1)
 
   if nil != err {
     return nil, err
