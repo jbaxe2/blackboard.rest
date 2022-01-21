@@ -2,6 +2,7 @@ package blackboard_rest_test
 
 import (
   "net/http"
+  "strings"
   "testing"
 
   blackboardRest "github.com/jbaxe2/blackboard.rest"
@@ -31,6 +32,20 @@ func TestNewCourseMembershipsRequiresService (t *testing.T) {
 }
 
 /**
+ * The [TestNewCourseMembershipsGetMembershipsForCourse] function...
+ */
+func TestNewCourseMembershipsGetMembershipsForCourse (t *testing.T) {
+  println ("Get the course memberships for a course.")
+
+  memberships := blackboardRest.NewCourseMemberships (mockCourseMembershipsService)
+  courseMemberships, err := memberships.GetMembershipsForCourse ("courseId1")
+
+  if !(nil == err && 2 == len (courseMemberships)) {
+    t.Error ("Retrieving memberships for a course should have appropriate responses.")
+  }
+}
+
+/**
  * Mocked types and instances to run the above tests with.
  */
 var mockCourseMembershipsService =
@@ -39,3 +54,51 @@ var mockCourseMembershipsService =
 type _MockCourseMembershipsRoundTripper struct {
   http.RoundTripper
 }
+
+func (roundTripper *_MockCourseMembershipsRoundTripper) RoundTrip (
+  request *http.Request,
+) (*http.Response, error) {
+  coursesIndex := strings.Index (request.URL.Path, "courses")
+  usersIndex := strings.Index (request.URL.Path, "users")
+
+  conditions := []bool {
+    "GET" == request.Method && (coursesIndex < usersIndex),
+  }
+
+  responseBodies := []string {rawCourse1Memberships}
+
+  builder := NewResponseBuilder (conditions, responseBodies)
+
+  return builder.Build (request), nil
+}
+
+const rawCourse1Memberships = `{"results":[` + rawCourse1Membership1 + `,` +
+  rawCourse1Membership2 + `]}`
+
+const rawCourse1Membership1 = `{"id":"membershipId1","userId":"userId1","user":` +
+  `{"id":"userId1","uuid":"universally_unique_id_1","externalId":` +
+  `"externalUserId1","dataSourceId":"data.source.id","userName":"username",` +
+  `"studentId":"studentUserId1","created":"2021-11-16T18:58:19.500Z",` +
+  `"modified":"2021-11-16T18:58:19.500Z","lastLogin":"2021-11-16T18:58:19.500Z",` +
+  `"institutionRoleIds":["Student"],"name":{"given":"first","family": "last",` +
+  `"middle":"","other":"","suffix":"","title":""},"contact":{"email":` +
+  `"user1@school.edu"},"systemRoleIds":["NONE"],"availability":{"available":"Yes"}},` +
+  `"courseId":"courseId1","childCourseId":"","dataSourceId":"data.source.id",` +
+  `"created":"2022-01-20T18:18:03.323Z","modified":"2022-01-20T18:18:03.323Z",` +
+  `"availability":{"available":"Yes"},"courseRoleId": "Instructor",` +
+  `"bypassCourseAvailabilityUntil":"2022-01-20T18:18:03.323Z",` +
+  `"lastAccessed":"2022-01-20T18:18:03.323Z"}`
+
+const rawCourse1Membership2 = `{"id":"membershipId2","userId":"userId2","user":` +
+  `{"id":"userId2","uuid":"universally_unique_id_2","externalId":` +
+  `"externalUserId2","dataSourceId":"data.source.id","userName":"username",` +
+  `"studentId":"studentUserId2","created":"2021-11-16T18:58:19.500Z",` +
+  `"modified":"2021-11-16T18:58:19.500Z","lastLogin":"2021-11-16T18:58:19.500Z",` +
+  `"institutionRoleIds":["Student"],"name":{"given":"first","family":"last",` +
+  `"middle":"","other":"","suffix":"","title":""},"contact":{"email":` +
+  `"user2@school.edu"},"systemRoleIds":["NONE"],"availability":{"available":"Yes"}},` +
+  `"courseId":"courseId1","childCourseId":"","dataSourceId":"data.source.id",` +
+  `"created":"2022-01-20T18:18:03.323Z","modified":"2022-01-20T18:18:03.323Z",` +
+  `"availability":{"available":"Yes"},"courseRoleId": "Instructor",` +
+  `"bypassCourseAvailabilityUntil":"2022-01-20T18:18:03.323Z",` +
+  `"lastAccessed":"2022-01-20T18:18:03.323Z"}`

@@ -1,8 +1,11 @@
 package blackboard_rest
 
 import (
+  "strings"
+
   "github.com/jbaxe2/blackboard.rest/api"
   "github.com/jbaxe2/blackboard.rest/course_memberships"
+  "github.com/jbaxe2/blackboard.rest/utils"
 )
 
 /**
@@ -49,4 +52,27 @@ func NewCourseMemberships (service api.Service) CourseMemberships {
   return &_CourseMemberships {
     service: service,
   }
+}
+
+/**
+ * The [GetMembershipsForCourse] method obtains the collection of course
+ * memberships, based on the course's ID.
+ */
+func (memberships *_CourseMemberships) GetMembershipsForCourse (
+  courseId string,
+) ([]course_memberships.Membership, error) {
+  memberships.service.SetRequestOption ("expand", "user")
+
+  course :=
+    strings.Replace (string (api.CourseMemberships), "{courseId}", courseId, 1)
+
+  rawMemberships, err := memberships.service.Request (course, "GET", nil, 1)
+
+  if nil != err {
+    return nil, err
+  }
+
+  return course_memberships.NewMemberships (
+    utils.NormalizeRawResponse (rawMemberships["results"].([]interface{})),
+  ), nil
 }
