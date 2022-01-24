@@ -4,7 +4,7 @@ import (
   "strings"
 
   "github.com/jbaxe2/blackboard.rest/api"
-  "github.com/jbaxe2/blackboard.rest/course_memberships"
+  courseMemberships "github.com/jbaxe2/blackboard.rest/course_memberships"
   "github.com/jbaxe2/blackboard.rest/utils"
 )
 
@@ -15,20 +15,20 @@ import (
 type CourseMemberships interface {
   GetMembershipsForCourse (
     courseId string,
-  ) ([]course_memberships.Membership, error)
+  ) ([]courseMemberships.Membership, error)
 
-  GetMembershipsForUser (userId string) ([]course_memberships.Membership, error)
+  GetMembershipsForUser (userId string) ([]courseMemberships.Membership, error)
 
   GetMembership (
     courseId string, userId string,
-  ) (course_memberships.Membership, error)
+  ) (courseMemberships.Membership, error)
 
   UpdateMembership (
-    courseId string, userId string, membership course_memberships.Membership,
+    courseId string, userId string, membership courseMemberships.Membership,
   ) error
 
   CreateMembership (
-    courseId string, userId string, membership course_memberships.Membership,
+    courseId string, userId string, membership courseMemberships.Membership,
   ) error
 }
 
@@ -60,21 +60,10 @@ func NewCourseMemberships (service api.Service) CourseMemberships {
  */
 func (memberships *_CourseMemberships) GetMembershipsForCourse (
   courseId string,
-) ([]course_memberships.Membership, error) {
-  memberships.service.SetRequestOption ("expand", "user")
-
-  endpoint :=
-    strings.Replace (string (api.CourseMemberships), "{courseId}", courseId, 1)
-
-  rawMemberships, err := memberships.service.Request (endpoint, "GET", nil, 1)
-
-  if nil != err {
-    return nil, err
-  }
-
-  return course_memberships.NewMemberships (
-    utils.NormalizeRawResponse (rawMemberships["results"].([]interface{})),
-  ), nil
+) ([]courseMemberships.Membership, error) {
+  return memberships._getMemberships (
+    string (api.CourseMemberships), "{courseId}", courseId,
+  )
 }
 
 /**
@@ -83,19 +72,29 @@ func (memberships *_CourseMemberships) GetMembershipsForCourse (
  */
 func (memberships *_CourseMemberships) GetMembershipsForUser (
   userId string,
-) ([]course_memberships.Membership, error) {
+) ([]courseMemberships.Membership, error) {
+  return memberships._getMemberships (
+    string (api.UserMemberships), "{userId}", userId,
+  )
+}
+
+/**
+ * The [_getMemberships] method obtains a collection of course memberships, for
+ * either the course or user based on the provided context type and context ID.
+ */
+func (memberships *_CourseMemberships) _getMemberships (
+  rawEndpoint, contextType, contextId string,
+) ([]courseMemberships.Membership, error) {
   memberships.service.SetRequestOption ("expand", "user")
 
-  endpoint :=
-    strings.Replace (string (api.CourseMemberships), "{userId}", userId, 1)
-
+  endpoint := strings.Replace (rawEndpoint, contextType, contextId, 1)
   rawMemberships, err := memberships.service.Request (endpoint, "GET", nil, 1)
 
   if nil != err {
     return nil, err
   }
 
-  return course_memberships.NewMemberships (
+  return courseMemberships.NewMemberships (
     utils.NormalizeRawResponse (rawMemberships["results"].([]interface{})),
   ), nil
 }

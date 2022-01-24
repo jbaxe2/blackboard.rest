@@ -77,9 +77,10 @@ func (roundTripper *_MockCourseMembershipsRoundTripper) RoundTrip (
 
   conditions := []bool {
     "GET" == request.Method && (coursesIndex < usersIndex),
+    "GET" == request.Method && (coursesIndex > usersIndex),
   }
 
-  responseBodies := []string {rawCourse1Memberships}
+  responseBodies := []string {rawCourse1Memberships, rawUser1Memberships}
 
   builder := NewResponseBuilder (conditions, responseBodies)
 
