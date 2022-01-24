@@ -1,5 +1,8 @@
 **blackboard.rest**
 
+## 0.2.9+5
+- Added get course memberships for user.
+
 ## 0.2.9+4
 - Added get course memberships for course.
 

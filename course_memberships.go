@@ -76,3 +76,26 @@ func (memberships *_CourseMemberships) GetMembershipsForCourse (
     utils.NormalizeRawResponse (rawMemberships["results"].([]interface{})),
   ), nil
 }
+
+/**
+ * The [GetMembershipsForCourse] method obtains the collection of course
+ * memberships, based on the user's ID.
+ */
+func (memberships *_CourseMemberships) GetMembershipsForUser (
+  userId string,
+) ([]course_memberships.Membership, error) {
+  memberships.service.SetRequestOption ("expand", "user")
+
+  endpoint :=
+    strings.Replace (string (api.CourseMemberships), "{userId}", userId, 1)
+
+  rawMemberships, err := memberships.service.Request (endpoint, "GET", nil, 1)
+
+  if nil != err {
+    return nil, err
+  }
+
+  return course_memberships.NewMemberships (
+    utils.NormalizeRawResponse (rawMemberships["results"].([]interface{})),
+  ), nil
+}
