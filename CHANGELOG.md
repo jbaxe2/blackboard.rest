@@ -1,5 +1,8 @@
 **blackboard.rest**
 
+## 0.2.9+6
+- Library updates via minor refactoring.
+
 ## 0.2.9+5
 - Added get course memberships for user.
 

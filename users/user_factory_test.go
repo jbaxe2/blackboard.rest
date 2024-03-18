@@ -49,7 +49,7 @@ var rawUser = map[string]interface{} {
   "created": "2021-11-16T18:58:19.500Z",
   "modified": "2021-11-16T18:58:19.500Z",
   "lastLogin": "2021-11-16T18:58:19.500Z",
-  "institutionRoleIds": []string {
+  "institutionRoleIds": []interface{} {
     "Student",
   },
   "name": map[string]interface{} {
@@ -63,7 +63,7 @@ var rawUser = map[string]interface{} {
   "contact": map[string]interface{} {
     "email": "user@school.edu",
   },
-  "systemRoleIds": []string {
+  "systemRoleIds": []interface{} {
     "NONE",
   },
   "availability": map[string]interface{} {
@@ -81,7 +81,7 @@ var rawUser2 = map[string]interface{} {
   "created": "2021-11-16T18:58:19.500Z",
   "modified": "2021-11-16T18:58:19.500Z",
   "lastLogin": "2021-11-16T18:58:19.500Z",
-  "institutionRoleIds": []string {
+  "institutionRoleIds": []interface{} {
     "Student",
   },
   "name": map[string]interface{} {
@@ -95,7 +95,7 @@ var rawUser2 = map[string]interface{} {
   "contact": map[string]interface{} {
     "email": "user2@school.edu",
   },
-  "systemRoleIds": []string {
+  "systemRoleIds": []interface{} {
     "NONE",
   },
   "availability": map[string]interface{} {
