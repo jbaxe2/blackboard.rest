@@ -89,8 +89,8 @@ func (oAuth2 *_OAuth2) AuthorizationCode (
   }
 
   authorizedUri := "https://" + oAuth2.host + endpoint + "?redirect_uri=" +
-    redirectUri.String() + "&client_id=" + clientId + "&response_type=code&scope=" +
-    scope
+    url.QueryEscape (redirectUri.String()) + "&client_id=" + clientId +
+    "&response_type=code&scope=" + scope
 
   response, _ := oAuth2.roundTripper.RoundTrip (request)
   response.StatusCode = 200
@@ -160,7 +160,7 @@ func _buildRequestTokenUri (
   }
 
   if nil != redirectUri {
-    tokenUri += "&redirect_uri=" + redirectUri.String()
+    tokenUri += "&redirect_uri=" + url.QueryEscape (redirectUri.String())
   }
 
   return tokenUri
