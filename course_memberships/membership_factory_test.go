@@ -50,11 +50,11 @@ var rawMembership1 = map[string]interface{} {
     "created": "2021-11-26T17:19:32.114Z",
     "modified": "2021-11-26T17:19:32.114Z",
     "lastLogin": "2021-11-26T17:19:32.114Z",
-    "institutionRoleIds": []string {
+    "institutionRoleIds": []interface{} {
       "institutionRoleId1",
     },
-    "systemRoleIds": []string {
-      "SystemAdmin",
+    "systemRoleIds": []interface{} {
+      "NONE",
     },
     "availability": map[string]interface{} {
       "available": "Yes",
@@ -120,10 +120,10 @@ var rawMembership2 = map[string]interface{} {
     "created": "2021-11-26T17:19:32.114Z",
     "modified": "2021-11-26T17:19:32.114Z",
     "lastLogin": "2021-11-26T17:19:32.114Z",
-    "institutionRoleIds": []string {
+    "institutionRoleIds": []interface{} {
       "institutionRoleId1",
     },
-    "systemRoleIds": []string {
+    "systemRoleIds": []interface{} {
       "SystemAdmin",
     },
     "availability": map[string]interface{} {

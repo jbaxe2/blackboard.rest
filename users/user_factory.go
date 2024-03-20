@@ -48,10 +48,10 @@ func NewUser (rawUser map[string]interface{}) User {
     Created: created,
     LastLogin: lastLogin,
     InstitutionRoleIds:
-      _parseInstitutionRoles (rawUser["institutionRoleIds"]),
-    SystemRoleIds: _parseSystemRoles (rawUser["systemRoleIds"]),
+      _parseInstitutionRoleIds (rawUser["institutionRoleIds"].([]interface{})),
+    SystemRoleIds: _parseSystemRoles (rawUser["systemRoleIds"].([]interface{})),
     Availability:
-      _parseUserAvailability (
+      UserAvailability (
         rawUser["availability"].(map[string]interface{})["available"].(string),
       ),
     Name: _parseName (rawUser["name"].(map[string]interface{})),
@@ -59,42 +59,31 @@ func NewUser (rawUser map[string]interface{}) User {
 }
 
 /**
- * The [_parseInstitutionRoles] function determines if there are any valid
- * institution roles and builds a slice of their identifiers.
+ * The [_parseInstitutionRoles] function builds a slice of institution roles'
+ * identifiers.
  */
-func _parseInstitutionRoles (rawInstitutionRoles ...interface{}) []string {
-  var institutionRoles = make ([]string, 0)
+func _parseInstitutionRoleIds (rawRoleIds []interface{}) []string {
+  roleIds := make ([]string, 0)
 
-  for _, rawRole := range rawInstitutionRoles {
-    if institutionRole, haveInstRole := rawRole.(string); haveInstRole {
-      institutionRoles = append (institutionRoles, institutionRole)
-    }
+  for _, rawRoleId := range rawRoleIds {
+    roleIds = append (roleIds, rawRoleId.(string))
   }
 
-  return institutionRoles
+  return roleIds
 }
 
 /**
  * The [_parseSystemRoles] function determines if there are any valid system
  * roles and builds a slice of their corresponding instances.
  */
-func _parseSystemRoles (rawSystemRoles ...interface{}) []SystemRole {
+func _parseSystemRoles (rawSystemRoles []interface{}) []SystemRole {
   var systemRoles = make ([]SystemRole, 0)
 
   for _, rawRole := range rawSystemRoles {
-    if systemRole, haveSystemRole := rawRole.(string); haveSystemRole {
-      systemRoles = append (systemRoles, SystemRole (systemRole))
-    }
+    systemRoles = append (systemRoles, SystemRole (rawRole.(string)))
   }
 
   return systemRoles
-}
-
-/**
- * The [_parseUserAvailability] function returns a typed user availability.
- */
-func _parseUserAvailability (rawUserAvailability string) UserAvailability {
-  return UserAvailability (rawUserAvailability)
 }
 
 /**

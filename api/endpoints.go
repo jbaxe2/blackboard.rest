@@ -92,10 +92,9 @@ const (
 type CourseMembershipsEndpoint string
 
 const (
-  CourseMemberships CourseMembershipsEndpoint = "courses/{courseId}/users?expand=user"
+  CourseMemberships CourseMembershipsEndpoint = "courses/{courseId}/users"
   UserMemberships   CourseMembershipsEndpoint = "users/{userId}/courses"
-  Membership        CourseMembershipsEndpoint =
-    "courses/{courseId}/users/{userId}?expand=user"
+  Membership        CourseMembershipsEndpoint = "courses/{courseId}/users/{userId}"
 )
 
 /**
