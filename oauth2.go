@@ -111,13 +111,16 @@ func (oAuth2 *_OAuth2) RequestToken (
   }
 
   tokenUri := _buildRequestTokenUri (oAuth2.host, grantType, code, redirectUri)
+  request, err := http.NewRequest (http.MethodPost, tokenUri, nil)
 
-  request, _ := http.NewRequest (http.MethodPost, tokenUri, nil)
+  if nil != err {
+    return nil, errors.NewOAuth2Error ("invalid_request", err.Error())
+  }
+
   request.SetBasicAuth (oAuth2.clientId, oAuth2.secret)
   request.Header.Set ("Content-Type", "application/x-www-form-urlencoded")
 
   client := http.Client {Transport: oAuth2.roundTripper}
-
   response, _ := client.Do (request)
 
   return _parseTokenRequestResponse (response)

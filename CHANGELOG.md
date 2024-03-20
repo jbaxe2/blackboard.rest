@@ -1,5 +1,8 @@
 **blackboard.rest**
 
+## 0.2.9+7
+- Updated error response for requesting token.
+
 ## 0.2.9+6
 - Library updates via minor refactoring.
 
