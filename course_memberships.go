@@ -85,7 +85,7 @@ func (memberships *_CourseMemberships) GetMembershipsForUser (
 func (memberships *_CourseMemberships) _getMemberships (
   rawEndpoint, contextType, contextId string,
 ) ([]courseMemberships.Membership, error) {
-  memberships.service.SetRequestOption ("expand", "user")
+  memberships.service.SetRequestOption ("expand", "course")
 
   endpoint := strings.Replace (rawEndpoint, contextType, contextId, 1)
   rawMemberships, err := memberships.service.Request (endpoint, "GET", nil, 1)
