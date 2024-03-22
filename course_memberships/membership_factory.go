@@ -3,6 +3,7 @@ package course_memberships
 import (
   "time"
 
+  "github.com/jbaxe2/blackboard.rest/courses"
   "github.com/jbaxe2/blackboard.rest/users"
 )
 
@@ -32,6 +33,7 @@ func NewMembership (rawMembership map[string]interface{}) Membership {
     CourseId: rawMembership["courseId"].(string),
     UserId: rawMembership["userId"].(string),
     User: _parseUser (rawMembership["user"]),
+    Course: _parseCourse (rawMembership["course"]),
     Created: created,
     CourseRoleId: _parseCourseRole (rawMembership["courseRoleId"].(string)),
     Availability:
@@ -51,6 +53,16 @@ func _parseUser (user interface{}) users.User {
   }
 
   return newUser
+}
+
+func _parseCourse (rawCourse interface{}) courses.Course {
+  var newCourse courses.Course
+
+  if someCourse, haveCourse := rawCourse.(map[string]interface{}); haveCourse {
+    newCourse = courses.NewCourse (someCourse)
+  }
+
+  return newCourse
 }
 
 /**

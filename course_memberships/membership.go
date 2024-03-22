@@ -3,6 +3,7 @@ package course_memberships
 import (
   "time"
 
+  "github.com/jbaxe2/blackboard.rest/courses"
   "github.com/jbaxe2/blackboard.rest/users"
 )
 
@@ -13,11 +14,11 @@ type Membership struct {
   Id, UserId, CourseId, ChildCourseId, DataSourceId string
 
   User users.User
+  Course courses.Course
 
   Created, LastAccess, BypassCourseAvailabilityUntil time.Time
 
   Availability MembershipAvailability
-
   CourseRoleId MembershipRole
 }
 
